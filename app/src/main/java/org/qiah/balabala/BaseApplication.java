@@ -7,6 +7,8 @@ import android.content.Context;
 import org.qiah.balabala.util.IconFontManager;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseApplication extends Application {
 
@@ -20,8 +22,12 @@ public abstract class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         contextReference = new WeakReference<>(getApplicationContext());
-        IconFontManager.initAsset(iconFontPath());
+        List<String> paths = new ArrayList<>();
+        paths.add(iconFontPath());
+        paths.add(normalPath());
+        IconFontManager.initAsset(paths);
     }
 
     protected abstract String iconFontPath();
+    protected abstract String normalPath();
 }

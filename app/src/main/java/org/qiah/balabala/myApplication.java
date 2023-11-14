@@ -8,4 +8,9 @@ public class myApplication extends BaseApplication {
     public String iconFontPath() {
         return "iconfont.ttf";
     }
+
+    @Override
+    protected String normalPath()  {
+        return "sourcehansans.ttf";
+    }
 }

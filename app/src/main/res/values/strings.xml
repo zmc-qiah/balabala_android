@@ -1,3 +1,84 @@
 <resources>
     <string name="app_name">balabala</string>
+    <string name="icon_sort_1">&#xe618;</string>
+
+
+
+
+    <dimen name="Big_text_size">18sp</dimen>
+    <dimen name="big_icon_size">40dp</dimen>
+    <dimen name="dialog_width">300dp</dimen>
+    <dimen name="mid_icon_size">25dp</dimen>
+    <dimen name="mid_letter_space">0.2</dimen>
+    <dimen name="mid_text_size">15sp</dimen>
+    <dimen name="normal_letter_space">0.1</dimen>
+    <dimen name="normal_text_size">14sp</dimen>
+    <dimen name="num_letter_space">0.05</dimen>
+    <dimen name="num_text_size">26sp</dimen>
+    <dimen name="small_icon_size">20dp</dimen>
+    <dimen name="small_text_size">13sp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="title_text_size">16sp</dimen>
+    <dimen name="toolbar_height">35dp</dimen>
+    <color name="transparent">#00000000</color>
+    <color name="light_grey">#EAEAEA</color>
+
+    <style name="AppBottomSheet" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppBottomSheetStyle</item>
+    </style>
+
+    <style name="AppBottomSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/transparent</item>
+    </style>
+    <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/custom_progress_drawable</item>
+    </style>
+
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/CustomTabText</item>
+    </style>
+
+    <style name="CustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">@color/white</item> <!-- 非选中状态的文本颜色 -->
+    </style>
+    <attr format="boolean" name="round_as_circle"/>
+    <attr format="integer|dimension" name="round_corner"/>
+    <attr format="integer|dimension" name="round_corner_bottom"/>
+    <attr format="integer|dimension" name="round_corner_bottom_left"/>
+    <attr format="integer|dimension" name="round_corner_bottom_right"/>
+    <attr format="integer|dimension" name="round_corner_left"/>
+    <attr format="integer|dimension" name="round_corner_right"/>
+    <attr format="integer|dimension" name="round_corner_top"/>
+    <attr format="integer|dimension" name="round_corner_top_left"/>
+    <attr format="integer|dimension" name="round_corner_top_right"/>
+    <attr format="color|reference" name="round_stroke_color"/>
+    <attr format="integer|dimension" name="round_stroke_width"/>
+    <declare-styleable name="RoundConstraintLayout">
+        <attr name="round_as_circle"/>
+        <attr name="round_corner"/>
+        <attr name="round_corner_top_left"/>
+        <attr name="round_corner_left"/>
+        <attr name="round_corner_top"/>
+        <attr name="round_corner_right"/>
+        <attr name="round_corner_bottom"/>
+        <attr name="round_corner_top_right"/>
+        <attr name="round_corner_bottom_left"/>
+        <attr name="round_corner_bottom_right"/>
+        <attr name="round_stroke_color"/>
+        <attr name="round_stroke_width"/>
+    </declare-styleable>
+    <declare-styleable name="RoundHelper">
+        <attr name="round_as_circle"/>
+        <attr name="round_corner"/>
+        <attr name="round_corner_top_left"/>
+        <attr name="round_corner_left"/>
+        <attr name="round_corner_top"/>
+        <attr name="round_corner_right"/>
+        <attr name="round_corner_bottom"/>
+        <attr name="round_corner_top_right"/>
+        <attr name="round_corner_bottom_left"/>
+        <attr name="round_corner_bottom_right"/>
+        <attr name="round_stroke_color"/>
+        <attr name="round_stroke_width"/>
+    </declare-styleable>
 </resources>
