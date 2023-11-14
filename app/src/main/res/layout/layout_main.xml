@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layoutDescription="@xml/scence_main"
+    app:motionDebug="SHOW_ALL"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/bgIv"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg"/>
+
+</androidx.constraintlayout.motion.widget.MotionLayout>
