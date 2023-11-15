@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.qiah.balabala.util.RoundConstraintLayout
+    app:round_corner="6dp"
+    android:elevation="3dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:layout_height="70dp">
+    <ImageView
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:id="@+id/nikkeIv"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/messageTv"
+        app:layout_constraintStart_toEndOf="@id/nikkeIv"
+        android:layout_marginStart="20dp"
+        android:id="@+id/nikkeTv"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/nikkeTv"
+        app:layout_constraintStart_toEndOf="@id/nikkeIv"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/messageTv"/>
+</org.qiah.balabala.util.RoundConstraintLayout>

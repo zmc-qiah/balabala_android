@@ -3,11 +3,14 @@ package org.qiah.balabala.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import org.qiah.balabala.util.MultipleType
 import org.qiah.balabala.viewHolder.MultipleViewHolder
 
-abstract class MultipleTypeAdapter<V : ViewBinding>(val view: V) :
+/**
+ * @author : Wangjf
+ * @date : 2021/1/19
+ */
+abstract class MultipleTypeAdapter() :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return createViewHolder(
@@ -18,7 +21,7 @@ abstract class MultipleTypeAdapter<V : ViewBinding>(val view: V) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val holder1 = holder as MultipleViewHolder<V, MultipleType>
+        val holder1 = holder as MultipleViewHolder<*, MultipleType>
         holder1.setHolder(data[position])
     }
 
@@ -31,10 +34,12 @@ abstract class MultipleTypeAdapter<V : ViewBinding>(val view: V) :
     }
 
     protected var data: MutableList<MultipleType> = ArrayList()
-    fun add(bean: MultipleType) {
-        val start = itemCount
-        data.add(bean)
-        notifyItemInserted(start)
+    fun add(bean: MultipleType?) {
+        bean?.let {
+            val start = itemCount
+            data.add(bean)
+            notifyItemInserted(start)
+        }
     }
 
     fun add(list: List<MultipleType>?) {

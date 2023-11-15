@@ -4,6 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+/**
+ * @author : Wangjf
+ * @date : 2021/1/19
+ */
 class RoundConstraintLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

@@ -6,6 +6,10 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 
+/**
+ * @author : Wangjf
+ * @date : 2021/1/19
+ */
 abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     protected lateinit var view: T
         private set

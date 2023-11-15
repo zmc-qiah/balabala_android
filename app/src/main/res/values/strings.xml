@@ -41,6 +41,16 @@
     <style name="CustomTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@color/white</item> <!-- 非选中状态的文本颜色 -->
     </style>
+
+    <style name="BaseDialogTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
     <attr format="boolean" name="round_as_circle"/>
     <attr format="integer|dimension" name="round_corner"/>
     <attr format="integer|dimension" name="round_corner_bottom"/>

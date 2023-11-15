@@ -8,6 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * @author : Wangjf
+ * @date : 2021/1/19
+ */
 public class CommonItemDecoration extends RecyclerView.ItemDecoration {
 
     public static final int VERTICAL = RecyclerView.VERTICAL;

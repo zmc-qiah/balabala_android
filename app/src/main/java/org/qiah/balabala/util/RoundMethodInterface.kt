@@ -1,5 +1,9 @@
 package org.qiah.balabala.util
 
+/**
+ * @author : Wangjf
+ * @date : 2021/1/19
+ */
 interface RoundMethodInterface {
     fun setRadius(radiusDp: Float)
     fun setRadius(

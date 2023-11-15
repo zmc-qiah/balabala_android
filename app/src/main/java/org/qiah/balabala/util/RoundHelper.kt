@@ -8,6 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import org.qiah.balabala.R
 
+/**
+ * @author : Wangjf
+ * @date : 2021/1/19
+ */
 class RoundHelper {
     private var mContext: Context? = null
     private var mView: View? = null
