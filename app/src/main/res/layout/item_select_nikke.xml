@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.qiah.balabala.util.RoundConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:round_corner="6dp"
+    android:elevation="4dp"
+
+    android:background="@drawable/round_white_6"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+    <ImageView
+        android:background="@drawable/round_white_6"
+        android:id="@+id/avatarIv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/chli"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_select"
+        android:alpha="0"
+        android:id="@+id/aView"/>
+
+</org.qiah.balabala.util.RoundConstraintLayout>

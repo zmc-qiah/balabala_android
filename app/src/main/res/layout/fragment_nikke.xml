@@ -67,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/top_yellow"
+        android:id="@+id/createBtn"
         android:src="@drawable/more"
         app:borderWidth="0dp"
         android:layout_marginRight="8dp"

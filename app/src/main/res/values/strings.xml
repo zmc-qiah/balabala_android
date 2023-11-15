@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">balabala</string>
     <string name="icon_sort_1">&#xe618;</string>
+    <string name="icon_search">&#xe632;</string>
+    <string name="icon_back">&#xe60f;</string>
 
 
 
