@@ -20,26 +20,24 @@
         android:layout_marginStart="12dp"
         app:layout_constraintStart_toEndOf="@id/avatarIv"
         app:layout_constraintTop_toTopOf="@id/avatarIv"/>
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_white"
+        android:background="@drawable/round_white_12"
         android:layout_marginTop="8dp"
-        android:id="@+id/messageTv"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:gravity="right|top|bottom"
+        android:id="@+id/messageIv"
+        android:padding = "6dp"
+        android:src="@drawable/chli"
         android:maxLines="1"
         android:textColor="@color/common_text_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameTv"
         android:layout_marginStart="62dp"
-        android:minHeight="35dp"
-        android:minWidth="60dp"/>
+        />
     <ImageView
-        app:layout_constraintBottom_toBottomOf="@id/messageTv"
+        app:layout_constraintBottom_toBottomOf="@id/messageIv"
         android:layout_marginBottom="3dp"
-        android:layout_marginStart="58dp"
+        android:layout_marginStart="56dp"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/lg"
         android:layout_width="14dp"

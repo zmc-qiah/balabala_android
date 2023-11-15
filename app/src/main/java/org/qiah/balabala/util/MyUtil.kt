@@ -2,6 +2,7 @@ package org.qiah.balabala.util
 
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.util.TypedValue
 import android.view.TouchDelegate
 import android.view.View
@@ -13,6 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import org.qiah.balabala.BaseApplication
+import org.qiah.balabala.R
 import org.qiah.balabala.bean.Nikke
 
 fun getHeight(): Int = BaseApplication.context().resources.displayMetrics.heightPixels
@@ -112,9 +114,11 @@ fun ImageView.load(drawableResId: Drawable, radius: Int) {
 }
 fun ImageView.load(url: String?, radius: Int) {
     url?.let {
+        Log.d("ImageView.load", "load: $url")
         Glide.with(this)
             .load(it)
             .apply(roundedCorner(radius))
+            .error(R.drawable.als1)
             .into(this)
     }
 }
