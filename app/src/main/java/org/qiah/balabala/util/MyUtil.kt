@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import org.qiah.balabala.BaseApplication
 import org.qiah.balabala.R
 import org.qiah.balabala.bean.Nikke
@@ -129,6 +131,33 @@ fun ImageView.load(@DrawableRes drawableResId: Int, radius: Int) {
             .apply(roundedCorner(radius))
             .into(this)
     }
+}
+fun ImageView.load(url: String?, max: Int, radius: Int) {
+    Glide.with(context)
+        .load(url)
+        .apply(roundedCorner(radius))
+        .into(
+            object : CustomTarget<Drawable>() {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    this@load.setImageDrawable(resource)
+                    val iw = resource.intrinsicWidth
+                    val ih = resource.intrinsicHeight
+                    val ratio = iw.toFloat() / ih.toFloat()
+                    if (max > iw) {
+                        this@load.layoutParams.width = iw
+                        this@load.layoutParams.height = ih
+                    } else {
+                        this@load.layoutParams.width = max
+                        this@load.layoutParams.height = (max / ratio).toInt()
+                    }
+                }
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            }
+        )
 }
 
 /**

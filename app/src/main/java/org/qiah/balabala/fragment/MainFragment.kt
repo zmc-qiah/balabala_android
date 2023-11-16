@@ -9,8 +9,8 @@ import org.qiah.balabala.MyListener.ClickCreateListener
 import org.qiah.balabala.R
 import org.qiah.balabala.activity.ModifyChatActivity
 import org.qiah.balabala.adapter.MultipleTypeAdapter
+import org.qiah.balabala.bean.CreateChat
 import org.qiah.balabala.bean.MainNikke
-import org.qiah.balabala.bean.Nikke
 import org.qiah.balabala.databinding.FragmentNikkeBinding
 import org.qiah.balabala.databinding.ItemNikkeMainBinding
 import org.qiah.balabala.dialog.CreateNikkeDialog
@@ -32,7 +32,7 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
     }
     private val listener: ClickCreateListener by lazy {
         object : ClickCreateListener {
-            override fun onClick(nikkes: ArrayList<Nikke>) {
+            override fun onClick(nikkes: CreateChat) {
                 val intent = Intent(requireActivity(), ModifyChatActivity::class.java)
                 intent.putExtra("nikkes", nikkes)
                 startActivity(intent)

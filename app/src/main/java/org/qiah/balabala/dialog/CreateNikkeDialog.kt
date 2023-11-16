@@ -8,6 +8,7 @@ import org.qiah.balabala.MyListener.ClickCreateListener
 import org.qiah.balabala.MyListener.SelectNikkeListener
 import org.qiah.balabala.R
 import org.qiah.balabala.adapter.MultipleTypeAdapter
+import org.qiah.balabala.bean.CreateChat
 import org.qiah.balabala.bean.Nikke
 import org.qiah.balabala.databinding.DialogCreateNikkeChatBinding
 import org.qiah.balabala.databinding.ItemSelectNikkeBinding
@@ -50,8 +51,11 @@ class CreateNikkeDialog(var listener: ClickCreateListener) : BaseDialog<DialogCr
         view.nikkeAvatarRv.adapter = adapter
         view.nikkeAvatarRv.addItemDecoration(SpanItemDecoration(8F, 4F, 4))
         view.createIv.singleClick {
-            listener.onClick(nikkes)
-            dismiss()
+            if (nikkes.size == 0 || "".equals(view.nameEt.text)) {
+            } else {
+                listener.onClick(CreateChat(nikkes, view.nameEt.text.toString()))
+                dismiss()
+            }
         }
         adapter.add(Nikke("红莲", "", R.drawable.chli))
         adapter.add(Nikke("红莲", "", R.drawable.chli))

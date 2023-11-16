@@ -20,10 +20,18 @@
         android:layout_marginStart="12dp"
         app:layout_constraintStart_toEndOf="@id/avatarIv"
         app:layout_constraintTop_toTopOf="@id/avatarIv"/>
+    <ImageView
+        app:layout_constraintBottom_toBottomOf="@id/messageTv"
+        android:layout_marginBottom="3dp"
+        android:layout_marginStart="58dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/lg"
+        android:layout_width="14dp"
+        android:layout_height="12dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_white"
+        android:background="@drawable/round_white_12"
         android:layout_marginTop="8dp"
         android:id="@+id/messageTv"
         android:paddingLeft="12dp"
@@ -36,13 +44,6 @@
         android:layout_marginStart="62dp"
         android:minHeight="35dp"
         android:minWidth="60dp"/>
-    <ImageView
-        app:layout_constraintBottom_toBottomOf="@id/messageTv"
-        android:layout_marginBottom="3dp"
-        android:layout_marginStart="58dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/lg"
-        android:layout_width="14dp"
-        android:layout_height="12dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

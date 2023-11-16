@@ -1,0 +1,21 @@
+ext {
+    compileSdkVersion = 33//用于编译的SDK版本
+    buildToolsVersion = '33.01'// 用于Gradle编译项目的工具版本
+
+    minSdkVersion = 22// 最低支持Android版本
+    targetSdkVersion = 33
+
+    versionCode = 1
+    versionName = '1.0'
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+    supportLibrariesVersion = '1.0.0'
+
+    dep = [
+            junit                  : 'junit:junit:4.13.1',
+            supportV7              : "androidx.appcompat:appcompat:1.2.0",
+            supportDesign          : "com.google.android.material:material:1.2.1",
+            supportCardview        : "androidx.cardview:cardview:$supportLibrariesVersion",
+            supportConstraintLayout: 'androidx.constraintlayout:constraintlayout:1.1.3',
+    ]
+}

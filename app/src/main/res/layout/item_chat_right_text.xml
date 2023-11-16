@@ -3,11 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp">
+    <ImageView
+        app:layout_constraintBottom_toBottomOf="@id/messageTv"
+        android:layout_marginBottom="3dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/rg"
+        android:layout_width="14dp"
+        android:layout_height="12dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_yellow"
+        android:background="@drawable/round_yellow_12"
         android:id="@+id/messageTv"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
@@ -19,13 +28,6 @@
         android:layout_marginEnd="12dp"
         android:minHeight="35dp"
         android:minWidth="60dp"/>
-    <ImageView
-        app:layout_constraintBottom_toBottomOf="@id/messageTv"
-        android:layout_marginBottom="3dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/rg"
-        android:layout_width="14dp"
-        android:layout_height="12dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,22 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:paddingTop="8dp"
     android:layout_height="wrap_content">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_yellow_12"
-        android:id="@+id/messageIv"
-        android:padding = "6dp"
-        android:src="@drawable/chli"
-        android:gravity="right|top|bottom"
-        android:maxLines="1"
-        android:textColor="@color/common_text_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="12dp"
-        android:minHeight="35dp"
-        android:minWidth="60dp"/>
     <ImageView
         app:layout_constraintBottom_toBottomOf="@id/messageIv"
         android:layout_marginBottom="2dp"
@@ -27,5 +13,18 @@
         android:src="@drawable/rg"
         android:layout_width="14dp"
         android:layout_height="12dp"/>
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_yellow_12"
+        android:id="@+id/messageIv"
+        android:padding = "3dp"
+        android:src="@drawable/chli"
+        android:gravity="right|top|bottom"
+        android:textColor="@color/common_text_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="12dp"
+        android:minHeight="35dp"
+        android:minWidth="60dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

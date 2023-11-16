@@ -1,7 +1,7 @@
 package org.qiah.balabala.MyListener
 
-import org.qiah.balabala.bean.Nikke
+import org.qiah.balabala.bean.CreateChat
 
 interface ClickCreateListener {
-    fun onClick(nikkes: ArrayList<Nikke>)
+    fun onClick(nikkes: CreateChat)
 }

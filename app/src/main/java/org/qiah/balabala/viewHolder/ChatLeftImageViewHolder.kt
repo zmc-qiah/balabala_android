@@ -2,6 +2,7 @@ package org.qiah.balabala.viewHolder
 
 import org.qiah.balabala.bean.ChatLeftImage
 import org.qiah.balabala.databinding.ItemChatLeftImageBinding
+import org.qiah.balabala.util.getWidth
 import org.qiah.balabala.util.gone
 import org.qiah.balabala.util.load
 import org.qiah.balabala.util.nullOrNot
@@ -21,6 +22,6 @@ class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding) : MultipleViewHold
                 view.nameTv.show()
             }
         )
-        view.messageIv.load(entity.path, 8)
+        view.run { messageIv.load(entity.path, (getWidth() * 0.7).toInt(), 16) }
     }
 }
