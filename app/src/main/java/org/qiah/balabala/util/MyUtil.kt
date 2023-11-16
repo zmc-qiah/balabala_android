@@ -1,5 +1,6 @@
 package org.qiah.balabala.util
 
+import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -7,7 +8,9 @@ import android.util.TypedValue
 import android.view.TouchDelegate
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -21,11 +24,29 @@ import org.qiah.balabala.bean.Nikke
 
 fun getHeight(): Int = BaseApplication.context().resources.displayMetrics.heightPixels
 fun getWidth(): Int = BaseApplication.context().resources.displayMetrics.widthPixels
+fun hideKeyboard(view: View?) {
+    view?.let {
+        val inputMethodManager = BaseApplication.context()
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+}
+fun showKeyboard(view: View?) {
+    view?.let {
+        val inputMethodManager = BaseApplication.context()
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+}
 
 /**
  * @author : Wangjf
  * @date : 2021/1/19
  */
+fun String.toast() {
+    Toast.makeText(BaseApplication.context(), this, Toast.LENGTH_SHORT).show()
+}
+
 // 触摸区域扩大
 fun View.increaseTouchRange(range: Int = 10) {
     val scale = context.resources.displayMetrics.density

@@ -18,8 +18,11 @@ import org.qiah.balabala.databinding.ItemChatLeftTextBinding
 import org.qiah.balabala.databinding.ItemChatRightImageBinding
 import org.qiah.balabala.databinding.ItemChatRightTextBinding
 import org.qiah.balabala.util.MyType
+import org.qiah.balabala.util.ResourceUtil
 import org.qiah.balabala.util.gone
+import org.qiah.balabala.util.hideKeyboard
 import org.qiah.balabala.util.show
+import org.qiah.balabala.util.showKeyboard
 import org.qiah.balabala.util.singleClick
 import org.qiah.balabala.viewHolder.ChatLeftImageViewHolder
 import org.qiah.balabala.viewHolder.ChatLeftTextViewHolder
@@ -72,18 +75,72 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     fun loadClick() {
         view.avatarIv.tag = false
         view.avatarIv.singleClick {
-            val b = view.avatarIv.tag as Boolean
+            val b = it.tag as Boolean
             if (!b) {
                 view.selectNikkeCL.show()
             } else {
                 view.selectNikkeCL.gone()
             }
+            it.tag = !b
         }
         view.pictureIcon.tag = false
         view.pictureIcon.singleClick {
             val b = view.pictureIcon.tag as Boolean
             if (!b) {
+                view.emojiRv.show()
+                hideKeyboard(view.sendEt)
             } else {
+                view.emojiRv.gone()
+                showKeyboard(view.sendEt)
+            }
+            it.tag = !b
+        }
+        view.sendEt.singleClick {
+            view.emojiRv.gone()
+        }
+
+        view.tv1.tag = true
+        view.tv2.tag = false
+        view.tv3.tag = false
+        view.tv1.singleClick {
+            val b = it.tag as Boolean
+            if (!b) {
+                view.tv2.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
+                view.tv3.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
+                it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
+                it.tag = true
+                view.tv2.tag = false
+                view.tv3.tag = false
+                view.pictureIcon.show()
+                view.avatarIv.show()
+            }
+        }
+        view.tv2.singleClick {
+            val b = it.tag as Boolean
+            if (!b) {
+                view.emojiRv.gone()
+                view.tv1.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
+                view.tv3.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
+                it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
+                it.tag = true
+                view.tv1.tag = false
+                view.tv3.tag = false
+                view.pictureIcon.gone()
+                view.avatarIv.gone()
+            }
+        }
+        view.tv3.singleClick {
+            val b = it.tag as Boolean
+            if (!b) {
+                view.emojiRv.gone()
+                view.tv2.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
+                view.tv1.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
+                it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
+                it.tag = true
+                view.tv2.tag = false
+                view.tv1.tag = false
+                view.pictureIcon.gone()
+                view.avatarIv.gone()
             }
         }
     }

@@ -5,6 +5,8 @@
     <string name="icon_back">&#xe60f;</string>
     <string name="icon_picture">&#xe63e;</string>
 
+    <string name="base_url">https://nikke-balabala.obs.cn-east-3.myhuaweicloud.com/nikke/</string>
+
 
 
 
