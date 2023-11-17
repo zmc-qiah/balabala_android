@@ -9,6 +9,7 @@ import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
+import org.qiah.balabala.MyListener.AddNikkeListener
 import org.qiah.balabala.MyListener.SelectNikkeListener
 import org.qiah.balabala.R
 import org.qiah.balabala.adapter.MultipleTypeAdapter
@@ -25,8 +26,12 @@ import org.qiah.balabala.databinding.ItemChatLeftTextBinding
 import org.qiah.balabala.databinding.ItemChatRightImageBinding
 import org.qiah.balabala.databinding.ItemChatRightTextBinding
 import org.qiah.balabala.databinding.ItemEmojiBinding
+import org.qiah.balabala.databinding.ItemNarrationBinding
 import org.qiah.balabala.databinding.ItemSelectNikkeBinding
+import org.qiah.balabala.databinding.ItemSplitLineBinding
+import org.qiah.balabala.dialog.AddNikkeDialog
 import org.qiah.balabala.util.GlideEngine
+import org.qiah.balabala.util.MultipleType
 import org.qiah.balabala.util.MyType
 import org.qiah.balabala.util.ResourceUtil
 import org.qiah.balabala.util.SpanItemDecoration
@@ -42,8 +47,11 @@ import org.qiah.balabala.viewHolder.ChatLeftImageViewHolder
 import org.qiah.balabala.viewHolder.ChatLeftTextViewHolder
 import org.qiah.balabala.viewHolder.ChatRightImageViewHolder
 import org.qiah.balabala.viewHolder.ChatRightTextViewHolder
+import org.qiah.balabala.viewHolder.MultipleViewHolder
+import org.qiah.balabala.viewHolder.NarrationViewHolder
 import org.qiah.balabala.viewHolder.NikkeAvatarViewHolder
 import org.qiah.balabala.viewHolder.SingleViewHolder
+import org.qiah.balabala.viewHolder.SplitViewHolder
 
 class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     private val TAG = "ModifyChatA"
@@ -74,6 +82,8 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 MyType.CHAT_RIGHT_TEXT -> ChatRightTextViewHolder(ItemChatRightTextBinding.inflate(layoutInflater, viewGroup, false))
                 MyType.CHAT_LEFT_IMAGE -> ChatLeftImageViewHolder(ItemChatLeftImageBinding.inflate(layoutInflater, viewGroup, false))
                 MyType.CHAT_RIGHT_IMAGE -> ChatRightImageViewHolder(ItemChatRightImageBinding.inflate(layoutInflater, viewGroup, false))
+                MyType.CHAT_SPLIT_LINE -> SplitViewHolder(ItemSplitLineBinding.inflate(layoutInflater, viewGroup, false))
+                MyType.CHAT_NARRATION -> NarrationViewHolder(ItemNarrationBinding.inflate(layoutInflater, viewGroup, false))
                 else -> null
             }
         }
@@ -86,6 +96,19 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 viewGroup: ViewGroup
             ): RecyclerView.ViewHolder? = when (i) {
                 MyType.NIKKE -> NikkeAvatarViewHolder(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false), selectNikkeListener, false)
+                MyType.ADD_NIKKE -> object : MultipleViewHolder<ItemSelectNikkeBinding, MultipleType>(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false)) {
+                    override fun setHolder(entity: MultipleType) {
+                        view.avatarIv.load(ResourceUtil.getString(R.string.base_url) + "more.png")
+                        view.root.singleClick {
+                            AddNikkeDialog(object : AddNikkeListener {
+                                override fun onClick(nikkes: ArrayList<Nikke>) {
+                                    val adapter = bindingAdapter as MultipleTypeAdapter
+                                    adapter.insert(adapter.itemCount - 1, nikkes)
+                                }
+                            }).show(supportFragmentManager)
+                        }
+                    }
+                }
                 else -> null
             }
         }
@@ -130,7 +153,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     override fun subscribeUi() {
     }
     fun init(createChat: CreateChat) {
-        view.inputRcl.transitionToEnd()
+        view.inputRcl.transitionToState(R.id.end)
         nikkes = createChat.nikkes
         if (createChat.name.isNullOrEmpty()) {
             view.nameTv.text = nikkes.get(0).name
@@ -141,6 +164,9 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
         avatarAdapter.add(Nikke("指挥官", "其它", ResourceUtil.getString(R.string.base_url) + ResourceUtil.getString(R.string.zhi)).also { selectNikke = it })
         view.avatarIv.load(selectNikke, true)
         avatarAdapter.add(createChat.nikkes)
+        avatarAdapter.add(object : MultipleType {
+            override fun viewType(): Int = MyType.ADD_NIKKE
+        })
         view.selectNikkeCL.adapter = avatarAdapter
         view.selectNikkeCL.addItemDecoration(SpanItemDecoration(4F, 8F, 2, true))
         view.emojiRv.adapter = emojiAdapter
@@ -210,11 +236,16 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 view.tv2.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 view.tv3.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
+                it.setTextColor(ResourceUtil.getColor(R.color.common_text_black))
+                view.tv2.setTextColor(ResourceUtil.getColor(R.color.common_text_white))
+                view.tv3.setTextColor(ResourceUtil.getColor(R.color.common_text_white))
+                selectType = 1
                 it.tag = true
                 view.tv2.tag = false
                 view.tv3.tag = false
                 view.pictureIcon.show()
                 view.avatarIv.show()
+                view.sendEt.setText("")
             }
         }
         view.tv2.singleClick {
@@ -224,11 +255,14 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 view.tv1.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 view.tv3.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
+                it.setTextColor(ResourceUtil.getColor(R.color.common_text_black))
+                view.tv1.setTextColor(ResourceUtil.getColor(R.color.common_text_white))
+                view.tv3.setTextColor(ResourceUtil.getColor(R.color.common_text_white))
+                selectType = 2
                 it.tag = true
                 view.tv1.tag = false
                 view.tv3.tag = false
-                view.pictureIcon.gone()
-                view.avatarIv.gone()
+                view.inputRcl.transitionToState(R.id.tureEnd)
             }
         }
         view.tv3.singleClick {
@@ -238,11 +272,14 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 view.tv2.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 view.tv1.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
+                it.setTextColor(ResourceUtil.getColor(R.color.common_text_black))
+                view.tv2.setTextColor(ResourceUtil.getColor(R.color.common_text_white))
+                view.tv1.setTextColor(ResourceUtil.getColor(R.color.common_text_white))
                 it.tag = true
                 view.tv2.tag = false
+                selectType = 3
                 view.tv1.tag = false
-                view.pictureIcon.gone()
-                view.avatarIv.gone()
+                view.inputRcl.transitionToState(R.id.tureEnd)
             }
         }
         view.sendBtn.singleClick {
@@ -255,27 +292,36 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                         } else {
                             adapter.add(ChatLeftText(s, selectNikke))
                         }
-                        view.chatRv.smoothScrollToPosition(adapter.itemCount - 1)
+                    }
+                    2 -> {
+                        adapter.add(object : MyType(s) {
+                            override fun viewType(): Int = MyType.CHAT_NARRATION
+                        })
+                        view.inputRcl.transitionToState(R.id.tureEnd)
+                    }
+                    3 -> {
+                        adapter.add(object : MyType(s) {
+                            override fun viewType(): Int = MyType.CHAT_SPLIT_LINE
+                        })
+                        view.inputRcl.transitionToState(R.id.tureEnd)
                     }
                 }
+                view.chatRv.smoothScrollToPosition(adapter.itemCount - 1)
                 view.sendEt.setText("")
                 hideKeyboard(view.sendEt)
-                view.inputRcl.transitionToEnd()
                 view.emojiRv.gone()
             }
         }
         view.sendEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
-
             override fun afterTextChanged(s: Editable?) {
                 if (s != null && !s.toString().isNullOrEmpty()) {
-                    view.inputRcl.transitionToStart()
+                    if (selectType == 1) view.inputRcl.transitionToState(R.id.start)
                 } else {
-                    view.inputRcl.transitionToEnd()
+                    if (selectType == 1) view.inputRcl.transitionToState(R.id.end)
                 }
             }
         })

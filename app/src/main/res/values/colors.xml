@@ -13,6 +13,7 @@
     <color name="line_grey">#C6C8C7</color>
     <color name="common_text_black">#3F4042</color>
     <color name="common_text_white">#FFFFFFFF</color>
+    <color name="grey_narration">#3F4042</color>
     <color name="bg_create_input">#3B3B3B</color>
     <color name="select_blue">#1B7CE1</color>
 </resources>

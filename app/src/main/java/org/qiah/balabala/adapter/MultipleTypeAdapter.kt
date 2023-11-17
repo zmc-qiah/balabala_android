@@ -61,6 +61,24 @@ abstract class MultipleTypeAdapter() :
         this.clear()
         this.add(list)
     }
+    fun insert(start: Int, beans: List<MultipleType>?) {
+        beans?.let {
+            val cnt = itemCount
+            val l = beans.size
+            data.addAll(start, beans)
+            notifyItemRangeRemoved(start, cnt - start)
+            notifyItemRangeInserted(start, cnt - start + l)
+        }
+    }
+    fun insert(start: Int, bean: MultipleType?) {
+        bean?.let {
+            val cnt = itemCount
+            val l = 1
+            data.add(start, bean)
+            notifyItemRangeRemoved(start, cnt - start)
+            notifyItemRangeInserted(start, cnt - start + l)
+        }
+    }
 
     protected abstract fun createViewHolder(
         i: Int,
