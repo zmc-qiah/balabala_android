@@ -16,7 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 class SpanItemDecoration(
     private val intervalVertical: Float,
     private val intervalHorizontal: Float,
-    private val spanCount: Int
+    private val spanCount: Int,
+    val flag: Boolean = false
 ) : RecyclerView.ItemDecoration() {
     private val halfIntervalHorizontal = intervalHorizontal / 2f
 
@@ -28,7 +29,7 @@ class SpanItemDecoration(
     ) {
         super.getItemOffsets(outRect, view, parent, state)
         val position = parent.getChildAdapterPosition(view)
-        if (position / spanCount == 0) {
+        if (position / spanCount == 0 && !flag) {
             // 首行
         } else {
             outRect.top = intervalVertical.dp()

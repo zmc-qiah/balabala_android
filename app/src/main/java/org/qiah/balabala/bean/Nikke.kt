@@ -9,6 +9,7 @@ data class Nikke(
 ) : MyType(), Serializable {
     var avatarId: Int? = null
     var avatarPath: String? = null
+    var enoji: ArrayList<String> ? = null
     constructor(name: String, enterprise: String, avatarId: Int?) : this(name, enterprise) {
         this.avatarId = avatarId
     }

@@ -37,6 +37,9 @@ android {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation group: 'com.github.bumptech.glide', name: 'glide', version: '4.9.0'
     api group: 'io.github.lucksiege', name: 'pictureselector', version: 'v3.11.1'
     implementation 'androidx.core:core-ktx:1.9.0'

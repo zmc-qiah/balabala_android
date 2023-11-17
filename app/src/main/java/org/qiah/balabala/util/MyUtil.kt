@@ -13,8 +13,11 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -65,8 +68,9 @@ fun View.increaseTouchRange(range: Int = 10) {
         }
     }
 }
+
 inline fun <T : View> T.singleClick(
-    time: Long = 500,
+    time: Long = 100,
     increase: Boolean = false,
     range: Int = 10,
     crossinline block: (T) -> Unit
@@ -137,11 +141,31 @@ fun ImageView.load(drawableResId: Drawable, radius: Int) {
 }
 fun ImageView.load(url: String?, radius: Int) {
     url?.let {
-        Log.d("ImageView.load", "load: $url")
         Glide.with(this)
             .load(it)
             .apply(roundedCorner(radius))
             .error(R.drawable.als1)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.d("ImageView.load", "Image load failed for URL: $url")
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            })
             .into(this)
     }
 }
@@ -150,6 +174,7 @@ fun ImageView.load(@DrawableRes drawableResId: Int, radius: Int) {
         Glide.with(this)
             .load(it)
             .apply(roundedCorner(radius))
+            .error(R.drawable.als1)
             .into(this)
     }
 }
@@ -157,6 +182,28 @@ fun ImageView.load(url: String?, max: Int, radius: Int) {
     Glide.with(context)
         .load(url)
         .apply(roundedCorner(radius))
+        .error(R.drawable.als1)
+        .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                Log.d("ImageView.load", "Image load failed for URL: $url")
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                return false
+            }
+        })
         .into(
             object : CustomTarget<Drawable>() {
                 override fun onResourceReady(
@@ -189,6 +236,28 @@ fun ImageView.load(url: String?, isCircle: Boolean = false) {
     val a = Glide.with(this)
         .load(url)
         .centerCrop()
+        .error(R.drawable.als1)
+        .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                Log.d("ImageView.load", "Image load failed for URL: $url")
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                return false
+            }
+        })
     if (isCircle) {
         a.circleCrop()
             .into(this)
@@ -201,6 +270,7 @@ fun ImageView.load(@DrawableRes drawableResId: Int, isCircle: Boolean = false) {
         val a = Glide.with(this)
             .load(it)
             .centerCrop()
+            .error(R.drawable.als1)
         if (isCircle) {
             a.circleCrop()
                 .into(this)

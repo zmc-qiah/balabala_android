@@ -3,38 +3,27 @@ package org.qiah.balabala.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import org.qiah.balabala.util.MultipleType
-import org.qiah.balabala.viewHolder.MultipleViewHolder
+import org.qiah.balabala.viewHolder.SingleViewHolder
 
-/**
- * @author : Wangjf
- * @date : 2021/1/19
- */
-abstract class MultipleTypeAdapter() :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class SingleTypeAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return createViewHolder(
-            viewType,
             LayoutInflater.from(parent.context),
             parent
         )!!
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val holder1 = holder as MultipleViewHolder<*, MultipleType>
+        val holder1 = holder as SingleViewHolder<*, T>
         holder1.setHolder(data[position])
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return data[position].viewType()
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-    protected var data: MutableList<MultipleType> = ArrayList()
-    fun add(bean: MultipleType?) {
+    protected var data: MutableList<T> = ArrayList()
+    fun add(bean: T?) {
         bean?.let {
             val start = itemCount
             data.add(bean)
@@ -42,7 +31,7 @@ abstract class MultipleTypeAdapter() :
         }
     }
 
-    fun add(list: List<MultipleType>?) {
+    fun add(list: List<T>?) {
         if (list == null || list.isEmpty()) {
             return
         }
@@ -57,13 +46,12 @@ abstract class MultipleTypeAdapter() :
         data.clear()
         notifyItemRangeRemoved(0, count)
     }
-    fun clearAndAdd(list: List<MultipleType>?) {
+    fun clearAndAdd(list: List<T>?) {
         this.clear()
         this.add(list)
     }
 
     protected abstract fun createViewHolder(
-        i: Int,
         layoutInflater: LayoutInflater,
         viewGroup: ViewGroup
     ): RecyclerView.ViewHolder?
