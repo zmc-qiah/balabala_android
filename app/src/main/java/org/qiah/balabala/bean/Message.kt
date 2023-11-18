@@ -1,7 +1,7 @@
 package org.qiah.balabala.bean
 
 data class Message(
-    val id: Int,
+    var id: Int,
     val chatId: Int,
     val nikkeId: Int,
     val type: Int,

@@ -12,23 +12,20 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import org.qiah.balabala.MyListener.AddNikkeListener
 import org.qiah.balabala.MyListener.SelectNikkeListener
 import org.qiah.balabala.R
+import org.qiah.balabala.SQLite.MyDataBaseHelper
+import org.qiah.balabala.adapter.ChatAdapter
 import org.qiah.balabala.adapter.MultipleTypeAdapter
 import org.qiah.balabala.adapter.SingleTypeAdapter
+import org.qiah.balabala.bean.Chat
 import org.qiah.balabala.bean.ChatLeftImage
 import org.qiah.balabala.bean.ChatLeftText
 import org.qiah.balabala.bean.ChatRightImage
 import org.qiah.balabala.bean.ChatRightText
-import org.qiah.balabala.bean.CreateChat
+import org.qiah.balabala.bean.Message
 import org.qiah.balabala.bean.Nikke
 import org.qiah.balabala.databinding.ActivityChatModifyBinding
-import org.qiah.balabala.databinding.ItemChatLeftImageBinding
-import org.qiah.balabala.databinding.ItemChatLeftTextBinding
-import org.qiah.balabala.databinding.ItemChatRightImageBinding
-import org.qiah.balabala.databinding.ItemChatRightTextBinding
 import org.qiah.balabala.databinding.ItemEmojiBinding
-import org.qiah.balabala.databinding.ItemNarrationBinding
 import org.qiah.balabala.databinding.ItemSelectNikkeBinding
-import org.qiah.balabala.databinding.ItemSplitLineBinding
 import org.qiah.balabala.dialog.AddNikkeDialog
 import org.qiah.balabala.util.GlideEngine
 import org.qiah.balabala.util.MultipleType
@@ -42,134 +39,44 @@ import org.qiah.balabala.util.load
 import org.qiah.balabala.util.show
 import org.qiah.balabala.util.showKeyboard
 import org.qiah.balabala.util.singleClick
-import org.qiah.balabala.util.toast
-import org.qiah.balabala.viewHolder.ChatLeftImageViewHolder
-import org.qiah.balabala.viewHolder.ChatLeftTextViewHolder
-import org.qiah.balabala.viewHolder.ChatRightImageViewHolder
-import org.qiah.balabala.viewHolder.ChatRightTextViewHolder
 import org.qiah.balabala.viewHolder.MultipleViewHolder
-import org.qiah.balabala.viewHolder.NarrationViewHolder
 import org.qiah.balabala.viewHolder.NikkeAvatarViewHolder
 import org.qiah.balabala.viewHolder.SingleViewHolder
-import org.qiah.balabala.viewHolder.SplitViewHolder
 
 class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     private val TAG = "ModifyChatA"
     private lateinit var nikkes: ArrayList<Nikke>
     private lateinit var selectNikke: Nikke
     private var selectType: Int = 1
-    private val selectNikkeListener by lazy {
-        object : SelectNikkeListener {
-            override fun select(nikke: Nikke) {
-                view.avatarIv.load(nikke.avatarPath, true)
-                view.selectNikkeCL.gone()
-                selectNikke = nikke
-            }
-
-            override fun unSelect(nikke: Nikke) {
-                this.select(nikke)
-            }
-        }
+    private val db by lazy {
+        MyDataBaseHelper(this, "Nikke_balabala", 1)
     }
-    private val adapter by lazy {
-        object : MultipleTypeAdapter() {
-            override fun createViewHolder(
-                i: Int,
-                layoutInflater: LayoutInflater,
-                viewGroup: ViewGroup
-            ): RecyclerView.ViewHolder? = when (i) {
-                MyType.CHAT_LEFT_TEXT -> ChatLeftTextViewHolder(ItemChatLeftTextBinding.inflate(layoutInflater, viewGroup, false))
-                MyType.CHAT_RIGHT_TEXT -> ChatRightTextViewHolder(ItemChatRightTextBinding.inflate(layoutInflater, viewGroup, false))
-                MyType.CHAT_LEFT_IMAGE -> ChatLeftImageViewHolder(ItemChatLeftImageBinding.inflate(layoutInflater, viewGroup, false))
-                MyType.CHAT_RIGHT_IMAGE -> ChatRightImageViewHolder(ItemChatRightImageBinding.inflate(layoutInflater, viewGroup, false))
-                MyType.CHAT_SPLIT_LINE -> SplitViewHolder(ItemSplitLineBinding.inflate(layoutInflater, viewGroup, false))
-                MyType.CHAT_NARRATION -> NarrationViewHolder(ItemNarrationBinding.inflate(layoutInflater, viewGroup, false))
-                else -> null
-            }
-        }
-    }
-    private val avatarAdapter by lazy {
-        object : MultipleTypeAdapter() {
-            override fun createViewHolder(
-                i: Int,
-                layoutInflater: LayoutInflater,
-                viewGroup: ViewGroup
-            ): RecyclerView.ViewHolder? = when (i) {
-                MyType.NIKKE -> NikkeAvatarViewHolder(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false), selectNikkeListener, false)
-                MyType.ADD_NIKKE -> object : MultipleViewHolder<ItemSelectNikkeBinding, MultipleType>(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false)) {
-                    override fun setHolder(entity: MultipleType) {
-                        view.avatarIv.load(ResourceUtil.getString(R.string.base_url) + "more.png")
-                        view.root.singleClick {
-                            AddNikkeDialog(object : AddNikkeListener {
-                                override fun onClick(nikkes: ArrayList<Nikke>) {
-                                    val adapter = bindingAdapter as MultipleTypeAdapter
-                                    adapter.insert(adapter.itemCount - 1, nikkes)
-                                }
-                            }).show(supportFragmentManager)
-                        }
-                    }
-                }
-                else -> null
-            }
-        }
-    }
-    private val emojiAdapter by lazy {
-        object : SingleTypeAdapter<String>() {
-            override fun createViewHolder(
-                layoutInflater: LayoutInflater,
-                viewGroup: ViewGroup
-            ): RecyclerView.ViewHolder? = object : SingleViewHolder<ItemEmojiBinding, String>(ItemEmojiBinding.inflate(layoutInflater, viewGroup, false)) {
-                override fun setHolder(entity: String) {
-                    val width = getWidth() / 5
-                    view.root.layoutParams.width = width
-                    view.root.layoutParams.height = width
-                    view.emojiIv.load(entity, 6)
-                }
-            }
-        }
-    }
-    override fun bindLayout(): ActivityChatModifyBinding = ActivityChatModifyBinding.inflate(layoutInflater)
-
+    private lateinit var chat: Chat
     override fun initView() {
-        val nikkes = intent.getSerializableExtra("nikkes") as? CreateChat
-        nikkes?.let {
+        val chat = intent.getSerializableExtra("chat") as? Chat
+        chat?.let {
+            this.chat = it
             view.chatRv.adapter = adapter
             init(it)
-            adapter.add(ChatLeftText("aaaaaa", Nikke("红莲", "", R.drawable.chli)))
-            adapter.add(ChatLeftText("aaaaaa"))
-            adapter.add(ChatRightText("bbbbsajsaksjasa"))
-            adapter.add(ChatRightImage("https://i0.hdslb.com/bfs/archive/c1804552a49963d9c5c6be8d4d285e4ce12ad8d7.jpg@472w_264h_1c_!web-dynamic.webp"))
-            adapter.add(ChatLeftImage("https://album.biliimg.com/bfs/new_dyn/15293a912adc0f2d9ed60ffd4bfee754692529506.jpg@1048w_!web-dynamic.webp", Nikke("红莲", "", R.drawable.chli)))
-            adapter.add(ChatLeftImage("https://i0.hdslb.com/bfs/new_dyn/a86a7c0548d36d0a3b1fa5bf1a2ef64c336132667.png@1048w_!web-dynamic.webp"))
-            adapter.add(ChatLeftText("aaaaaa", Nikke("红莲", "", R.drawable.chli)))
-            adapter.add(ChatLeftText("aaaaaa"))
-            adapter.add(ChatRightText("bbbbsajsaksjasa"))
-            adapter.add(ChatRightImage("https://i0.hdslb.com/bfs/archive/c1804552a49963d9c5c6be8d4d285e4ce12ad8d7.jpg@472w_264h_1c_!web-dynamic.webp"))
-            adapter.add(ChatLeftImage("https://album.biliimg.com/bfs/new_dyn/15293a912adc0f2d9ed60ffd4bfee754692529506.jpg@1048w_!web-dynamic.webp", Nikke("红莲", "", R.drawable.chli)))
-            adapter.add(ChatLeftImage("https://i0.hdslb.com/bfs/new_dyn/a86a7c0548d36d0a3b1fa5bf1a2ef64c336132667.png@1048w_!web-dynamic.webp"))
             loadClick()
         }
     }
-    override fun subscribeUi() {
-    }
-    fun init(createChat: CreateChat) {
+
+    fun init(chat: Chat) {
         view.inputRcl.transitionToState(R.id.end)
-        nikkes = createChat.nikkes
-        if (createChat.name.isNullOrEmpty()) {
-            view.nameTv.text = nikkes.get(0).name
-        } else {
-            view.nameTv.text = createChat.name
-            createChat.name.toast()
-        }
+        nikkes = chat.nikkes
+        view.nameTv.text = chat.name
         avatarAdapter.add(Nikke("指挥官", "其它", ResourceUtil.getString(R.string.base_url) + ResourceUtil.getString(R.string.zhi)).also { selectNikke = it })
         view.avatarIv.load(selectNikke, true)
-        avatarAdapter.add(createChat.nikkes)
+        avatarAdapter.add(nikkes)
         avatarAdapter.add(object : MultipleType {
             override fun viewType(): Int = MyType.ADD_NIKKE
         })
         view.selectNikkeCL.adapter = avatarAdapter
         view.selectNikkeCL.addItemDecoration(SpanItemDecoration(4F, 8F, 2, true))
         view.emojiRv.adapter = emojiAdapter
+        val messages = db.selectAllMessageByChatId(chat.id)
+        adapter.addMessages(messages)
     }
     fun loadClick() {
         view.selectNikkeCL.tag = false
@@ -212,8 +119,26 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                 it1 ->
                             val s = result.get(0).realPath
                             if ("指挥官".equals(selectNikke.name)) {
+                                val message = Message(
+                                    0,
+                                    chat.id,
+                                    -1,
+                                    4,
+                                    s,
+                                    adapter.itemCount
+                                )
+                                message.id = db.insertMessage(message)
                                 adapter.add(ChatRightImage(s))
                             } else {
+                                val message = Message(
+                                    0,
+                                    chat.id,
+                                    selectNikke.id,
+                                    4,
+                                    s,
+                                    adapter.itemCount
+                                )
+                                message.id = db.insertMessage(message)
                                 adapter.add(ChatLeftImage(s, selectNikke))
                             }
                             view.chatRv.smoothScrollToPosition(adapter.itemCount - 1)
@@ -288,18 +213,58 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 when (selectType) {
                     1 -> {
                         if ("指挥官".equals(selectNikke.name)) {
+                            val message = Message(
+                                0,
+                                chat.id,
+                                -1,
+                                selectType,
+                                s,
+                                adapter.itemCount
+                            )
+                            message.id = db.insertMessage(message)
                             adapter.add(ChatRightText(s))
+                            chat.news = s
+                            db.updateChat(chat)
                         } else {
+                            val message = Message(
+                                0,
+                                chat.id,
+                                selectNikke.id,
+                                selectType,
+                                s,
+                                adapter.itemCount
+                            )
+                            message.id = db.insertMessage(message)
                             adapter.add(ChatLeftText(s, selectNikke))
+                            chat.news = s
+                            db.updateChat(chat)
                         }
                     }
                     2 -> {
+                        val message = Message(
+                            0,
+                            chat.id,
+                            selectNikke.id,
+                            selectType,
+                            s,
+                            adapter.itemCount
+                        )
+                        message.id = db.insertMessage(message)
                         adapter.add(object : MyType(s) {
                             override fun viewType(): Int = MyType.CHAT_NARRATION
                         })
                         view.inputRcl.transitionToState(R.id.tureEnd)
                     }
                     3 -> {
+                        val message = Message(
+                            0,
+                            chat.id,
+                            selectNikke.id,
+                            selectType,
+                            s,
+                            adapter.itemCount
+                        )
+                        message.id = db.insertMessage(message)
                         adapter.add(object : MyType(s) {
                             override fun viewType(): Int = MyType.CHAT_SPLIT_LINE
                         })
@@ -326,4 +291,65 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
             }
         })
     }
+    private val selectNikkeListener by lazy {
+        object : SelectNikkeListener {
+            override fun select(nikke: Nikke) {
+                view.avatarIv.load(nikke.avatarPath, true)
+                view.selectNikkeCL.gone()
+                selectNikke = nikke
+            }
+
+            override fun unSelect(nikke: Nikke) {
+                this.select(nikke)
+            }
+        }
+    }
+    private val adapter by lazy {
+        ChatAdapter(db)
+    }
+    private val avatarAdapter by lazy {
+        object : MultipleTypeAdapter() {
+            override fun createViewHolder(
+                i: Int,
+                layoutInflater: LayoutInflater,
+                viewGroup: ViewGroup
+            ): RecyclerView.ViewHolder? = when (i) {
+                MyType.NIKKE -> NikkeAvatarViewHolder(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false), selectNikkeListener, false)
+                MyType.ADD_NIKKE -> object : MultipleViewHolder<ItemSelectNikkeBinding, MultipleType>(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false)) {
+                    override fun setHolder(entity: MultipleType) {
+                        view.avatarIv.load(ResourceUtil.getString(R.string.base_url) + "more.png")
+                        view.root.singleClick {
+                            AddNikkeDialog(object : AddNikkeListener {
+                                override fun onClick(nikkes: ArrayList<Nikke>) {
+                                    val adapter = bindingAdapter as MultipleTypeAdapter
+                                    adapter.insert(adapter.itemCount - 1, nikkes)
+                                    chat.nikkes.addAll(nikkes)
+                                    chat.nikkeIds.addAll(nikkes.map { it.id })
+                                }
+                            }).show(supportFragmentManager)
+                        }
+                    }
+                }
+                else -> null
+            }
+        }
+    }
+    private val emojiAdapter by lazy {
+        object : SingleTypeAdapter<String>() {
+            override fun createViewHolder(
+                layoutInflater: LayoutInflater,
+                viewGroup: ViewGroup
+            ): RecyclerView.ViewHolder? = object : SingleViewHolder<ItemEmojiBinding, String>(ItemEmojiBinding.inflate(layoutInflater, viewGroup, false)) {
+                override fun setHolder(entity: String) {
+                    val width = getWidth() / 5
+                    view.root.layoutParams.width = width
+                    view.root.layoutParams.height = width
+                    view.emojiIv.load(entity, 6)
+                }
+            }
+        }
+    }
+    override fun subscribeUi() {
+    }
+    override fun bindLayout(): ActivityChatModifyBinding = ActivityChatModifyBinding.inflate(layoutInflater)
 }

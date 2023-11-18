@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import androidx.core.database.getIntOrNull
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -35,6 +36,7 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
         "\tid integer primary key autoincrement,\n" +
         "\tavatar text,\n" +
         "\tname text,\n" +
+        "\tnikkeids text,\n" +
         "\tnews text\n" +
         ");"
     override fun onCreate(db: SQLiteDatabase?) {
@@ -117,9 +119,28 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
     }
 
     @SuppressLint("Range")
-    fun selectNikkeById(id: Int): ArrayList<Nikke> {
-        val list = ArrayList<Nikke>()
+    fun selectNikkeById(id: Int): Nikke? {
+        var nikke: Nikke? = null
         val c = this.rd.rawQuery("select * from Nikke where id =  ?", arrayOf(id.toString()))
+        if (c.moveToFirst()) {
+            val name = c.getString(c.getColumnIndex("name"))
+            val avatar = c.getString(c.getColumnIndex("avatar"))
+            val enterprise = c.getString(c.getColumnIndex("enterprise"))
+            val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
+            nikke = Nikke(name, enterprise, avatar, id)
+            val emoji = c.getString(c.getColumnIndex("emoji"))
+            if (!emoji.isNullOrEmpty()) {
+                nikke.enoji = gson.fromJson<ArrayList<String>>(emoji, object : TypeToken<ArrayList<String>>() {}.type)
+            }
+        }
+        c.close()
+        return nikke
+    }
+
+    @SuppressLint("Range")
+    fun selectNikkeByIds(ids: ArrayList<Int>): ArrayList<Nikke> {
+        val list = ArrayList<Nikke>()
+        val c = this.rd.rawQuery("select * from Nikke where id in (${ids.joinToString()}) ", null)
         if (c.moveToFirst()) {
             do {
                 val name = c.getString(c.getColumnIndex("name"))
@@ -169,13 +190,68 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 val name = c.getString(c.getColumnIndex("name"))
                 val avatar = c.getString(c.getColumnIndex("avatar"))
                 val news = c.getString(c.getColumnIndex("news"))
+                val nikkeids = c.getString(c.getColumnIndex("nikkeids"))
+                val ids = gson.fromJson<ArrayList<Int>>(
+                    nikkeids,
+                    object : TypeToken<ArrayList<Int>>() {}.type
+                )
+                val nikkes = selectNikkeByIds(ids)
                 val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-                val nikke = Chat(id, name, avatar, news)
+                val nikke = Chat(id, name, avatar, news, ids, nikkes)
                 list.add(nikke)
             } while (c.moveToNext())
         }
         c.close()
         return list
+    }
+
+    @SuppressLint("Range")
+    fun selectChatById(id: Int): Chat? {
+        var res: Chat? = null
+        val c = this.rd.rawQuery("select * from chat where id = ?", arrayOf(id.toString()))
+        if (c.moveToFirst()) {
+            val name = c.getString(c.getColumnIndex("name"))
+            val avatar = c.getString(c.getColumnIndex("avatar"))
+            val news = c.getString(c.getColumnIndex("news"))
+            val nikkeids = c.getString(c.getColumnIndex("nikkeids"))
+            val ids = gson.fromJson<ArrayList<Int>>(
+                nikkeids,
+                object : TypeToken<ArrayList<Int>>() {}.type
+            )
+            val nikkes = selectNikkeByIds(ids)
+            val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
+            res = Chat(id, name, avatar, news, ids, nikkes)
+        }
+        c.close()
+        return res
+    }
+
+    @SuppressLint("Range")
+    fun insertChat(chat: Chat): Int {
+        Log.d("TAG", "selectAllexceptionChat:" + gson.toJson(chat.nikkeIds))
+        return this.wd.insert(
+            "chat",
+            null,
+            ContentValues().apply {
+                put("name", chat.name)
+                put("avatar", chat.avatar)
+                put("news", chat.news)
+                put("nikkeids", gson.toJson(chat.nikkeIds))
+            }
+        ).toInt()
+    }
+    fun updateChat(chat: Chat) {
+        wd.update(
+            "chat",
+            ContentValues().apply {
+                put("name", chat.name)
+                put("avatar", chat.avatar)
+                put("news", chat.news)
+                put("nikkeids", gson.toJson(chat.nikkeIds))
+            },
+            "id = ?",
+            arrayOf(chat.id.toString())
+        )
     }
     private val cms = "create table message(\n" +
         "\tid integer primary key autoincrement,\n" +
@@ -192,19 +268,20 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
         val c = this.rd.rawQuery("select * from message where chatid = ? ", arrayOf(id.toString()))
         if (c.moveToFirst()) {
             do {
-                val id = c.getInt(c.getColumnIndex("name"))
+                val id = c.getInt(c.getColumnIndex("id"))
                 val chatid = c.getInt(c.getColumnIndex("chatid"))
                 val type = c.getInt(c.getColumnIndex("type"))
                 val nikkeid = c.getInt(c.getColumnIndex("nikkeid"))
                 val position = c.getInt(c.getColumnIndex("position"))
                 val content = c.getString(c.getColumnIndex("content"))
-                val message = Message(id, chatid, type, nikkeid, content, position)
+                val message = Message(id, chatid, nikkeid, type, content, position)
                 list.add(message)
             } while (c.moveToNext())
         }
         c.close()
         return list
     }
+
     private val rd by lazy { this.readableDatabase }
     private val wd by lazy { this.writableDatabase }
     fun insertMessage(message: Message): Int {
@@ -212,12 +289,11 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
             "message",
             null,
             ContentValues().apply {
-                put("id", message.id)
                 put("chatid", message.chatId)
+                put("type", message.type)
                 put("nikkeid", message.nikkeId)
                 put("position", message.postion)
                 put("content", message.content)
-                put("id", message.id)
             }
         ).toInt()
     }

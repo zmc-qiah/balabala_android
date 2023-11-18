@@ -25,7 +25,7 @@ class AddNikkeDialog(var listener: AddNikkeListener) : BaseDialog<DialogCreateNi
     init {
         gravity = Gravity.BOTTOM
         enableBack = true
-        height = getHeight()
+        height = getHeight() / 5 * 4
         alpha = 0.3f
     }
     private val SelectNikkeListener by lazy {

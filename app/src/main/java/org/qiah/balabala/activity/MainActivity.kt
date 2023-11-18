@@ -20,6 +20,7 @@ class MainActivity : BaseActivity<LayoutMainBinding>() {
     private lateinit var fragments: MutableList<Fragment>
     override fun initView() {
         view.viewPage.adapter = adapter
+        view.viewPage.isUserInputEnabled = false
         TabLayoutMediator(view.tableLayout, view.viewPage) { tab, i ->
             tab.text = tabs.get(i).name
         }.attach()

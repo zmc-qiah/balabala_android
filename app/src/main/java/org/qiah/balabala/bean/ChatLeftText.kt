@@ -6,7 +6,7 @@ data class ChatLeftText(
     val text: String
 ) : MyType() {
     var nikke: Nikke? = null
-    constructor(text: String, nikke: Nikke) : this(text) {
+    constructor(text: String, nikke: Nikke?) : this(text) {
         this.nikke = nikke
     }
     override fun viewType(): Int = CHAT_LEFT_TEXT

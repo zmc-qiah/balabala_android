@@ -6,7 +6,7 @@ class ChatLeftImage(
     val path: String
 ) : MyType() {
     var nikke: Nikke? = null
-    constructor(path: String, nikke: Nikke) : this(path) {
+    constructor(path: String, nikke: Nikke?) : this(path) {
         this.nikke = nikke
     }
     override fun viewType(): Int = MyType.CHAT_LEFT_IMAGE

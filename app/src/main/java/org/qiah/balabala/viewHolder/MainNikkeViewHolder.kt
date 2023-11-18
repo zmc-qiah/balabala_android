@@ -1,12 +1,21 @@
 package org.qiah.balabala.viewHolder
 
-import org.qiah.balabala.bean.MainNikke
+import android.util.Log
+import org.qiah.balabala.MyListener.ClickItemListener
+import org.qiah.balabala.bean.Chat
 import org.qiah.balabala.databinding.ItemNikkeMainBinding
+import org.qiah.balabala.util.load
+import org.qiah.balabala.util.singleClick
 
-class MainNikkeViewHolder(binding: ItemNikkeMainBinding) : MultipleViewHolder<ItemNikkeMainBinding, MainNikke>(binding) {
-    override fun setHolder(entity: MainNikke) {
-        view.nikkeIv.setImageDrawable(entity.drawable)
+class MainNikkeViewHolder(binding: ItemNikkeMainBinding, val listener: ClickItemListener<Chat>? = null) : MultipleViewHolder<ItemNikkeMainBinding, Chat>(binding) {
+    override fun setHolder(entity: Chat) {
+        Log.d("chat", "setHolder: +" + entity)
+        view.nikkeIv.load(entity.avatar)
         view.nikkeTv.text = entity.name
-        view.messageTv.text = entity.message
+        view.messageTv.text = entity.news
+        view.root.singleClick {
+            listener?.onClick(entity)
+            listener?.onClick(entity, bindingAdapterPosition)
+        }
     }
 }
