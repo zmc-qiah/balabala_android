@@ -24,6 +24,18 @@ abstract class MultipleTypeAdapter() :
         val holder1 = holder as MultipleViewHolder<*, MultipleType>
         holder1.setHolder(data[position])
     }
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (!payloads.isNullOrEmpty()) {
+            val holder1 = holder as MultipleViewHolder<*, MultipleType>
+            holder.setHolder(data.get(position), payloads[0])
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
 
     override fun getItemViewType(position: Int): Int {
         return data[position].viewType()

@@ -1,9 +1,8 @@
 package org.qiah.balabala.bean
 
-import org.qiah.balabala.util.MyType
-
-data class ChatRightText(
+class ChatRightText(
+    message: Message,
     val text: String
-) : MyType() {
+) : ChatItem(message) {
     override fun viewType(): Int = CHAT_RIGHT_TEXT
 }

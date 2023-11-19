@@ -2,6 +2,7 @@ package org.qiah.balabala.activity
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import org.qiah.balabala.MyListener.AddNikkeListener
+import org.qiah.balabala.MyListener.ClickModifyDialogListener
 import org.qiah.balabala.MyListener.SelectNikkeListener
 import org.qiah.balabala.R
 import org.qiah.balabala.SQLite.MyDataBaseHelper
@@ -17,6 +19,7 @@ import org.qiah.balabala.adapter.ChatAdapter
 import org.qiah.balabala.adapter.MultipleTypeAdapter
 import org.qiah.balabala.adapter.SingleTypeAdapter
 import org.qiah.balabala.bean.Chat
+import org.qiah.balabala.bean.ChatItem
 import org.qiah.balabala.bean.ChatLeftImage
 import org.qiah.balabala.bean.ChatLeftText
 import org.qiah.balabala.bean.ChatRightImage
@@ -32,6 +35,7 @@ import org.qiah.balabala.util.MultipleType
 import org.qiah.balabala.util.MyType
 import org.qiah.balabala.util.ResourceUtil
 import org.qiah.balabala.util.SpanItemDecoration
+import org.qiah.balabala.util.enen
 import org.qiah.balabala.util.getWidth
 import org.qiah.balabala.util.gone
 import org.qiah.balabala.util.hideKeyboard
@@ -39,6 +43,7 @@ import org.qiah.balabala.util.load
 import org.qiah.balabala.util.show
 import org.qiah.balabala.util.showKeyboard
 import org.qiah.balabala.util.singleClick
+import org.qiah.balabala.util.toast
 import org.qiah.balabala.viewHolder.MultipleViewHolder
 import org.qiah.balabala.viewHolder.NikkeAvatarViewHolder
 import org.qiah.balabala.viewHolder.SingleViewHolder
@@ -52,6 +57,10 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
         MyDataBaseHelper(this, "Nikke_balabala", 1)
     }
     private lateinit var chat: Chat
+    private var isModify: Boolean = false
+    private var isInsert: Boolean = false
+    private var modifyPosition: Int = 0
+    private lateinit var modifyCI: ChatItem
     override fun initView() {
         val chat = intent.getSerializableExtra("chat") as? Chat
         chat?.let {
@@ -125,10 +134,22 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                     -1,
                                     4,
                                     s,
-                                    adapter.itemCount
+                                    if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
                                 )
-                                message.id = db.insertMessage(message)
-                                adapter.add(ChatRightImage(s))
+                                if (!isModify) {
+                                    message.id = db.insertMessage(message)
+                                } else {
+                                    message.id = modifyCI.message.id
+                                    Log.d("addMessages", "onResult: " + message.postion + message.postion)
+                                    db.updateMessage(message)
+                                }
+                                if (!isModify && !isInsert) {
+                                    adapter.add(ChatRightImage(message, s))
+                                } else if (isInsert) {
+                                    adapter.insertMessage(ChatRightImage(message, s))
+                                } else {
+                                    adapter.updateMessage(ChatRightImage(message, s))
+                                }
                             } else {
                                 val message = Message(
                                     0,
@@ -136,13 +157,26 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                     selectNikke.id,
                                     4,
                                     s,
-                                    adapter.itemCount
+                                    if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
                                 )
-                                message.id = db.insertMessage(message)
-                                adapter.add(ChatLeftImage(s, selectNikke))
+                                if (!isModify) {
+                                    message.id = db.insertMessage(message)
+                                } else {
+                                    message.id = modifyCI.message.id
+                                    db.updateMessage(message)
+                                }
+                                if (!isModify && !isInsert) {
+                                    adapter.add(ChatLeftImage(message, s, selectNikke))
+                                } else if (isInsert) {
+                                    adapter.insertMessage(ChatLeftImage(message, s, selectNikke))
+                                } else {
+                                    adapter.updateMessage(ChatLeftImage(message, s, selectNikke))
+                                }
                             }
-                            view.chatRv.smoothScrollToPosition(adapter.itemCount - 1)
+                            view.chatRv.smoothScrollToPosition(if (!isModify && !isInsert) adapter.itemCount - 1 else modifyPosition + 1)
                             view.emojiRv.gone()
+                            isModify = false
+                            isInsert = false
                         }
                     }
                     override fun onCancel() {
@@ -219,10 +253,21 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                 -1,
                                 selectType,
                                 s,
-                                adapter.itemCount
+                                if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
                             )
-                            message.id = db.insertMessage(message)
-                            adapter.add(ChatRightText(s))
+                            if (!isModify) {
+                                message.id = db.insertMessage(message)
+                            } else {
+                                message.id = modifyCI.message.id
+                                db.updateMessage(message)
+                            }
+                            if (!isModify && !isInsert) {
+                                adapter.add(ChatRightText(message, s))
+                            } else if (isInsert) {
+                                adapter.insertMessage(ChatRightText(message, s))
+                            } else {
+                                adapter.updateMessage(ChatRightText(message, s))
+                            }
                             chat.news = s
                             db.updateChat(chat)
                         } else {
@@ -232,10 +277,21 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                 selectNikke.id,
                                 selectType,
                                 s,
-                                adapter.itemCount
+                                if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
                             )
-                            message.id = db.insertMessage(message)
-                            adapter.add(ChatLeftText(s, selectNikke))
+                            if (!isModify) {
+                                message.id = db.insertMessage(message)
+                            } else {
+                                message.id = modifyCI.message.id
+                                db.updateMessage(message)
+                            }
+                            if (!isModify && !isInsert) {
+                                adapter.add(ChatLeftText(message, s, selectNikke))
+                            } else if (isInsert) {
+                                adapter.insertMessage(ChatLeftText(message, s, selectNikke))
+                            } else {
+                                adapter.updateMessage(ChatLeftText(message, s, selectNikke))
+                            }
                             chat.news = s
                             db.updateChat(chat)
                         }
@@ -247,12 +303,23 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                             selectNikke.id,
                             selectType,
                             s,
-                            adapter.itemCount
+                            if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
                         )
                         message.id = db.insertMessage(message)
-                        adapter.add(object : MyType(s) {
-                            override fun viewType(): Int = MyType.CHAT_NARRATION
-                        })
+                        if (!isModify && !isInsert) {
+                            adapter.add(object : ChatItem(message, s) {
+                                override fun viewType(): Int = MyType.CHAT_NARRATION
+                            })
+                        } else if (isInsert) {
+                            adapter.insertMessage(object : ChatItem(message, s) {
+                                override fun viewType(): Int = MyType.CHAT_NARRATION
+                            })
+                        } else {
+                            adapter.updateMessage(object : ChatItem(message, s) {
+                                override fun viewType(): Int = MyType.CHAT_NARRATION
+                            })
+                        }
+
                         view.inputRcl.transitionToState(R.id.tureEnd)
                     }
                     3 -> {
@@ -262,19 +329,39 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                             selectNikke.id,
                             selectType,
                             s,
-                            adapter.itemCount
+                            if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else {
+                                modifyPosition + 1
+                            }
                         )
-                        message.id = db.insertMessage(message)
-                        adapter.add(object : MyType(s) {
-                            override fun viewType(): Int = MyType.CHAT_SPLIT_LINE
-                        })
+                        if (!isModify) {
+                            message.id = db.insertMessage(message)
+                        } else {
+                            message.id = modifyCI.message.id
+                            db.updateMessage(message)
+                        }
+                        if (!isModify && !isInsert) {
+                            adapter.add(object : ChatItem(message, s) {
+                                override fun viewType(): Int = MyType.CHAT_SPLIT_LINE
+                            })
+                        } else if (isInsert) {
+                            adapter.insertMessage(object : ChatItem(message, s) {
+                                override fun viewType(): Int = MyType.CHAT_SPLIT_LINE
+                            })
+                        } else {
+                            adapter.updateMessage(object : ChatItem(message, s) {
+                                override fun viewType(): Int = MyType.CHAT_SPLIT_LINE
+                            })
+                        }
                         view.inputRcl.transitionToState(R.id.tureEnd)
                     }
                 }
-                view.chatRv.smoothScrollToPosition(adapter.itemCount - 1)
+                enen()
+                view.chatRv.smoothScrollToPosition(if (!isModify && !isInsert) adapter.itemCount - 1 else modifyPosition + 1)
                 view.sendEt.setText("")
                 hideKeyboard(view.sendEt)
                 view.emojiRv.gone()
+                isModify = false
+                isInsert = false
             }
         }
         view.sendEt.addTextChangedListener(object : TextWatcher {
@@ -290,6 +377,10 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 }
             }
         })
+        view.topView.singleClick {
+            isModify = false
+            isInsert = false
+        }
     }
     private val selectNikkeListener by lazy {
         object : SelectNikkeListener {
@@ -304,9 +395,30 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
             }
         }
     }
-    private val adapter by lazy {
-        ChatAdapter(db)
+    private val modifyDialogListener: ClickModifyDialogListener = object : ClickModifyDialogListener {
+        override fun onInsert(entry: ChatItem, position: Int) {
+            "正常输入一条消息后插入到下面,点击顶部黄色区域取消".toast()
+            modifyCI = entry
+            modifyPosition = entry.message.postion
+            isInsert = true
+            isModify = false
+        }
+
+        override fun onUpdate(entry: ChatItem, position: Int) {
+            "正常输入一条消息后覆盖此消息,点击顶部黄色区域取消".toast()
+            modifyCI = entry
+            modifyPosition = entry.message.postion
+            modifyPosition = entry.message.postion
+            isInsert = false
+            isModify = true
+        }
+
+        override fun onDelete(entry: ChatItem, position: Int) {
+            db.deleteMessage(entry.message)
+            adapter.deleteMessage(entry.message)
+        }
     }
+    private val adapter: ChatAdapter = ChatAdapter(db, supportFragmentManager, modifyDialogListener)
     private val avatarAdapter by lazy {
         object : MultipleTypeAdapter() {
             override fun createViewHolder(

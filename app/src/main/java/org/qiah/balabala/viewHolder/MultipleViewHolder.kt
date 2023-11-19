@@ -19,4 +19,6 @@ abstract class MultipleViewHolder<V : ViewBinding?, T : MultipleType?>(var view:
     }
 
     abstract fun setHolder(entity: T)
+    open fun setHolder(entity: T, payload: Any) {
+    }
 }

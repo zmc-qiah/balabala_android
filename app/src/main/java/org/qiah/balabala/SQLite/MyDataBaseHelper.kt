@@ -261,6 +261,38 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
         "\tcontent text default '',\n" +
         "\tposition integer default 0\n" +
         ")"
+    fun updateMessage(message: Message) {
+        Log.d("addMessages", "updateMessage: " + message.postion + message.content)
+        wd.update(
+            "message",
+            ContentValues().apply {
+                put("chatid", message.chatId)
+                put("type", message.type)
+                put("nikkeid", message.nikkeId)
+                put("content", message.content)
+            },
+            "id = ?",
+            arrayOf(message.id.toString())
+        )
+    }
+
+    @SuppressLint("Range")
+    fun deleteMessage(message: Message) {
+        val c = this.rd.rawQuery("select * from message where chatid = ? and position > ? ", arrayOf(message.chatId.toString(), (message.postion).toString()))
+        if (c.moveToFirst()) {
+            do {
+                val id = c.getInt(c.getColumnIndex("id"))
+                val np = c.getInt(c.getColumnIndex("position")) - 1
+                wd.execSQL("UPDATE message SET position = ? WHERE id = ?;", arrayOf(np, id))
+                Log.d("addMessages", "selectAllMessageByChatId: " + np)
+            } while (c.moveToNext())
+        }
+        wd.delete(
+            "message",
+            "id = ?",
+            arrayOf(message.id.toString())
+        )
+    }
 
     @SuppressLint("Range")
     fun selectAllMessageByChatId(id: Int): ArrayList<Message> {
@@ -273,6 +305,7 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 val type = c.getInt(c.getColumnIndex("type"))
                 val nikkeid = c.getInt(c.getColumnIndex("nikkeid"))
                 val position = c.getInt(c.getColumnIndex("position"))
+                Log.d("addMessages", "selectAllMessageByChatId: " + position)
                 val content = c.getString(c.getColumnIndex("content"))
                 val message = Message(id, chatid, nikkeid, type, content, position)
                 list.add(message)
@@ -284,8 +317,21 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
 
     private val rd by lazy { this.readableDatabase }
     private val wd by lazy { this.writableDatabase }
+
+    @SuppressLint("Range")
     fun insertMessage(message: Message): Int {
-        return this.wd.insert(
+        Log.d("addMessages", "insertMessage: " + message.postion + message.content)
+        val c = this.rd.rawQuery("select * from message where chatid = ? and position > ? ", arrayOf(message.chatId.toString(), (message.postion - 1).toString()))
+        if (c.moveToFirst()) {
+            do {
+                val id = c.getInt(c.getColumnIndex("id"))
+                val np = c.getInt(c.getColumnIndex("position")) + 1
+                wd.execSQL("UPDATE message SET position = ? WHERE id = ?;", arrayOf(np, id))
+                Log.d("addMessages", "selectAllMessageByChatId: " + np)
+            } while (c.moveToNext())
+        }
+        c.close()
+        val a = this.wd.insert(
             "message",
             null,
             ContentValues().apply {
@@ -296,5 +342,6 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 put("content", message.content)
             }
         ).toInt()
+        return a
     }
 }

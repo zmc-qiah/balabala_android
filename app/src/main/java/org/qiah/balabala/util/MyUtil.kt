@@ -3,6 +3,7 @@ package org.qiah.balabala.util
 import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.os.Vibrator
 import android.util.Log
 import android.util.TypedValue
 import android.view.TouchDelegate
@@ -41,13 +42,17 @@ fun showKeyboard(view: View?) {
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 }
+fun enen(time: Long = 50) {
+    val vibrator = BaseApplication.context().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    vibrator.vibrate(time)
+}
 
 /**
  * @author : Wangjf
  * @date : 2021/1/19
  */
 fun String.toast() {
-    Toast.makeText(BaseApplication.context(), this, Toast.LENGTH_SHORT).show()
+    Toast.makeText(BaseApplication.context(), this, Toast.LENGTH_LONG).show()
 }
 
 // 触摸区域扩大

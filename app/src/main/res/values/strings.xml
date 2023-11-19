@@ -8,6 +8,9 @@
     <string name="base_url">https://nikke-balabala.obs.cn-east-3.myhuaweicloud.com/</string>
     <string name="zhi">zhi.png</string>
     <string name="nikke">nikke/</string>
+    <string name="icon_update">&#xe600;</string>
+    <string name="icon_inset">&#xe63f;</string>
+    <string name="icon_delete">&#xe63a;</string>
 
 
 

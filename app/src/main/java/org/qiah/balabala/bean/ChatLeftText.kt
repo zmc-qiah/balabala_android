@@ -1,12 +1,11 @@
 package org.qiah.balabala.bean
 
-import org.qiah.balabala.util.MyType
-
-data class ChatLeftText(
+class ChatLeftText(
+    message: Message,
     val text: String
-) : MyType() {
+) : ChatItem(message) {
     var nikke: Nikke? = null
-    constructor(text: String, nikke: Nikke?) : this(text) {
+    constructor(message: Message, text: String, nikke: Nikke?) : this(message, text) {
         this.nikke = nikke
     }
     override fun viewType(): Int = CHAT_LEFT_TEXT

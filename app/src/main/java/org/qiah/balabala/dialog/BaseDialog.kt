@@ -61,7 +61,6 @@ abstract class BaseDialog<T : ViewBinding> : DialogFragment() {
             if (fragment == null || !fragment.isAdded) {
                 // 在每个add事务前增加一个remove事务，防止连续的add
                 manager.beginTransaction().remove(this).commitAllowingStateLoss()
-
                 val trans = manager.beginTransaction()
                 trans.add(this, tag)
                 trans.commitAllowingStateLoss()
@@ -85,7 +84,6 @@ abstract class BaseDialog<T : ViewBinding> : DialogFragment() {
                 }
                 setDimAmount(alpha)
                 setGravity(gravity)
-
                 setLayout(this@BaseDialog.width, this@BaseDialog.height)
             }
             setCanceledOnTouchOutside(ifCancelOnTouch)

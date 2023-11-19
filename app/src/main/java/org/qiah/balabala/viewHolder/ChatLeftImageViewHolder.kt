@@ -1,5 +1,6 @@
 package org.qiah.balabala.viewHolder
 
+import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.bean.ChatLeftImage
 import org.qiah.balabala.bean.ChatLeftText
 import org.qiah.balabala.databinding.ItemChatLeftImageBinding
@@ -9,7 +10,7 @@ import org.qiah.balabala.util.gone
 import org.qiah.balabala.util.load
 import org.qiah.balabala.util.show
 
-class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) -> MultipleType) : MultipleViewHolder<ItemChatLeftImageBinding, ChatLeftImage>(view) {
+class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) -> MultipleType, val onLongItemListener: LongItemListener) : MultipleViewHolder<ItemChatLeftImageBinding, ChatLeftImage>(view) {
     override fun setHolder(entity: ChatLeftImage) {
         if (absoluteAdapterPosition == 0 ||
             entity.nikke == null
@@ -40,5 +41,16 @@ class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) 
             }
         }
         view.messageIv.load(entity.path, (getWidth() * 0.7).toInt(), 16)
+        view.root.setOnLongClickListener {
+            val location = IntArray(2)
+            view.root.getLocationOnScreen(location)
+            onLongItemListener.onLongClick(location, absoluteAdapterPosition, entity)
+            view.root.alpha = 0.7f
+            true
+        }
+    }
+    override fun setHolder(entity: ChatLeftImage, payload: Any) {
+        super.setHolder(entity, payload)
+        view.root.alpha = 1f
     }
 }

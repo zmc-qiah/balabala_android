@@ -6,5 +6,5 @@ data class Message(
     val nikkeId: Int,
     val type: Int,
     val content: String,
-    val postion: Int
+    var postion: Int
 )
