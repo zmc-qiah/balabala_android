@@ -10,7 +10,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_percent="0.19"
         android:id="@+id/topView"/>
-    <org.qiah.balabala.util.NormalTextView
+    <org.qiah.balabala.widget.NormalTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"

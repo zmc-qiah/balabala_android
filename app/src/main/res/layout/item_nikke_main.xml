@@ -3,32 +3,44 @@
     app:round_corner="6dp"
     android:elevation="3dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="@drawable/round_bg_grey_12"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp">
-    <ImageView
-        android:layout_width="90dp"
+    <org.qiah.balabala.widget.NikkeAvatarIV
+        android:layout_width="80dp"
         android:layout_height="match_parent"
         android:id="@+id/nikkeIv"
         android:scaleType="centerCrop"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
-    <TextView
+    <org.qiah.balabala.widget.BoldTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/mid_text_size"
         app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@id/messageTv"
         app:layout_constraintStart_toEndOf="@id/nikkeIv"
         android:layout_marginStart="20dp"
+        android:textColor="@color/black"
+        android:textStyle="normal"
         android:id="@+id/nikkeTv"/>
-    <TextView
+    <org.qiah.balabala.widget.NormalTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/top_yellow"
+
         app:layout_constraintTop_toBottomOf="@id/nikkeTv"
         app:layout_constraintStart_toEndOf="@id/nikkeIv"
+        app:layout_constraintBaseline_toBottomOf="parent"
         android:layout_marginStart="20dp"
+        android:textSize="@dimen/mid_text_size"
+        android:textColor="@color/common_text_black"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/messageTv"/>
 </org.qiah.balabala.util.RoundConstraintLayout>

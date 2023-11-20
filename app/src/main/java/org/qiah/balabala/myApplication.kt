@@ -13,6 +13,9 @@ class myApplication : BaseApplication() {
     }
 
     override fun normalPath(): String {
-        return "sourcehansans.ttf"
+        return "SourceHanSansCN-Normal#1.otf"
+    }
+    override fun blodPath(): String {
+        return "SourceHanSansCN-Bold#1.otf"
     }
 }

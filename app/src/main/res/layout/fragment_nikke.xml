@@ -6,7 +6,7 @@
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <org.qiah.balabala.util.IconFont
+    <org.qiah.balabala.widget.IconFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/icon_sort_1"
@@ -27,9 +27,9 @@
         app:layout_constraintBottom_toBottomOf="@id/sortIcon"
         app:layout_constraintEnd_toStartOf="@id/sortIcon"
         android:layout_marginEnd="20dp"/>
-    <org.qiah.balabala.util.NormalTextView
+    <org.qiah.balabala.widget.NormalTextView
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/sortTv"
         android:text="最新消息"
         android:gravity="center"
@@ -41,12 +41,12 @@
         app:layout_constraintBottom_toBottomOf="@id/sortIcon"
         app:layout_constraintEnd_toStartOf="@id/lineView1"
         />
-    <org.qiah.balabala.util.NormalTextView
+    <org.qiah.balabala.widget.NormalTextView
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:textSize="@dimen/Big_text_size"
         android:textColor="@color/icon_grey"
-        android:text="最新消息:()"
+        android:text="对话清单:()"
         android:id="@+id/numsTv"
         app:layout_constraintTop_toTopOf="@id/sortIcon"
         app:layout_constraintBottom_toBottomOf="@id/sortIcon"

@@ -6,7 +6,7 @@
     app:round_corner="4dp"
     android:padding="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <org.qiah.balabala.util.IconFont
+    <org.qiah.balabala.widget.IconFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/icon_update"
@@ -20,7 +20,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/insertIcon"
         app:layout_constraintBottom_toTopOf="@id/updateTextView">
-    </org.qiah.balabala.util.IconFont>
+    </org.qiah.balabala.widget.IconFont>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@id/updateIcon"
         app:layout_constraintRight_toRightOf="@id/updateIcon">
     </TextView>
-    <org.qiah.balabala.util.IconFont
+    <org.qiah.balabala.widget.IconFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/icon_inset"
@@ -47,7 +47,7 @@
         app:layout_constraintLeft_toRightOf="@id/updateIcon"
         app:layout_constraintRight_toLeftOf="@id/deleteIcon"
         app:layout_constraintBottom_toTopOf="@id/insertTv">
-    </org.qiah.balabala.util.IconFont>
+    </org.qiah.balabala.widget.IconFont>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@id/insertIcon"
         app:layout_constraintRight_toRightOf="@id/insertIcon">
     </TextView>
-    <org.qiah.balabala.util.IconFont
+    <org.qiah.balabala.widget.IconFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/icon_delete"
@@ -74,7 +74,7 @@
         app:layout_constraintStart_toEndOf="@id/insertIcon"
         app:layout_constraintBottom_toTopOf="@id/deleteTextView"
         app:layout_constraintEnd_toEndOf="parent">
-    </org.qiah.balabala.util.IconFont>
+    </org.qiah.balabala.widget.IconFont>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

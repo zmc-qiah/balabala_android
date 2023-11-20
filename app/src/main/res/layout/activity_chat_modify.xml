@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_percent="0.15"
         android:id="@+id/topView"/>
-    <org.qiah.balabala.util.IconFont
+    <org.qiah.balabala.widget.IconFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +145,7 @@
                 app:layout_constraintEnd_toStartOf="@id/pictureIcon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@id/avatarIv"/>
-            <org.qiah.balabala.util.IconFont
+            <org.qiah.balabala.widget.IconFont
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/icon_picture"
@@ -168,7 +168,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
-            <org.qiah.balabala.util.IconFont
+            <org.qiah.balabala.widget.IconFont
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/icon_picture"

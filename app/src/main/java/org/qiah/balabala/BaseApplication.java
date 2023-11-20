@@ -25,9 +25,11 @@ public abstract class BaseApplication extends Application {
         List<String> paths = new ArrayList<>();
         paths.add(iconFontPath());
         paths.add(normalPath());
+        paths.add(blodPath());
         IconFontManager.initAsset(paths);
     }
 
     protected abstract String iconFontPath();
     protected abstract String normalPath();
+    protected abstract String blodPath();
 }

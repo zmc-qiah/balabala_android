@@ -74,7 +74,7 @@
                 app:layout_constraintTop_toBottomOf="@id/aTv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-                <org.qiah.balabala.util.IconFont
+                <org.qiah.balabala.widget.IconFont
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/searchIcon"

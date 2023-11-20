@@ -22,7 +22,7 @@ class TopView @JvmOverloads constructor(
         paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.FILL
             color = ResourceUtil.getColor(R.color.top_point)
-            alpha = 125
+            alpha = 100
         }
     }
     override fun onDraw(canvas: Canvas?) {
