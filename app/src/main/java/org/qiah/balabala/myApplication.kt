@@ -16,6 +16,6 @@ class myApplication : BaseApplication() {
         return "SourceHanSansCN-Normal#1.otf"
     }
     override fun blodPath(): String {
-        return "SourceHanSansCN-Bold#1.otf"
+        return "SourceHanSansCN-Heavy#1.otf"
     }
 }

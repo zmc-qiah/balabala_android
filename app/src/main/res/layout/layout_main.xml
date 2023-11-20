@@ -10,12 +10,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_percent="0.19"
         android:id="@+id/topView"/>
-    <org.qiah.balabala.widget.NormalTextView
+    <org.qiah.balabala.widget.BoldTextView
+        android:id="@+id/aTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="27sp"
-        android:text="balabala"
+        android:textSize="42sp"
+        android:text="blabla"
         app:layout_constraintTop_toTopOf="@id/topView"
         app:layout_constraintBottom_toBottomOf="@id/topView"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +32,14 @@
         android:background="@color/transparent"
         app:tabTextColor="@color/white"
         app:tabMode="fixed"
-        app:layout_constraintBottom_toBottomOf="@id/topView"/>
+        app:layout_constraintBottom_toBottomOf="@id/line1"/>
+    <View
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/topView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="3dp"
+        android:id="@+id/line1"/>
     <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -17,7 +17,7 @@ class TopView @JvmOverloads constructor(
     private val TAG = TopView::class.simpleName
     private val paint: Paint
     private val point = 8
-    private val space = 8
+    private val space = 5
     init {
         paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.FILL

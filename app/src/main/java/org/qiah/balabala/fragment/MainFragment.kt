@@ -53,11 +53,12 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
 
     override fun initView() {
         find.chatRv.adapter = adapter
-        find.chatRv.addItemDecoration(CommonItemDecoration(12F, CommonItemDecoration.VERTICAL))
+        find.chatRv.addItemDecoration(CommonItemDecoration(18F, CommonItemDecoration.VERTICAL))
         find.createBtn.singleClick {
             dialog.show(parentFragmentManager)
         }
         val chat = db.selectAllChat()
+        find.numsTv.text = "对话清单:(${chat.size})"
         adapter.add(chat)
     }
 
@@ -89,6 +90,7 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
                 Log.d("TAG", "selectAllexceptionChat:: " + chat.toString())
                 chat.id = db.insertChat(chat)
                 adapter.add(chat)
+                find.numsTv.text = "对话清单:(${adapter.itemCount})"
                 val intent = Intent(requireActivity(), ModifyChatActivity::class.java)
                 intent.putExtra("chat", chat)
                 startActivity(intent)

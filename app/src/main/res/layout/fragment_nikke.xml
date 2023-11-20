@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/icon_sort_1"
         android:textColor="@color/icon_grey"
-        android:textSize="@dimen/mid_icon_size"
+        android:textSize="@dimen/small_icon_size"
         android:layout_marginTop="20dp"
         android:id="@+id/sortIcon"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,33 +19,31 @@
     <View
         android:layout_width="2dp"
         android:layout_height="0dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
         android:id="@+id/lineView1"
         android:background="@color/line_grey"
         app:layout_constraintTop_toTopOf="@id/sortIcon"
         app:layout_constraintBottom_toBottomOf="@id/sortIcon"
         app:layout_constraintEnd_toStartOf="@id/sortIcon"
-        android:layout_marginEnd="20dp"/>
-    <org.qiah.balabala.widget.NormalTextView
+        android:layout_marginEnd="12dp"/>
+    <org.qiah.balabala.widget.BoldTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sortTv"
         android:text="最新消息"
         android:gravity="center"
-        android:textSize="@dimen/Big_text_size"
-        android:textColor="@color/icon_grey"
-        android:layout_marginEnd="20dp"
+        android:textSize="@dimen/title_text_size"
+        android:textColor="@color/common_text_black"
+        android:layout_marginEnd="6dp"
         android:background="@color/transparent"
-        app:layout_constraintTop_toTopOf="@id/sortIcon"
-        app:layout_constraintBottom_toBottomOf="@id/sortIcon"
+        app:layout_constraintTop_toTopOf="@id/numsTv"
+        app:layout_constraintBottom_toBottomOf="@id/numsTv"
         app:layout_constraintEnd_toStartOf="@id/lineView1"
         />
-    <org.qiah.balabala.widget.NormalTextView
+    <org.qiah.balabala.widget.BoldTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/Big_text_size"
-        android:textColor="@color/icon_grey"
+        android:textSize="@dimen/title_text_size"
+        android:textColor="@color/common_text_black"
         android:text="对话清单:()"
         android:id="@+id/numsTv"
         app:layout_constraintTop_toTopOf="@id/sortIcon"
@@ -53,16 +51,21 @@
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         />
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:id="@+id/chatRv"
         android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="@id/numsTv"
-        app:layout_constraintEnd_toEndOf="@id/sortIcon"
+        android:paddingTop="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/sortIcon"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/numsTv"
         app:layout_constraintTop_toBottomOf="@id/numsTv"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintVertical_bias="1.0" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -20,7 +20,7 @@ class NikkeAvatarIV @JvmOverloads constructor(
 
         paint2 = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.FILL
-            color = ResourceUtil.getColor(R.color.bg_grey)
+            color = ResourceUtil.getColor(R.color.grey_1)
         }
     }
 
@@ -40,7 +40,7 @@ class NikkeAvatarIV @JvmOverloads constructor(
             val y2 = height
             val x2 = width
             val y3 = height
-            val x3 = (width * 17 / 20.0).toFloat()
+            val x3 = (width * 16 / 20.0).toFloat()
             val path = Path()
             path.moveTo(x1.toFloat(), y1.toFloat())
             path.lineTo(x2.toFloat(), y2.toFloat())
