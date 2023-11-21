@@ -12,7 +12,7 @@
         android:layout_marginStart="6dp"
         android:id="@+id/avatarIv"
         android:background="@drawable/round_white"/>
-    <TextView
+    <org.qiah.balabala.widget.BoldTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nameTv"
@@ -23,27 +23,37 @@
     <ImageView
         app:layout_constraintBottom_toBottomOf="@id/messageTv"
         android:layout_marginBottom="3dp"
-        android:layout_marginStart="58dp"
+        android:layout_marginStart="57dp"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/lg"
         android:layout_width="14dp"
         android:layout_height="12dp"/>
-    <TextView
+    <View
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:background="@color/transparent"
+        android:id="@+id/pointView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="2dp"/>
+    <org.qiah.balabala.widget.MidTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/round_white_12"
         android:layout_marginTop="8dp"
         android:id="@+id/messageTv"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:gravity="right|top|bottom"
-        android:maxLines="1"
+        android:padding="12dp"
+        android:gravity="left|top|bottom"
+        android:ellipsize="end"
+        app:layout_constraintHorizontal_bias="0"
+        android:letterSpacing="0.02"
+        android:textSize="@dimen/mid_text_size"
         android:textColor="@color/common_text_black"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/pointView"
         app:layout_constraintTop_toBottomOf="@id/nameTv"
         android:layout_marginStart="62dp"
-        android:minHeight="35dp"
-        android:minWidth="60dp"/>
+        android:minWidth="25dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

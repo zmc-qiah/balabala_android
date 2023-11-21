@@ -1,5 +1,6 @@
 package org.qiah.balabala.viewHolder
 
+import android.view.ViewTreeObserver
 import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.bean.ChatLeftImage
 import org.qiah.balabala.bean.ChatLeftText
@@ -47,6 +48,14 @@ class ChatLeftTextViewHolder(view: ItemChatLeftTextBinding, val getPre: (Int) ->
             onLongItemListener.onLongClick(location, absoluteAdapterPosition, entity)
             true
         }
+        view.messageTv.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                val x1 = view.messageTv.x
+                val x2 = view.pointView.x
+                view.messageTv.maxWidth = (x2 - x1).toInt()
+                return true
+            }
+        })
     }
     override fun setHolder(entity: ChatLeftText, payload: Any) {
         super.setHolder(entity, payload)
