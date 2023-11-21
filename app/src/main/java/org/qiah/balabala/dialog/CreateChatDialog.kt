@@ -21,7 +21,7 @@ import org.qiah.balabala.util.singleClick
 import org.qiah.balabala.util.toast
 import org.qiah.balabala.viewHolder.NikkeAvatarViewHolder
 
-class CreateNikkeDialog(var listener: ClickCreateListener) : BaseDialog<DialogCreateNikkeChatBinding>() {
+class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCreateNikkeChatBinding>() {
     init {
         gravity = Gravity.BOTTOM
         enableBack = true

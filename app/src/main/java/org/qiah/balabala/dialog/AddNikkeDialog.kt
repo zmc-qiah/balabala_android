@@ -1,5 +1,6 @@
 package org.qiah.balabala.dialog
 
+import android.graphics.Typeface
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -58,8 +59,10 @@ class AddNikkeDialog(var listener: AddNikkeListener) : BaseDialog<DialogCreateNi
         view.nikkeAvatarRv.adapter = adapter
         view.nameEt.gone()
         view.nameIv.gone()
-        view.aTv.text = "添加"
+        view.tTv.text = "添加"
         view.nikkeAvatarRv.addItemDecoration(SpanItemDecoration(8F, 4F, 4))
+        view.searchEt.typeface = Typeface.createFromAsset(BaseApplication.context().getAssets(), "SourceHanSansCN-Bold#1.otf");
+        view.nameEt.typeface = Typeface.createFromAsset(BaseApplication.context().getAssets(), "SourceHanSansCN-Bold#1.otf");
         view.createIv.singleClick {
             if (nikkes.size != 0) {
                 listener.onClick(nikkes)

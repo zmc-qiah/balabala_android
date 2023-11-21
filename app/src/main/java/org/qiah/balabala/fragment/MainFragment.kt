@@ -14,7 +14,7 @@ import org.qiah.balabala.bean.Chat
 import org.qiah.balabala.bean.CreateChat
 import org.qiah.balabala.databinding.FragmentNikkeBinding
 import org.qiah.balabala.databinding.ItemNikkeMainBinding
-import org.qiah.balabala.dialog.CreateNikkeDialog
+import org.qiah.balabala.dialog.CreateChatDialog
 import org.qiah.balabala.util.CommonItemDecoration
 import org.qiah.balabala.util.singleClick
 import org.qiah.balabala.viewHolder.MainNikkeViewHolder
@@ -101,8 +101,8 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
         MyDataBaseHelper(requireContext(), "Nikke_balabala", 1)
     }
 
-    private val dialog: CreateNikkeDialog
+    private val dialog: CreateChatDialog
         get() {
-            return CreateNikkeDialog(listener)
+            return CreateChatDialog(listener)
         }
 }

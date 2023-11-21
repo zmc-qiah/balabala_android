@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:round_corner="12dp">
-            <TextView
+            <org.qiah.balabala.widget.MidTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="对话名称"
@@ -44,9 +44,9 @@
                 android:layout_height="35dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:hint="默认名称"
                 android:gravity="center"
                 android:id="@+id/nameEt"
+                android:hint="请输入"
                 android:textColorHint="@color/common_text_white"
                 android:textColor="@color/common_text_white"
                 app:layout_constraintTop_toTopOf="@id/nameIv"
@@ -54,7 +54,7 @@
                 android:background="@drawable/bg_create_input"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/nameIv"/>
-            <TextView
+            <org.qiah.balabala.widget.MidTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="选择对话妮姬（至少选一个后续可填加）"
@@ -97,7 +97,7 @@
                     app:layout_constraintStart_toEndOf="@id/searchIcon"
                     app:layout_constraintEnd_toStartOf="@id/searchBtn"
                     android:id="@+id/searchEt"/>
-                <TextView
+                <org.qiah.balabala.widget.BoldTextView
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -140,10 +140,11 @@
             android:scaleType="centerCrop"
             android:src="@drawable/btn_bg"
             android:id="@+id/createIv"/>
-        <TextView
+        <org.qiah.balabala.widget.BoldTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="创建"
+            android:id="@+id/tTv"
             android:textColor="@color/common_text_white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
