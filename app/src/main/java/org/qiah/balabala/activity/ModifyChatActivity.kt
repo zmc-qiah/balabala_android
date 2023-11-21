@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
@@ -17,7 +20,6 @@ import org.qiah.balabala.R
 import org.qiah.balabala.SQLite.MyDataBaseHelper
 import org.qiah.balabala.adapter.ChatAdapter
 import org.qiah.balabala.adapter.MultipleTypeAdapter
-import org.qiah.balabala.adapter.SingleTypeAdapter
 import org.qiah.balabala.bean.Chat
 import org.qiah.balabala.bean.ChatItem
 import org.qiah.balabala.bean.ChatLeftImage
@@ -42,13 +44,13 @@ import org.qiah.balabala.util.getWidth
 import org.qiah.balabala.util.gone
 import org.qiah.balabala.util.hideKeyboard
 import org.qiah.balabala.util.load
+import org.qiah.balabala.util.nullOrNot
 import org.qiah.balabala.util.show
 import org.qiah.balabala.util.showKeyboard
 import org.qiah.balabala.util.singleClick
 import org.qiah.balabala.util.toast
 import org.qiah.balabala.viewHolder.MultipleViewHolder
 import org.qiah.balabala.viewHolder.NikkeAvatarViewHolder
-import org.qiah.balabala.viewHolder.SingleViewHolder
 
 class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     private val TAG = "ModifyChatA"
@@ -75,9 +77,20 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
 
     fun init(chat: Chat) {
         view.inputRcl.transitionToState(R.id.end)
-        nikkes = chat.nikkes
+        if (chat.tempIds.isNullOrEmpty() && chat.nikkes != null) {
+            nikkes = chat.nikkes!!
+        } else {
+            Log.d(TAG, "init: " + chat.tempIds)
+            val ids = gson.fromJson<ArrayList<Int>>(
+                chat.tempIds,
+                object : TypeToken<ArrayList<Int>>() {}.type
+            )
+            nikkes = db.selectNikkeByIds(ids)
+            chat.nikkeIds = ids
+            chat.nikkes = nikkes
+        }
         view.nameTv.text = chat.name
-        avatarAdapter.add(Nikke("指挥官", "其它", ResourceUtil.getString(R.string.base_url) + ResourceUtil.getString(R.string.zhi)).also { selectNikke = it })
+        avatarAdapter.add(db.selectNikkeById(0).also { selectNikke = it!! })
         view.avatarIv.load(selectNikke, true)
         avatarAdapter.add(nikkes)
         avatarAdapter.add(object : MultipleType {
@@ -93,6 +106,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     fun loadClick() {
         view.selectNikkeCL.tag = false
         view.avatarIv.singleClick {
+            view.emojiRv.gone()
             val b = view.selectNikkeCL.tag as Boolean
             if (!b) {
                 view.selectNikkeCL.show()
@@ -103,11 +117,37 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
         }
         view.pictureIcon.tag = false
         view.pictureIcon.singleClick {
+            view.emojiRv.gone()
             val b = view.pictureIcon.tag as Boolean
             if (!b) {
                 emojiAdapter.clear()
-                emojiAdapter.add(ResourceUtil.getString(R.string.base_url) + "more.png")
-                emojiAdapter.add(selectNikke.enoji)
+                emojiAdapter.add(object : MyType(ResourceUtil.getString(R.string.base_url) + "more.png") {
+                    override fun viewType(): Int = MyType.ADD_EMOJI
+                })
+                var list: List<MyType>? = null
+                selectNikke.enoji.nullOrNot(
+                    {
+                        Log.d(TAG, "loadClick: exception " + selectNikke.tememoji)
+                        if (!selectNikke.tememoji.isNullOrEmpty()) {
+                            list = gson.fromJson<ArrayList<String>>(
+                                selectNikke.tememoji,
+                                object : TypeToken<ArrayList<String>>() {}.type
+                            ).map {
+                                object : MyType(it) {
+                                    override fun viewType(): Int = MyType.EMOJI
+                                }
+                            }
+                        }
+                    },
+                    {
+                        list = it.map {
+                            object : MyType(it) {
+                                override fun viewType(): Int = MyType.EMOJI
+                            }
+                        }
+                    }
+                )
+                emojiAdapter.add(list)
                 view.emojiRv.show()
                 hideKeyboard(view.sendEt)
             } else {
@@ -134,7 +174,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                 val message = Message(
                                     0,
                                     chat.id,
-                                    -1,
+                                    0,
                                     4,
                                     s,
                                     if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
@@ -224,6 +264,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 it.tag = true
                 view.tv1.tag = false
                 view.tv3.tag = false
+                view.emojiRv.gone()
                 view.inputRcl.transitionToState(R.id.tureEnd)
             }
         }
@@ -241,6 +282,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 view.tv2.tag = false
                 selectType = 3
                 view.tv1.tag = false
+                view.emojiRv.gone()
                 view.inputRcl.transitionToState(R.id.tureEnd)
             }
         }
@@ -253,7 +295,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                             val message = Message(
                                 0,
                                 chat.id,
-                                -1,
+                                0,
                                 selectType,
                                 s,
                                 if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
@@ -388,6 +430,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     private val selectNikkeListener by lazy {
         object : SelectNikkeListener {
             override fun select(nikke: Nikke) {
+                view.emojiRv.gone()
                 view.avatarIv.load(nikke.avatarPath, true)
                 view.selectNikkeCL.gone()
                 selectNikke = nikke
@@ -434,12 +477,13 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                     override fun setHolder(entity: MultipleType) {
                         view.avatarIv.load(ResourceUtil.getString(R.string.base_url) + "more.png")
                         view.root.singleClick {
+                            this@ModifyChatActivity.view.emojiRv.gone()
                             AddNikkeDialog(object : AddNikkeListener {
                                 override fun onClick(nikkes: ArrayList<Nikke>) {
                                     val adapter = bindingAdapter as MultipleTypeAdapter
                                     adapter.insert(adapter.itemCount - 1, nikkes)
-                                    chat.nikkes.addAll(nikkes)
-                                    chat.nikkeIds.addAll(nikkes.map { it.id })
+                                    chat.nikkes?.addAll(nikkes)
+                                    chat.nikkeIds?.addAll(nikkes.map { it.id })
                                 }
                             }).show(supportFragmentManager)
                         }
@@ -449,22 +493,123 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
             }
         }
     }
-    private val emojiAdapter by lazy {
-        object : SingleTypeAdapter<String>() {
+    private val emojiAdapter: MultipleTypeAdapter by lazy {
+        object : MultipleTypeAdapter() {
             override fun createViewHolder(
+                i: Int,
                 layoutInflater: LayoutInflater,
                 viewGroup: ViewGroup
-            ): RecyclerView.ViewHolder? = object : SingleViewHolder<ItemEmojiBinding, String>(ItemEmojiBinding.inflate(layoutInflater, viewGroup, false)) {
-                override fun setHolder(entity: String) {
-                    val width = getWidth() / 5
-                    view.root.layoutParams.width = width
-                    view.root.layoutParams.height = width
-                    view.emojiIv.load(entity, 6)
+            ): RecyclerView.ViewHolder? = when (i) {
+                MyType.ADD_EMOJI -> {
+                    object : MultipleViewHolder<ItemEmojiBinding, MyType>(ItemEmojiBinding.inflate(layoutInflater, viewGroup, false)) {
+                        override fun setHolder(entity: MyType) {
+                            val width = getWidth() / 5
+                            view.root.layoutParams.width = width
+                            view.root.layoutParams.height = width
+                            view.emojiIv.load(entity.data, 6)
+                            view.emojiIv.singleClick {
+                                PictureSelector.create(this@ModifyChatActivity)
+                                    .openGallery(SelectMimeType.TYPE_IMAGE)
+                                    .setImageEngine(GlideEngine())
+                                    .setMaxSelectNum(9)
+                                    .forResult(object : OnResultCallbackListener<LocalMedia> {
+                                        override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
+                                            result?.let {
+                                                emojiAdapter.add(
+                                                    it.map {
+                                                        object : MyType(it.realPath) {
+                                                            override fun viewType(): Int = MyType.EMOJI
+                                                        }
+                                                    }
+                                                )
+                                                if (selectNikke.enoji == null) {
+                                                    selectNikke.enoji = ArrayList()
+                                                }
+                                                selectNikke.enoji!!.addAll(
+                                                    it.map { it.realPath }
+                                                )
+                                                db.addEmojiByNikkeId(selectNikke.id, it)
+                                            }
+                                        }
+
+                                        override fun onCancel() {
+                                        }
+                                    })
+                            }
+                        }
+                    }
                 }
+                MyType.EMOJI -> {
+                    object : MultipleViewHolder<ItemEmojiBinding, MyType>(ItemEmojiBinding.inflate(layoutInflater, viewGroup, false)) {
+                        override fun setHolder(entity: MyType) {
+                            val width = getWidth() / 5
+                            view.root.layoutParams.width = width
+                            view.root.layoutParams.height = width
+                            view.emojiIv.load(entity.data, 6)
+                            view.emojiIv.singleClick {
+                                val s = entity.data
+                                if ("指挥官".equals(selectNikke.name)) {
+                                    val message = Message(
+                                        0,
+                                        chat.id,
+                                        0,
+                                        4,
+                                        s,
+                                        if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
+                                    )
+                                    if (!isModify) {
+                                        message.id = db.insertMessage(message)
+                                    } else {
+                                        message.id = modifyCI.message.id
+                                        Log.d("addMessages", "onResult: " + message.postion + message.postion)
+                                        db.updateMessage(message)
+                                    }
+                                    if (!isModify && !isInsert) {
+                                        adapter.add(ChatRightImage(message, s))
+                                    } else if (isInsert) {
+                                        adapter.insertMessage(ChatRightImage(message, s))
+                                    } else {
+                                        adapter.updateMessage(ChatRightImage(message, s))
+                                    }
+                                } else {
+                                    val message = Message(
+                                        0,
+                                        chat.id,
+                                        selectNikke.id,
+                                        4,
+                                        s,
+                                        if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
+                                    )
+                                    if (!isModify) {
+                                        message.id = db.insertMessage(message)
+                                    } else {
+                                        message.id = modifyCI.message.id
+                                        db.updateMessage(message)
+                                    }
+                                    if (!isModify && !isInsert) {
+                                        adapter.add(ChatLeftImage(message, s, selectNikke))
+                                    } else if (isInsert) {
+                                        adapter.insertMessage(ChatLeftImage(message, s, selectNikke))
+                                    } else {
+                                        adapter.updateMessage(ChatLeftImage(message, s, selectNikke))
+                                    }
+                                }
+                                this@ModifyChatActivity.view.chatRv.smoothScrollToPosition(if (!isModify && !isInsert) adapter.itemCount - 1 else modifyPosition + 1)
+                                this@ModifyChatActivity.view.emojiRv.gone()
+                                isModify = false
+                                isInsert = false
+                            }
+                        }
+                    }
+                }
+                else -> null
             }
         }
     }
     override fun subscribeUi() {
     }
     override fun bindLayout(): ActivityChatModifyBinding = ActivityChatModifyBinding.inflate(layoutInflater)
+    private val gson: Gson by lazy {
+        GsonBuilder().create()
+    }
 }

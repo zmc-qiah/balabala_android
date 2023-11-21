@@ -10,6 +10,7 @@ data class Nikke(
     var avatarId: Int? = null
     var avatarPath: String? = null
     var enoji: ArrayList<String> ? = null
+    var tememoji: String = ""
     var id: Int = 0
     constructor(name: String, enterprise: String, avatarId: Int?) : this(name, enterprise) {
         this.avatarId = avatarId
@@ -17,8 +18,9 @@ data class Nikke(
     constructor(name: String, enterprise: String, avatarPath: String?) : this(name, enterprise) {
         this.avatarPath = avatarPath
     }
-    constructor(name: String, enterprise: String, avatarPath: String?, id: Int) : this(name, enterprise, avatarPath) {
+    constructor(name: String, enterprise: String, avatarPath: String?, id: Int, tememoji: String = "") : this(name, enterprise, avatarPath) {
         this.id = id
+        this.tememoji = tememoji
     }
     override fun viewType(): Int = NIKKE
 }

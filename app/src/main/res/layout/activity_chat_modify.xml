@@ -18,18 +18,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/topView"
         app:layout_constraintBottom_toBottomOf="@id/topView"
-        app:layout_constraintVertical_bias="0.65"
+        app:layout_constraintVertical_bias="0.75"
         android:id="@+id/backIcon"
         android:layout_marginStart="8dp"
-        android:textSize="@dimen/big_icon_size"
+        android:textSize="32dp"
         android:textColor="@color/common_text_white"
         android:text="@string/icon_back"/>
-    <TextView
+    <org.qiah.balabala.widget.BoldTextView
         android:id="@+id/nameTv"
         app:layout_constraintTop_toTopOf="@id/backIcon"
         app:layout_constraintBottom_toBottomOf="@id/backIcon"
         app:layout_constraintStart_toEndOf="@id/backIcon"
         android:layout_marginStart="8dp"
+        android:textSize="24sp"
         android:textColor="@color/common_text_white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,7 +149,7 @@
             <org.qiah.balabala.widget.IconFont
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/icon_picture"
+                android:text="@string/icon_emoji"
                 android:textColor="@color/icon_grey"
                 android:layout_marginEnd="8dp"
                 android:id="@+id/pictureIcon"
@@ -175,7 +176,7 @@
                 android:textColor="@color/icon_grey"
                 android:id="@+id/tpictureIcon"
                 android:textSize="@dimen/mid_icon_size"
-               android:visibility="gone"/>
+                android:visibility="gone"/>
         </androidx.constraintlayout.motion.widget.MotionLayout>
     </org.qiah.balabala.util.RoundConstraintLayout>
     <androidx.recyclerview.widget.RecyclerView

@@ -8,8 +8,12 @@ data class Chat(
     val name: String,
     val avatar: String,
     var news: String,
-    val nikkeIds: ArrayList<Int>,
-    val nikkes: ArrayList<Nikke>
+    var nikkeIds: ArrayList<Int>?,
+    var nikkes: ArrayList<Nikke>?
 ) : MyType(), Serializable {
+    var tempIds: String = ""
+    constructor(id: Int, name: String, avatar: String, news: String, tempIds: String) : this(id, name, avatar, news, null, null) {
+        this.tempIds = tempIds
+    }
     override fun viewType(): Int = MyType.CHAT
 }

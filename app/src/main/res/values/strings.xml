@@ -4,6 +4,7 @@
     <string name="icon_search">&#xe632;</string>
     <string name="icon_back">&#xe60f;</string>
     <string name="icon_picture">&#xe63e;</string>
+    <string name="icon_emoji">&#xe9a7;</string>
 
     <string name="base_url">https://nikke-balabala.obs.cn-east-3.myhuaweicloud.com/</string>
     <string name="zhi">zhi.png</string>

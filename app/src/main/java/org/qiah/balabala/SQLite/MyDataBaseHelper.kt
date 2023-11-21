@@ -10,6 +10,7 @@ import androidx.core.database.getIntOrNull
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.luck.picture.lib.entity.LocalMedia
 import org.qiah.balabala.BaseApplication
 import org.qiah.balabala.R
 import org.qiah.balabala.bean.Chat
@@ -56,6 +57,16 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
             val input = BaseApplication.context().assets.open("nikke.txt")
             val reader = BufferedReader(InputStreamReader(input))
             var line: String?
+            db.execSQL(
+                "insert into Nikke(id,name,avatar,enterprise,emoji) values(?,?,?,?,?)",
+                arrayOf(
+                    "0",
+                    "指挥官",
+                    "${ResourceUtil.getString(R.string.base_url)}${ResourceUtil.getString(R.string.zhi)}",
+                    "其他",
+                    ""
+                )
+            )
             while (reader.readLine().also { line = it } != null) {
                 val split = line!!.split(";")
                 if (split.size >= 3) {
@@ -77,18 +88,16 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
     @SuppressLint("Range")
     fun selectNikkeAll(): ArrayList<Nikke> {
         val list = ArrayList<Nikke>()
-        val c = this.rd.rawQuery("select * from Nikke", null)
+        val c = this.rd.rawQuery("select * from Nikke where id > 0 ", null)
         if (c.moveToFirst()) {
             do {
                 val name = c.getString(c.getColumnIndex("name"))
                 val avatar = c.getString(c.getColumnIndex("avatar"))
                 val enterprise = c.getString(c.getColumnIndex("enterprise"))
                 val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-                val nikke = Nikke(name, enterprise, avatar, id)
-                val emoji = c.getString(c.getColumnIndex("emoji"))
-                if (!emoji.isNullOrEmpty()) {
-                    nikke.enoji = gson.fromJson<ArrayList<String>>(emoji, object : TypeToken<ArrayList<String>>() {}.type)
-                }
+                val emoji = c.getString(4)
+                if (id == 2) Log.d("TAG", "selectNikkeAll: " + emoji)
+                val nikke = Nikke(name, enterprise, avatar, id, emoji)
                 list.add(nikke)
             } while (c.moveToNext())
         }
@@ -106,11 +115,8 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 val avatar = c.getString(c.getColumnIndex("avatar"))
                 val enterprise = c.getString(c.getColumnIndex("enterprise"))
                 val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-                val nikke = Nikke(name, enterprise, avatar, id)
                 val emoji = c.getString(c.getColumnIndex("emoji"))
-                if (!emoji.isNullOrEmpty()) {
-                    nikke.enoji = gson.fromJson<ArrayList<String>>(emoji, object : TypeToken<ArrayList<String>>() {}.type)
-                }
+                val nikke = Nikke(name, enterprise, avatar, id, emoji)
                 list.add(nikke)
             } while (c.moveToNext())
         }
@@ -127,11 +133,8 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
             val avatar = c.getString(c.getColumnIndex("avatar"))
             val enterprise = c.getString(c.getColumnIndex("enterprise"))
             val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-            nikke = Nikke(name, enterprise, avatar, id)
             val emoji = c.getString(c.getColumnIndex("emoji"))
-            if (!emoji.isNullOrEmpty()) {
-                nikke.enoji = gson.fromJson<ArrayList<String>>(emoji, object : TypeToken<ArrayList<String>>() {}.type)
-            }
+            nikke = Nikke(name, enterprise, avatar, id, emoji)
         }
         c.close()
         return nikke
@@ -147,16 +150,49 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 val avatar = c.getString(c.getColumnIndex("avatar"))
                 val enterprise = c.getString(c.getColumnIndex("enterprise"))
                 val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-                val nikke = Nikke(name, enterprise, avatar, id)
                 val emoji = c.getString(c.getColumnIndex("emoji"))
-                if (!emoji.isNullOrEmpty()) {
-                    nikke.enoji = gson.fromJson<ArrayList<String>>(emoji, object : TypeToken<ArrayList<String>>() {}.type)
-                }
+                val nikke = Nikke(name, enterprise, avatar, id, emoji)
                 list.add(nikke)
             } while (c.moveToNext())
         }
         c.close()
         return list
+    }
+
+    @SuppressLint("Range")
+    fun addEmojiByNikkeId(id: Int, list: List<LocalMedia>) {
+        var nikke: Nikke? = null
+        val c = this.rd.rawQuery("select * from Nikke where id =  ?", arrayOf(id.toString()))
+        if (c.moveToFirst()) {
+            val name = c.getString(c.getColumnIndex("name"))
+            val avatar = c.getString(c.getColumnIndex("avatar"))
+            val enterprise = c.getString(c.getColumnIndex("enterprise"))
+            val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
+            nikke = Nikke(name, enterprise, avatar, id)
+            val emoji = c.getString(c.getColumnIndex("emoji"))
+            if (!emoji.isNullOrEmpty()) {
+                nikke.enoji = gson.fromJson<ArrayList<String>>(emoji, object : TypeToken<ArrayList<String>>() {}.type)
+            }
+        }
+        c.close()
+        nikke?.let {
+            if (nikke.enoji == null) {
+                nikke.enoji = ArrayList()
+            }
+            nikke.enoji!!.addAll(
+                list.map {
+                    it.realPath
+                }
+            )
+            rd.update(
+                "Nikke",
+                ContentValues().apply {
+                    put("emoji", gson.toJson(nikke.enoji))
+                },
+                "id = ?",
+                arrayOf(id.toString())
+            )
+        }
     }
 
     @SuppressLint("Range")
@@ -169,11 +205,8 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 val avatar = c.getString(c.getColumnIndex("avatar"))
                 val enterprise = c.getString(c.getColumnIndex("enterprise"))
                 val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-                val nikke = Nikke(name, enterprise, avatar, id)
                 val emoji = c.getString(c.getColumnIndex("emoji"))
-                if (!emoji.isNullOrEmpty()) {
-                    nikke.enoji = gson.fromJson<ArrayList<String>>(emoji, object : TypeToken<ArrayList<String>>() {}.type)
-                }
+                val nikke = Nikke(name, enterprise, avatar, id, emoji)
                 list.add(nikke)
             } while (c.moveToNext())
         }
@@ -191,13 +224,13 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 val avatar = c.getString(c.getColumnIndex("avatar"))
                 val news = c.getString(c.getColumnIndex("news"))
                 val nikkeids = c.getString(c.getColumnIndex("nikkeids"))
-                val ids = gson.fromJson<ArrayList<Int>>(
-                    nikkeids,
-                    object : TypeToken<ArrayList<Int>>() {}.type
-                )
-                val nikkes = selectNikkeByIds(ids)
+//                val ids = gson.fromJson<ArrayList<Int>>(
+//                    nikkeids,
+//                    object : TypeToken<ArrayList<Int>>() {}.type
+//                )
+//                val nikkes = selectNikkeByIds(ids)
                 val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-                val nikke = Chat(id, name, avatar, news, ids, nikkes)
+                val nikke = Chat(id, name, avatar, news, nikkeids)
                 list.add(nikke)
             } while (c.moveToNext())
         }
@@ -214,13 +247,7 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
             val avatar = c.getString(c.getColumnIndex("avatar"))
             val news = c.getString(c.getColumnIndex("news"))
             val nikkeids = c.getString(c.getColumnIndex("nikkeids"))
-            val ids = gson.fromJson<ArrayList<Int>>(
-                nikkeids,
-                object : TypeToken<ArrayList<Int>>() {}.type
-            )
-            val nikkes = selectNikkeByIds(ids)
-            val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-            res = Chat(id, name, avatar, news, ids, nikkes)
+            res = Chat(id, name, avatar, news, nikkeids)
         }
         c.close()
         return res
