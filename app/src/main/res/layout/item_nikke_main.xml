@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="65dp"
     app:cardElevation="3dp"
     app:cardCornerRadius="8dp"
     app:cardBackgroundColor="#DCE3E3"
@@ -39,7 +39,7 @@
             android:textColor="@color/common_text_black"
             android:textStyle="normal"
             android:id="@+id/nikkeTv"/>
-        <org.qiah.balabala.widget.NormalTextView
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

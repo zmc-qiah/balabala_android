@@ -30,11 +30,13 @@ import org.qiah.balabala.databinding.ActivityChatModifyBinding
 import org.qiah.balabala.databinding.ItemEmojiBinding
 import org.qiah.balabala.databinding.ItemSelectNikkeBinding
 import org.qiah.balabala.dialog.AddNikkeDialog
+import org.qiah.balabala.util.CommonItemDecoration
 import org.qiah.balabala.util.GlideEngine
 import org.qiah.balabala.util.MultipleType
 import org.qiah.balabala.util.MyType
 import org.qiah.balabala.util.ResourceUtil
 import org.qiah.balabala.util.SpanItemDecoration
+import org.qiah.balabala.util.dp
 import org.qiah.balabala.util.enen
 import org.qiah.balabala.util.getWidth
 import org.qiah.balabala.util.gone
@@ -85,6 +87,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
         view.selectNikkeCL.addItemDecoration(SpanItemDecoration(4F, 8F, 2, true))
         view.emojiRv.adapter = emojiAdapter
         val messages = db.selectAllMessageByChatId(chat.id)
+        view.chatRv.addItemDecoration(CommonItemDecoration(8.dp()))
         adapter.addMessages(messages)
     }
     fun loadClick() {

@@ -26,6 +26,11 @@ public class CommonItemDecoration extends RecyclerView.ItemDecoration {
     @Orientation
     private final int orientation;
 
+    public CommonItemDecoration(float interval) {
+        this.interval = interval;
+        this.orientation = CommonItemDecoration.VERTICAL;
+    }
+
     public CommonItemDecoration(float interval, @Orientation int orientation) {
         this.interval = interval;
         this.orientation = orientation;

@@ -5,12 +5,14 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <TextView
+    <org.qiah.balabala.widget.MidTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/narrationTv"
         android:maxWidth="200dp"
         android:gravity="center"
+        android:textSize="@dimen/mid_text_size"
+        android:textColor="@color/common_text_black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

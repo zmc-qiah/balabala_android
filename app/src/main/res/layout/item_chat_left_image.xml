@@ -12,10 +12,11 @@
         android:layout_marginStart="6dp"
         android:id="@+id/avatarIv"
         android:background="@drawable/round_white"/>
-    <TextView
+    <org.qiah.balabala.widget.BoldTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nameTv"
+        android:textSize="@dimen/mid_text_size"
         android:textColor="@color/common_text_black"
         android:layout_marginStart="12dp"
         app:layout_constraintStart_toEndOf="@id/avatarIv"
@@ -23,7 +24,7 @@
     <ImageView
         app:layout_constraintBottom_toBottomOf="@id/messageIv"
         android:layout_marginBottom="3dp"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="57dp"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/lg"
         android:layout_width="14dp"
@@ -31,7 +32,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_white_12"
+        android:background="@drawable/round_white_6"
         android:layout_marginTop="8dp"
         android:id="@+id/messageIv"
         android:padding = "3dp"

@@ -1,11 +1,13 @@
 package org.qiah.balabala.viewHolder
 
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.ViewTreeObserver
 import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.bean.ChatLeftImage
 import org.qiah.balabala.bean.ChatLeftText
 import org.qiah.balabala.databinding.ItemChatLeftTextBinding
 import org.qiah.balabala.util.MultipleType
+import org.qiah.balabala.util.dp
 import org.qiah.balabala.util.gone
 import org.qiah.balabala.util.load
 import org.qiah.balabala.util.show
@@ -17,6 +19,7 @@ class ChatLeftTextViewHolder(view: ItemChatLeftTextBinding, val getPre: (Int) ->
         ) {
             view.avatarIv.load(entity.nikke!!, true)
             view.nameTv.text = entity.nikke!!.name
+            (view.messageTv.layoutParams as MarginLayoutParams).topMargin = 8.dp()
             view.avatarIv.show()
             view.nameTv.show()
         } else {
@@ -31,11 +34,13 @@ class ChatLeftTextViewHolder(view: ItemChatLeftTextBinding, val getPre: (Int) ->
                 i2 = entity.nikke?.id ?: -2
             }
             if (i1.equals(i2)) {
+                (view.messageTv.layoutParams as MarginLayoutParams).topMargin = 0
                 view.avatarIv.gone()
                 view.nameTv.gone()
             } else {
                 view.avatarIv.load(entity.nikke!!, true)
                 view.nameTv.text = entity.nikke!!.name
+                (view.messageTv.layoutParams as MarginLayoutParams).topMargin = 8.dp()
                 view.avatarIv.show()
                 view.nameTv.show()
             }

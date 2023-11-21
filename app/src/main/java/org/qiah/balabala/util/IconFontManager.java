@@ -23,7 +23,7 @@ public class IconFontManager {
 
     public static void initAsset(List<String> paths) {
         iconAsset = Typeface.createFromAsset(BaseApplication.context().getAssets(), paths.get(0));
-        normalAsset = Typeface.createFromAsset(BaseApplication.context().getAssets(), paths.get(1));
+        normalAsset = Typeface.createFromAsset(BaseApplication.context().getAssets(), paths.get(3));
         boldAsset = Typeface.createFromAsset(BaseApplication.context().getAssets(), paths.get(2));
         midAsset = Typeface.createFromAsset(BaseApplication.context().getAssets(), paths.get(3));
     }

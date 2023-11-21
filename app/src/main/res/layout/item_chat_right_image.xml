@@ -3,12 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingTop="8dp"
     android:layout_height="wrap_content">
     <ImageView
         app:layout_constraintBottom_toBottomOf="@id/messageIv"
         android:layout_marginBottom="2dp"
-        android:layout_marginEnd="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/rg"
         android:layout_width="14dp"
@@ -16,15 +14,13 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_yellow_12"
+        android:background="@drawable/round_yellow_6"
         android:id="@+id/messageIv"
         android:padding = "3dp"
-        android:src="@drawable/chli"
         android:gravity="right|top|bottom"
         android:textColor="@color/common_text_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="12dp"
-        android:minHeight="35dp"
-        android:minWidth="60dp"/>
+        android:layout_marginEnd="5dp"
+       />
 </androidx.constraintlayout.widget.ConstraintLayout>
