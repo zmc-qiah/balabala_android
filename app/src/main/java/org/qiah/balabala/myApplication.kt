@@ -18,4 +18,6 @@ class myApplication : BaseApplication() {
     override fun blodPath(): String {
         return "SourceHanSansCN-Heavy#1.otf"
     }
+
+    override fun midPath(): String = "SourceHanSansCN-Bold#1.otf"
 }

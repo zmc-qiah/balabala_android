@@ -26,10 +26,12 @@ public abstract class BaseApplication extends Application {
         paths.add(iconFontPath());
         paths.add(normalPath());
         paths.add(blodPath());
+        paths.add(midPath());
         IconFontManager.initAsset(paths);
     }
 
     protected abstract String iconFontPath();
     protected abstract String normalPath();
     protected abstract String blodPath();
+    protected abstract String midPath();
 }
