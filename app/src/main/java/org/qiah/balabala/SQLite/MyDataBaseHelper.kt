@@ -85,6 +85,16 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
         }
     }
 
+    fun addNikke(name: String, avatar: String): Int = wd.insert(
+        "Nikke",
+        null,
+        ContentValues().apply {
+            put("name", name)
+            put("avatar", avatar)
+            put("enterprise", "新增")
+        }
+    ).toInt()
+
     @SuppressLint("Range")
     fun selectNikkeAll(): ArrayList<Nikke> {
         val list = ArrayList<Nikke>()

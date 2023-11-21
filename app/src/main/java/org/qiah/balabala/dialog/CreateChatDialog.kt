@@ -6,8 +6,13 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.luck.picture.lib.basic.PictureSelector
+import com.luck.picture.lib.config.SelectMimeType
+import com.luck.picture.lib.entity.LocalMedia
+import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import org.qiah.balabala.BaseApplication
 import org.qiah.balabala.MyListener.ClickCreateListener
+import org.qiah.balabala.MyListener.ClickItemListener
 import org.qiah.balabala.MyListener.SelectNikkeListener
 import org.qiah.balabala.SQLite.MyDataBaseHelper
 import org.qiah.balabala.adapter.MultipleTypeAdapter
@@ -15,6 +20,7 @@ import org.qiah.balabala.bean.CreateChat
 import org.qiah.balabala.bean.Nikke
 import org.qiah.balabala.databinding.DialogCreateNikkeChatBinding
 import org.qiah.balabala.databinding.ItemSelectNikkeBinding
+import org.qiah.balabala.util.GlideEngine
 import org.qiah.balabala.util.SpanItemDecoration
 import org.qiah.balabala.util.getHeight
 import org.qiah.balabala.util.singleClick
@@ -28,6 +34,7 @@ class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCre
         height = getHeight() / 6 * 5
         alpha = 0.3f
     }
+    private var temp: String? = null
     private val SelectNikkeListener by lazy {
         object : SelectNikkeListener {
             override fun select(nikke: Nikke) {
@@ -78,7 +85,7 @@ class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCre
                 if (s1.isEmpty()) {
                     adapter.clearAndAdd(db.selectNikkeAll())
                 } else {
-                    if ("米西利斯".equals(s1) || "泰特拉".equals(s1) || "极乐净土".equals(s1) || "其他".equals(s1) || "朝圣者".equals(s1)) {
+                    if ("米西利斯".equals(s1) || "泰特拉".equals(s1) || "极乐净土".equals(s1) || "其他".equals(s1) || "朝圣者".equals(s1) || "新增".equals(s1)) {
                         adapter.clearAndAdd(db.selectNikkeByEnterprise(s1))
                     } else {
                         adapter.clearAndAdd(db.selectNikkeByName(s1))
@@ -86,9 +93,41 @@ class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCre
                 }
             }
         })
+        view.addIv.singleClick {
+            "挑选头像".toast()
+            PictureSelector.create(context)
+                .openGallery(SelectMimeType.TYPE_IMAGE)
+                .setImageEngine(GlideEngine())
+                .setMaxSelectNum(1)
+                .forResult(object : OnResultCallbackListener<LocalMedia> {
+                    override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
+                        result?.getOrNull(0)?.let {
+                            temp = it.realPath
+                            CreateNikkeDialog(createListener).show(parentFragmentManager, CreateNikkeDialog::class.simpleName)
+                        }
+                    }
+
+                    override fun onCancel() {
+                    }
+                })
+        }
     }
     override fun getView(
         inflater: LayoutInflater,
         parent: ViewGroup?
     ): DialogCreateNikkeChatBinding = DialogCreateNikkeChatBinding.inflate(layoutInflater)
+    private val createListener: ClickItemListener<String> by lazy {
+        object : ClickItemListener<String> {
+            override fun onClick(data: String) {
+                temp?.let {
+                    val id = db.addNikke(data, it)
+                    adapter.add(Nikke(data, "新增", temp, id))
+                }
+            }
+
+            override fun onClick(data: String, position: Int) {
+                onClick(data)
+            }
+        }
+    }
 }

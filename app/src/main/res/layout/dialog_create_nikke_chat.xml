@@ -123,6 +123,26 @@
                 app:layout_constraintTop_toBottomOf="@id/searchRCL"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_bg"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/nikkeAvatarRv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/addIv"/>
+            <org.qiah.balabala.widget.BoldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="增加角色"
+                android:id="@+id/addTv"
+                android:textColor="@color/common_text_white"
+                app:layout_constraintTop_toTopOf="@id/addIv"
+                app:layout_constraintBottom_toBottomOf="@id/addIv"
+                app:layout_constraintStart_toStartOf="@id/addIv"
+                app:layout_constraintEnd_toEndOf="@id/addIv"/>
         </org.qiah.balabala.util.RoundConstraintLayout>
     </androidx.core.widget.NestedScrollView>
     <org.qiah.balabala.util.RoundConstraintLayout

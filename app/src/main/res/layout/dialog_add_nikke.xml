@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.qiah.balabala.util.RoundConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="12dp"
+    android:id="@+id/searchRCL"
+    android:background="@drawable/round_white"
+    android:elevation="8dp"
+    app:round_as_circle="true"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:hint="输入新角色的名称"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="4dp"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/searchBtn"
+        android:id="@+id/searchEt"/>
+    <org.qiah.balabala.widget.BoldTextView
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/bg_search_btn"
+        android:id="@+id/searchBtn"
+        android:textColor="@color/common_text_white"
+        android:text="确认"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</org.qiah.balabala.util.RoundConstraintLayout>
