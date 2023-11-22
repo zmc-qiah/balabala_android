@@ -18,6 +18,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -149,7 +150,7 @@ fun ImageView.load(url: String?, radius: Int) {
         Glide.with(this)
             .load(it)
             .apply(roundedCorner(radius))
-            .error(R.drawable.als1)
+            .error(R.drawable.error)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -179,58 +180,88 @@ fun ImageView.load(@DrawableRes drawableResId: Int, radius: Int) {
         Glide.with(this)
             .load(it)
             .apply(roundedCorner(radius))
-            .error(R.drawable.als1)
+            .error(R.drawable.error)
             .into(this)
     }
 }
 fun ImageView.load(url: String?, max: Int, radius: Int) {
-    Glide.with(context)
-        .load(url)
-        .apply(roundedCorner(radius))
-        .error(R.drawable.als1)
-        .listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                Log.d("ImageView.load", "Image load failed for URL: $url")
-                return false
-            }
-
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: com.bumptech.glide.request.target.Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                return false
-            }
-        })
-        .into(
-            object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    this@load.setImageDrawable(resource)
-                    val iw = resource.intrinsicWidth
-                    val ih = resource.intrinsicHeight
-                    val ratio = iw.toFloat() / ih.toFloat()
-                    if (max > iw) {
-                        this@load.layoutParams.width = iw
-                        this@load.layoutParams.height = ih
-                    } else {
-                        this@load.layoutParams.width = max
-                        this@load.layoutParams.height = (max / ratio).toInt()
+    if (!url.isNullOrEmpty() && url.endsWith(".gif")) {
+        Glide.with(context)
+            .asGif()
+            .load(url)
+            .into(
+                object : CustomTarget<GifDrawable>() {
+                    override fun onResourceReady(
+                        resource: GifDrawable,
+                        transition: Transition<in GifDrawable>?
+                    ) {
+                        resource.setLoopCount(100)
+                        resource.start()
+                        this@load.setImageDrawable(resource)
+                        val iw = resource.intrinsicWidth
+                        val ih = resource.intrinsicHeight
+                        val ratio = iw.toFloat() / ih.toFloat()
+                        if (max > iw) {
+                            this@load.layoutParams.width = iw
+                            this@load.layoutParams.height = ih
+                        } else {
+                            this@load.layoutParams.width = max
+                            this@load.layoutParams.height = (max / ratio).toInt()
+                        }
+                    }
+                    override fun onLoadCleared(placeholder: Drawable?) {
                     }
                 }
-                override fun onLoadCleared(placeholder: Drawable?) {
+            )
+    } else {
+        Glide.with(context)
+            .load(url)
+            .apply(roundedCorner(radius))
+            .error(R.drawable.error)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.d("ImageView.load", "Image load failed for URL: $url")
+                    return false
                 }
-            }
-        )
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: com.bumptech.glide.request.target.Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            })
+            .into(
+                object : CustomTarget<Drawable>() {
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        this@load.setImageDrawable(resource)
+                        val iw = resource.intrinsicWidth
+                        val ih = resource.intrinsicHeight
+                        val ratio = iw.toFloat() / ih.toFloat()
+                        if (max > iw) {
+                            this@load.layoutParams.width = iw
+                            this@load.layoutParams.height = ih
+                        } else {
+                            this@load.layoutParams.width = max
+                            this@load.layoutParams.height = (max / ratio).toInt()
+                        }
+                    }
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                    }
+                }
+            )
+    }
 }
 
 /**
@@ -241,7 +272,7 @@ fun ImageView.load(url: String?, isCircle: Boolean = false) {
     val a = Glide.with(this)
         .load(url)
         .centerCrop()
-        .error(R.drawable.als1)
+        .error(R.drawable.error)
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(
                 e: GlideException?,
@@ -275,7 +306,7 @@ fun ImageView.load(@DrawableRes drawableResId: Int, isCircle: Boolean = false) {
         val a = Glide.with(this)
             .load(it)
             .centerCrop()
-            .error(R.drawable.als1)
+            .error(R.drawable.error)
         if (isCircle) {
             a.circleCrop()
                 .into(this)

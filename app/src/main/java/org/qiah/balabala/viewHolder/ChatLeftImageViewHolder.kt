@@ -53,6 +53,9 @@ class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) 
             view.root.alpha = 0.7f
             true
         }
+//        if (entity.path.endsWith(".gif")){
+//            (view.avatarIv.resources as? GifDrawable)?.start()
+//        }
     }
     override fun setHolder(entity: ChatLeftImage, payload: Any) {
         super.setHolder(entity, payload)

@@ -165,6 +165,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 .openGallery(SelectMimeType.TYPE_IMAGE)
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setMaxSelectNum(1)
+                .isGif(true)
                 .forResult(object : OnResultCallbackListener<LocalMedia> {
                     override fun onResult(result: ArrayList<LocalMedia>?) {
                         result?.let {
@@ -512,6 +513,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                     .openGallery(SelectMimeType.TYPE_IMAGE)
                                     .setImageEngine(GlideEngine())
                                     .setMaxSelectNum(9)
+                                    .isGif(true)
                                     .forResult(object : OnResultCallbackListener<LocalMedia> {
                                         override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
                                             result?.let {

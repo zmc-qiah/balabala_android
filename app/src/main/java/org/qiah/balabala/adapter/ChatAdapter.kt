@@ -124,7 +124,7 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
             Log.d("TAG", "addMessages: " + it.postion + it.content)
             when (it.type) {
                 1 -> {
-                    if (it.nikkeId == -1) {
+                    if (it.nikkeId == 0) {
                         data.add(ChatRightText(it, it.content))
                     } else {
                         val nikke = db.selectNikkeById(it.nikkeId)
@@ -145,7 +145,7 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
                 }
 
                 4 -> {
-                    if (it.nikkeId == -1) {
+                    if (it.nikkeId == 0) {
                         data.add(ChatRightImage(it, it.content))
                     } else {
                         val nikke = db.selectNikkeById(it.nikkeId)
