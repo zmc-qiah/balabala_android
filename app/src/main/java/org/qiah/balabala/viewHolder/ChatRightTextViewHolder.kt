@@ -9,6 +9,7 @@ import org.qiah.balabala.util.dp
 
 class ChatRightTextViewHolder(view: ItemChatRightTextBinding, val onLongItemListener: LongItemListener) : MultipleViewHolder<ItemChatRightTextBinding, ChatRightText>(view) {
     override fun setHolder(entity: ChatRightText) {
+        Log.d("asacsacsa", "setHolder: " + entity.text)
         view.messageTv.text = entity.text
         view.root.setOnLongClickListener {
             val location = IntArray(2)

@@ -35,6 +35,9 @@ buildscript {
             classpath "com.chaquo.python:gradle:13.0.0"
         }
     }
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
+    }
 }
 allprojects {
     configurations.all {

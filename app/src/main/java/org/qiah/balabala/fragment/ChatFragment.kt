@@ -1,10 +1,12 @@
 package org.qiah.balabala.fragment
 
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import org.qiah.balabala.MyListener.ClickCreateListener
 import org.qiah.balabala.MyListener.ClickItemListener
@@ -18,12 +20,13 @@ import org.qiah.balabala.databinding.ItemNikkeMainBinding
 import org.qiah.balabala.dialog.CreateChatDialog
 import org.qiah.balabala.util.CommonItemDecoration
 import org.qiah.balabala.util.MyType
-import org.qiah.balabala.util.dp
 import org.qiah.balabala.util.getHeight
 import org.qiah.balabala.util.singleClick
+import org.qiah.balabala.util.toast
 import org.qiah.balabala.viewHolder.MainNikkeViewHolder
 
-class MainFragment : BaseFragment<FragmentNikkeBinding>() {
+class ChatFragment : Fragment() {
+    private lateinit var find: FragmentNikkeBinding
     private var selectChat: Chat? = null
     private var selectPosition: Int? = null
     private val onClick by lazy {
@@ -47,31 +50,32 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
                 layoutInflater: LayoutInflater,
                 viewGroup: ViewGroup
             ): RecyclerView.ViewHolder? = when (i) {
-                MyType.CHAT -> {
-                    Log.d("chatAdapter", "createViewHolder: " + this.itemCount)
-                    MainNikkeViewHolder(
-                        ItemNikkeMainBinding.inflate(layoutInflater, viewGroup, false),
-                        onClick
-                    )
-                }
+                MyType.CHAT -> MainNikkeViewHolder(
+                    ItemNikkeMainBinding.inflate(layoutInflater, viewGroup, false),
+                    onClick
+                )
                 else -> null
             }
         }
     }
-
-    override fun bindLayout(): FragmentNikkeBinding = FragmentNikkeBinding.inflate(layoutInflater)
-
-    override fun initView() {
-//        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        find.root.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        find.sortIcon.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        val i = (getHeight() * 0.81).toInt()
-        val i1 = find.sortIcon.measuredHeight
-        val i2: Float = 20.dp()
-        Log.d("ChatFragment", "initView:${i}m${i1}m$i2 ")
-        val params = find.chatRv.layoutParams
-        params.height = i - i1 - i2.toInt()
-        find.chatRv.layoutParams = params
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        find = FragmentNikkeBinding.inflate(inflater)
+        return find.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+    fun initView() {
+        val x1 = find.root.height
+        val x2 = find.chatRv.x
+        Log.d("ChatFragment", "initView: " + find.root.height + " " + find.chatRv.x + "" + getHeight())
+        "bb".toast()
+        find.chatRv.layoutParams.width = (x1 - x2).toInt()
         find.chatRv.adapter = chatAdapter
         find.chatRv.addItemDecoration(CommonItemDecoration(18F, CommonItemDecoration.VERTICAL))
         find.createBtn.singleClick {
@@ -79,12 +83,9 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
         }
         val chat = db.selectAllChat()
         find.numsTv.text = "对话清单:(${chat.size})"
+        "${chat.size}".toast()
         chatAdapter.add(chat)
     }
-
-    override fun subscribeUi() {
-    }
-
     override fun onResume() {
         selectChat?.let {
             db.selectChatById(it.id)?.let { new ->

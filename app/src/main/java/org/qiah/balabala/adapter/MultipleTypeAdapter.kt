@@ -1,5 +1,6 @@
 package org.qiah.balabala.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +20,13 @@ abstract class MultipleTypeAdapter() :
             parent
         )!!
     }
-
+    protected abstract fun createViewHolder(
+        i: Int,
+        layoutInflater: LayoutInflater,
+        viewGroup: ViewGroup
+    ): RecyclerView.ViewHolder?
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Log.d("MainNikk", "onBindViewHolder: " + position)
         val holder1 = holder as MultipleViewHolder<*, MultipleType>
         holder1.setHolder(data[position])
     }
@@ -91,10 +97,4 @@ abstract class MultipleTypeAdapter() :
             notifyItemRangeInserted(start, cnt - start + l)
         }
     }
-
-    protected abstract fun createViewHolder(
-        i: Int,
-        layoutInflater: LayoutInflater,
-        viewGroup: ViewGroup
-    ): RecyclerView.ViewHolder?
 }

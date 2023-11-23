@@ -36,7 +36,6 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     override fun onResume() {
         super.onResume()
         lazyInit()
-
         // 从下一个activity回到此fragment只会触发onResume
         if (isCurrentFragment()) {
             onFragmentVisibilityChanged(true)

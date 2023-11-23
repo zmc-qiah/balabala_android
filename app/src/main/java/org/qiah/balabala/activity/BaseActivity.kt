@@ -11,7 +11,7 @@ import androidx.viewbinding.ViewBinding
  * @date : 2021/1/19
  */
 abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
-    protected lateinit var view: T
+    lateinit var view: T
         private set
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

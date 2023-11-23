@@ -15,8 +15,6 @@
     <string name="icon_delete">&#xe63a;</string>
 
 
-
-
     <dimen name="Big_text_size">18sp</dimen>
     <dimen name="big_icon_size">40dp</dimen>
     <dimen name="dialog_width">300dp</dimen>
@@ -42,6 +40,7 @@
     <style name="AppBottomSheetStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
         <item name="backgroundTint">@color/transparent</item>
     </style>
+
     <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/custom_progress_drawable</item>
     </style>
@@ -63,44 +62,47 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
     </style>
-    <attr format="boolean" name="round_as_circle"/>
-    <attr format="integer|dimension" name="round_corner"/>
-    <attr format="integer|dimension" name="round_corner_bottom"/>
-    <attr format="integer|dimension" name="round_corner_bottom_left"/>
-    <attr format="integer|dimension" name="round_corner_bottom_right"/>
-    <attr format="integer|dimension" name="round_corner_left"/>
-    <attr format="integer|dimension" name="round_corner_right"/>
-    <attr format="integer|dimension" name="round_corner_top"/>
-    <attr format="integer|dimension" name="round_corner_top_left"/>
-    <attr format="integer|dimension" name="round_corner_top_right"/>
-    <attr format="color|reference" name="round_stroke_color"/>
-    <attr format="integer|dimension" name="round_stroke_width"/>
+
+    <attr name="round_as_circle" format="boolean" />
+    <attr name="round_corner" format="integer|dimension" />
+    <attr name="round_corner_bottom" format="integer|dimension" />
+    <attr name="round_corner_bottom_left" format="integer|dimension" />
+    <attr name="round_corner_bottom_right" format="integer|dimension" />
+    <attr name="round_corner_left" format="integer|dimension" />
+    <attr name="round_corner_right" format="integer|dimension" />
+    <attr name="round_corner_top" format="integer|dimension" />
+    <attr name="round_corner_top_left" format="integer|dimension" />
+    <attr name="round_corner_top_right" format="integer|dimension" />
+    <attr name="round_stroke_color" format="color|reference" />
+    <attr name="round_stroke_width" format="integer|dimension" />
     <declare-styleable name="RoundConstraintLayout">
-        <attr name="round_as_circle"/>
-        <attr name="round_corner"/>
-        <attr name="round_corner_top_left"/>
-        <attr name="round_corner_left"/>
-        <attr name="round_corner_top"/>
-        <attr name="round_corner_right"/>
-        <attr name="round_corner_bottom"/>
-        <attr name="round_corner_top_right"/>
-        <attr name="round_corner_bottom_left"/>
-        <attr name="round_corner_bottom_right"/>
-        <attr name="round_stroke_color"/>
-        <attr name="round_stroke_width"/>
+        <attr name="round_as_circle" />
+        <attr name="round_corner" />
+        <attr name="round_corner_top_left" />
+        <attr name="round_corner_left" />
+        <attr name="round_corner_top" />
+        <attr name="round_corner_right" />
+        <attr name="round_corner_bottom" />
+        <attr name="round_corner_top_right" />
+        <attr name="round_corner_bottom_left" />
+        <attr name="round_corner_bottom_right" />
+        <attr name="round_stroke_color" />
+        <attr name="round_stroke_width" />
     </declare-styleable>
     <declare-styleable name="RoundHelper">
-        <attr name="round_as_circle"/>
-        <attr name="round_corner"/>
-        <attr name="round_corner_top_left"/>
-        <attr name="round_corner_left"/>
-        <attr name="round_corner_top"/>
-        <attr name="round_corner_right"/>
-        <attr name="round_corner_bottom"/>
-        <attr name="round_corner_top_right"/>
-        <attr name="round_corner_bottom_left"/>
-        <attr name="round_corner_bottom_right"/>
-        <attr name="round_stroke_color"/>
-        <attr name="round_stroke_width"/>
+        <attr name="round_as_circle" />
+        <attr name="round_corner" />
+        <attr name="round_corner_top_left" />
+        <attr name="round_corner_left" />
+        <attr name="round_corner_top" />
+        <attr name="round_corner_right" />
+        <attr name="round_corner_bottom" />
+        <attr name="round_corner_top_right" />
+        <attr name="round_corner_bottom_left" />
+        <attr name="round_corner_bottom_right" />
+        <attr name="round_stroke_color" />
+        <attr name="round_stroke_width" />
     </declare-styleable>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

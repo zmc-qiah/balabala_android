@@ -140,6 +140,17 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
     }
 
     @SuppressLint("Range")
+    fun selectEmojiByNikkeId(id: Int): List<String>? {
+        var list: List<String>? = null
+        val c = rd.rawQuery("select emoji from Nikke where id = ?", arrayOf(id.toString()))
+        if (c.moveToFirst()) {
+            val emoji = c.getString(c.getColumnIndex("emoji"))
+            list = gson.fromJson(emoji, object : TypeToken<List<String>>() {})
+        }
+        return list
+    }
+
+    @SuppressLint("Range")
     fun selectNikkeById(id: Int): Nikke? {
         var nikke: Nikke? = null
         val c = this.rd.rawQuery("select * from Nikke where id =  ?", arrayOf(id.toString()))

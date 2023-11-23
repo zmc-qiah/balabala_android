@@ -66,15 +66,15 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     private var modifyPosition: Int = 0
     private lateinit var modifyCI: ChatItem
     override fun initView() {
-        val chat = intent.getSerializableExtra("chat") as? Chat
-        chat?.let {
-            this.chat = it
-            view.chatRv.adapter = adapter
-            init(it)
-            loadClick()
+        (intent.getSerializableExtra("chat") as? org.qiah.balabala.bean.Chat)?.let {
+            db.selectChatById(it.id)?.let {
+                this.chat = it
+                view.chatRv.adapter = adapter
+                init(it)
+                loadClick()
+            }
         }
     }
-
     fun init(chat: Chat) {
         view.inputRcl.transitionToState(R.id.end)
         if (chat.tempIds.isNullOrEmpty() && chat.nikkes != null) {
@@ -106,7 +106,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     fun loadClick() {
         view.selectNikkeCL.tag = false
         view.avatarIv.singleClick {
-            view.emojiRv.gone()
+            hideEmoji()
             val b = view.selectNikkeCL.tag as Boolean
             if (!b) {
                 view.selectNikkeCL.show()
@@ -117,7 +117,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
         }
         view.pictureIcon.tag = false
         view.pictureIcon.singleClick {
-            view.emojiRv.gone()
+            hideEmoji()
             val b = view.pictureIcon.tag as Boolean
             if (!b) {
                 emojiAdapter.clear()
@@ -151,7 +151,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 view.emojiRv.show()
                 hideKeyboard(view.sendEt)
             } else {
-                view.emojiRv.gone()
+                hideEmoji()
                 showKeyboard(view.sendEt)
             }
             it.tag = !b
@@ -218,7 +218,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                 }
                             }
                             view.chatRv.smoothScrollToPosition(if (!isModify && !isInsert) adapter.itemCount - 1 else modifyPosition + 1)
-                            view.emojiRv.gone()
+                            hideEmoji()
                             isModify = false
                             isInsert = false
                         }
@@ -228,7 +228,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 })
         }
         view.sendEt.singleClick {
-            view.emojiRv.gone()
+            hideEmoji()
         }
         view.tv1.tag = true
         view.tv2.tag = false
@@ -254,7 +254,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
         view.tv2.singleClick {
             val b = it.tag as Boolean
             if (!b) {
-                view.emojiRv.gone()
+                hideEmoji()
                 view.tv1.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 view.tv3.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
@@ -265,14 +265,14 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 it.tag = true
                 view.tv1.tag = false
                 view.tv3.tag = false
-                view.emojiRv.gone()
+                hideEmoji()
                 view.inputRcl.transitionToState(R.id.tureEnd)
             }
         }
         view.tv3.singleClick {
             val b = it.tag as Boolean
             if (!b) {
-                view.emojiRv.gone()
+                hideEmoji()
                 view.tv2.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 view.tv1.background = ResourceUtil.getDrawable(R.drawable.bg_unselect_btn)
                 it.background = ResourceUtil.getDrawable(R.drawable.bg_select_btn)
@@ -283,7 +283,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 view.tv2.tag = false
                 selectType = 3
                 view.tv1.tag = false
-                view.emojiRv.gone()
+                hideEmoji()
                 view.inputRcl.transitionToState(R.id.tureEnd)
             }
         }
@@ -405,7 +405,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                 view.chatRv.smoothScrollToPosition(if (!isModify && !isInsert) adapter.itemCount - 1 else modifyPosition + 1)
                 view.sendEt.setText("")
                 hideKeyboard(view.sendEt)
-                view.emojiRv.gone()
+                hideEmoji()
                 isModify = false
                 isInsert = false
             }
@@ -431,7 +431,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     private val selectNikkeListener by lazy {
         object : SelectNikkeListener {
             override fun select(nikke: Nikke) {
-                view.emojiRv.gone()
+                hideEmoji()
                 view.avatarIv.load(nikke.avatarPath, true)
                 view.selectNikkeCL.gone()
                 selectNikke = nikke
@@ -478,13 +478,14 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                     override fun setHolder(entity: MultipleType) {
                         view.avatarIv.load(ResourceUtil.getString(R.string.base_url) + "more.png")
                         view.root.singleClick {
-                            this@ModifyChatActivity.view.emojiRv.gone()
+                            this@ModifyChatActivity.hideEmoji()
                             AddNikkeDialog(object : AddNikkeListener {
                                 override fun onClick(nikkes: ArrayList<Nikke>) {
                                     val adapter = bindingAdapter as MultipleTypeAdapter
                                     adapter.insert(adapter.itemCount - 1, nikkes)
                                     chat.nikkes?.addAll(nikkes)
                                     chat.nikkeIds?.addAll(nikkes.map { it.id })
+                                    db.updateChat(chat)
                                 }
                             }).show(supportFragmentManager)
                         }
@@ -597,7 +598,7 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                     }
                                 }
                                 this@ModifyChatActivity.view.chatRv.smoothScrollToPosition(if (!isModify && !isInsert) adapter.itemCount - 1 else modifyPosition + 1)
-                                this@ModifyChatActivity.view.emojiRv.gone()
+                                this@ModifyChatActivity.hideEmoji()
                                 isModify = false
                                 isInsert = false
                             }
@@ -613,5 +614,9 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
     override fun bindLayout(): ActivityChatModifyBinding = ActivityChatModifyBinding.inflate(layoutInflater)
     private val gson: Gson by lazy {
         GsonBuilder().create()
+    }
+    fun hideEmoji() {
+        emojiAdapter.clear()
+        view.emojiRv.gone()
     }
 }
