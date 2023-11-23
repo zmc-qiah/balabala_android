@@ -15,12 +15,14 @@ import org.qiah.balabala.BaseApplication
 import org.qiah.balabala.MyListener.AddNikkeListener
 import org.qiah.balabala.MyListener.ClickItemListener
 import org.qiah.balabala.MyListener.SelectNikkeListener
+import org.qiah.balabala.R
 import org.qiah.balabala.SQLite.MyDataBaseHelper
 import org.qiah.balabala.adapter.MultipleTypeAdapter
 import org.qiah.balabala.bean.Nikke
 import org.qiah.balabala.databinding.DialogCreateNikkeChatBinding
 import org.qiah.balabala.databinding.ItemSelectNikkeBinding
 import org.qiah.balabala.util.GlideEngine
+import org.qiah.balabala.util.ResourceUtil
 import org.qiah.balabala.util.SpanItemDecoration
 import org.qiah.balabala.util.getHeight
 import org.qiah.balabala.util.gone
@@ -38,20 +40,21 @@ class AddNikkeDialog(var listener: AddNikkeListener) : BaseDialog<DialogCreateNi
     private val SelectNikkeListener by lazy {
         object : SelectNikkeListener {
             override fun select(nikke: Nikke) {
-                nikkes.add(nikke)
+                selectNikkes.add(nikke)
             }
 
             override fun unSelect(nikke: Nikke) {
-                nikkes.remove(nikke)
+                selectNikkes.remove(nikke)
             }
         }
     }
     private val db by lazy {
         MyDataBaseHelper(BaseApplication.context(), "Nikke_balabala", 1)
     }
-    private val nikkes by lazy {
+    private val selectNikkes by lazy {
         ArrayList<Nikke>()
     }
+    private lateinit var nikkes: ArrayList<Nikke>
     private val adapter by lazy {
         object : MultipleTypeAdapter() {
             override fun createViewHolder(
@@ -70,14 +73,15 @@ class AddNikkeDialog(var listener: AddNikkeListener) : BaseDialog<DialogCreateNi
         view.searchEt.typeface = Typeface.createFromAsset(BaseApplication.context().getAssets(), "SourceHanSansCN-Bold#1.otf")
         view.nameEt.typeface = Typeface.createFromAsset(BaseApplication.context().getAssets(), "SourceHanSansCN-Bold#1.otf")
         view.createIv.singleClick {
-            if (nikkes.size != 0) {
-                listener.onClick(nikkes)
+            if (selectNikkes.size != 0) {
+                listener.onClick(selectNikkes)
                 dismiss()
             } else {
                 "请选择Nikke".toast()
             }
         }
-        adapter.add(db.selectNikkeAll())
+        nikkes = db.selectNikkeAll()
+        adapter.add(nikkes)
         view.searchEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -88,12 +92,27 @@ class AddNikkeDialog(var listener: AddNikkeListener) : BaseDialog<DialogCreateNi
             override fun afterTextChanged(s: Editable?) {
                 val s1 = s.toString()
                 if (s1.isEmpty()) {
-                    adapter.clearAndAdd(db.selectNikkeAll())
+                    adapter.clearAndAdd(nikkes)
                 } else {
-                    if ("米西利斯".equals(s1) || "泰特拉".equals(s1) || "极乐净土".equals(s1) || "其他".equals(s1) || "朝圣者".equals(s1) || "新增".equals(s1)) {
-                        adapter.clearAndAdd(db.selectNikkeByEnterprise(s1))
+                    if ("米西利斯".equals(s1) || "泰特拉".equals(s1) || "极乐净土".equals(s1) || "其他".equals(s1) || "朝圣者".equals(s1) || ResourceUtil.getString(
+                            R.string.added_nikke_enterprise
+                        ).equals(s1)
+                    ) {
+                        adapter.clearAndAdd(
+                            nikkes.map {
+                                if (s1.equals(it.enterprise)) {
+                                    it
+                                } else null
+                            }.filterNotNull()
+                        )
                     } else {
-                        adapter.clearAndAdd(db.selectNikkeByName(s1))
+                        adapter.clearAndAdd(
+                            nikkes.map {
+                                if (it.name.contains(s1)) {
+                                    it
+                                } else null
+                            }.filterNotNull()
+                        )
                     }
                 }
             }
@@ -126,7 +145,16 @@ class AddNikkeDialog(var listener: AddNikkeListener) : BaseDialog<DialogCreateNi
             override fun onClick(data: String) {
                 temp?.let {
                     val id = db.addNikke(data, it)
-                    adapter.add(Nikke(data, "新增", temp, id))
+                    val bean = Nikke(
+                        data,
+                        ResourceUtil.getString(
+                            R.string.added_nikke_enterprise
+                        ),
+                        temp,
+                        id
+                    )
+                    nikkes.add(bean)
+                    adapter.add(bean)
                 }
             }
 

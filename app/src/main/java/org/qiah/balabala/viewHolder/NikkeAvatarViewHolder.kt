@@ -19,9 +19,14 @@ class NikkeAvatarViewHolder(view: ItemSelectNikkeBinding, var listener: SelectNi
                 view.avatarIv.load(entity.avatarId!!, 6)
             }
         )
-        view.aView.tag = false
+        val b = entity.flag
+        if (b) {
+            if (flag) view.aView.alpha = 0.4f
+        } else {
+            if (flag) view.aView.alpha = 0f
+        }
         view.aView.singleClick(time = 100L) {
-            val b = view.aView.tag as Boolean
+            val b = entity.flag
             if (!b) {
                 if (flag) view.aView.alpha = 0.4f
                 listener.select(entity)
@@ -29,7 +34,7 @@ class NikkeAvatarViewHolder(view: ItemSelectNikkeBinding, var listener: SelectNi
                 if (flag) view.aView.alpha = 0f
                 listener.unSelect(entity)
             }
-            view.aView.tag = !b
+            entity.flag = !b
         }
     }
 }

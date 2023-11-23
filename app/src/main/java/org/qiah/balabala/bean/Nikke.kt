@@ -12,6 +12,7 @@ data class Nikke(
     var enoji: ArrayList<String> ? = null
     var tememoji: String = ""
     var id: Int = 0
+    var flag = false
     constructor(name: String, enterprise: String, avatarId: Int?) : this(name, enterprise) {
         this.avatarId = avatarId
     }

@@ -91,7 +91,12 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
         ContentValues().apply {
             put("name", name)
             put("avatar", avatar)
-            put("enterprise", "新增")
+            put(
+                "enterprise",
+                ResourceUtil.getString(
+                    R.string.added_nikke_enterprise
+                )
+            )
         }
     ).toInt()
 
