@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.qiah.balabala.MyListener.ClickCreateListener
 import org.qiah.balabala.MyListener.ClickItemListener
+import org.qiah.balabala.MyListener.ClickLongChatDialogListener
+import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.SQLite.MyDataBaseHelper
 import org.qiah.balabala.activity.ModifyChatActivity
 import org.qiah.balabala.adapter.MultipleTypeAdapter
@@ -16,6 +18,7 @@ import org.qiah.balabala.bean.CreateChat
 import org.qiah.balabala.databinding.FragmentNikkeBinding
 import org.qiah.balabala.databinding.ItemNikkeMainBinding
 import org.qiah.balabala.dialog.CreateChatDialog
+import org.qiah.balabala.dialog.LongChatDialog
 import org.qiah.balabala.util.CommonItemDecoration
 import org.qiah.balabala.util.MyType
 import org.qiah.balabala.util.dp
@@ -51,7 +54,8 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
                     Log.d("chatAdapter", "createViewHolder: " + this.itemCount)
                     MainNikkeViewHolder(
                         ItemNikkeMainBinding.inflate(layoutInflater, viewGroup, false),
-                        onClick
+                        onClick,
+                        longListener
                     )
                 }
                 else -> null
@@ -79,7 +83,7 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
         }
         val chat = db.selectAllChat()
         find.numsTv.text = "对话清单:(${chat.size})"
-        chatAdapter.add(chat)
+        chatAdapter.add(chat.sortedBy { it.position })
     }
 
     override fun subscribeUi() {
@@ -104,6 +108,7 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
                     if (!nikkes.name.isNullOrEmpty()) nikkes.name else nikkes.nikkes.get(0).name,
                     nikkes.nikkes.get(0).avatarPath!!,
                     "",
+                    chatAdapter.itemCount + 1,
                     ArrayList(nikkes.nikkes.map { it.id }),
                     nikkes.nikkes
                 )
@@ -124,4 +129,29 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
         get() {
             return CreateChatDialog(listener)
         }
+    val longListener by lazy {
+        object : LongItemListener {
+            override fun onLongClick(location: IntArray, position: Int, entry: MyType) {
+                LongChatDialog(location, position, entry as Chat, onClickDialog).show(parentFragmentManager, LongChatDialog::class.simpleName)
+            }
+        }
+    }
+
+    private val onClickDialog: ClickLongChatDialogListener by lazy {
+        object : ClickLongChatDialogListener {
+            override fun onMoveTo(entry: Chat, position: Int) {
+                chatAdapter.moveToPostion(entry, 0)
+                db.moveChatToTop(entry)
+            }
+
+            override fun onUpdate(entry: Chat, position: Int) {
+            }
+
+            override fun onDelete(entry: Chat, position: Int) {
+                chatAdapter.remove(entry)
+                db.deleteChat(entry)
+                find.numsTv.text = "对话清单:(${chatAdapter.itemCount})"
+            }
+        }
+    }
 }

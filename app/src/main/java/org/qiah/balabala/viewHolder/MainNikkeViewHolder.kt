@@ -2,12 +2,13 @@ package org.qiah.balabala.viewHolder
 
 import android.util.Log
 import org.qiah.balabala.MyListener.ClickItemListener
+import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.bean.Chat
 import org.qiah.balabala.databinding.ItemNikkeMainBinding
 import org.qiah.balabala.util.load
 import org.qiah.balabala.util.singleClick
 
-class MainNikkeViewHolder(binding: ItemNikkeMainBinding, val listener: ClickItemListener<Chat>? = null) : MultipleViewHolder<ItemNikkeMainBinding, Chat>(binding) {
+class MainNikkeViewHolder(binding: ItemNikkeMainBinding, val listener: ClickItemListener<Chat>? = null, val onLong: LongItemListener) : MultipleViewHolder<ItemNikkeMainBinding, Chat>(binding) {
     companion object {
         var a = 1
     }
@@ -19,6 +20,13 @@ class MainNikkeViewHolder(binding: ItemNikkeMainBinding, val listener: ClickItem
         view.root.singleClick(time = 100L) {
             listener?.onClick(entity)
             listener?.onClick(entity, bindingAdapterPosition)
+        }
+        view.root.setOnLongClickListener {
+            val a = IntArray(2)
+            it.getLocationOnScreen(a)
+            val b = intArrayOf(a[0], a[1], it.width, it.height)
+            onLong.onLongClick(b, absoluteAdapterPosition, entity)
+            true
         }
     }
 

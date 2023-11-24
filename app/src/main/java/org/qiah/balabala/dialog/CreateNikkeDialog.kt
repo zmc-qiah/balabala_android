@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.qiah.balabala.MyListener.ClickItemListener
 import org.qiah.balabala.databinding.DialogAddNikkeBinding
-import org.qiah.balabala.util.dp
 import org.qiah.balabala.util.singleClick
 import org.qiah.balabala.util.toast
 
@@ -13,7 +12,7 @@ class CreateNikkeDialog(val listener: ClickItemListener<String>) : BaseDialog<Di
     init {
         gravity = Gravity.CENTER
         enableBack = true
-        height = 50.dp()
+        height = ViewGroup.LayoutParams.WRAP_CONTENT
         width = ViewGroup.LayoutParams.WRAP_CONTENT
     }
     override fun initView(view: DialogAddNikkeBinding) {

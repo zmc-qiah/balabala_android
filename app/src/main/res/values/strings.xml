@@ -1,3 +1,4 @@
+
 <resources>
     <string name="app_name">balabala</string>
     <string name="icon_sort_1">&#xe618;</string>
@@ -13,6 +14,7 @@
     <string name="icon_update">&#xe600;</string>
     <string name="icon_inset">&#xe63f;</string>
     <string name="icon_delete">&#xe63a;</string>
+    <string name="icon_move_top">&#xe62a;</string>
 
 
     <dimen name="Big_text_size">18sp</dimen>

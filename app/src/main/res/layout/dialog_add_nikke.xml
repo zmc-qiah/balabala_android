@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:layout_margin="12dp"
     android:id="@+id/searchRCL"
-    android:background="@drawable/round_white"
+    android:background="@drawable/round_white_6"
     android:elevation="8dp"
-    app:round_as_circle="true"
+    app:round_corner="6dp"
+    android:padding = "12dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent">
     <EditText
@@ -25,7 +26,7 @@
         android:id="@+id/searchEt"/>
     <org.qiah.balabala.widget.BoldTextView
         android:layout_width="60dp"
-        android:layout_height="match_parent"
+        android:layout_height="30dp"
         android:gravity="center"
         android:layout_marginEnd="6dp"
         android:layout_marginTop="3dp"

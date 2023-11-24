@@ -38,7 +38,8 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
         "\tavatar text,\n" +
         "\tname text,\n" +
         "\tnikkeids text,\n" +
-        "\tnews text\n" +
+        "\tnews text,\n" +
+        "\tposition integer\n" +
         ");"
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(createSQL)
@@ -260,18 +261,78 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 val avatar = c.getString(c.getColumnIndex("avatar"))
                 val news = c.getString(c.getColumnIndex("news"))
                 val nikkeids = c.getString(c.getColumnIndex("nikkeids"))
-//                val ids = gson.fromJson<ArrayList<Int>>(
-//                    nikkeids,
-//                    object : TypeToken<ArrayList<Int>>() {}.type
-//                )
-//                val nikkes = selectNikkeByIds(ids)
                 val id = c.getIntOrNull(c.getColumnIndex("id")) ?: 0
-                val nikke = Chat(id, name, avatar, news, nikkeids)
+                val position = c.getIntOrNull(c.getColumnIndex("position")) ?: 0
+                val nikke = Chat(id, name, avatar, news, position, nikkeids)
                 list.add(nikke)
             } while (c.moveToNext())
         }
         c.close()
         return list
+    }
+
+    @SuppressLint("Range")
+    fun moveChatToTop(chat: Chat) {
+        val c = this.rd.rawQuery(
+            "select * from chat where position < ?",
+            arrayOf(chat.position.toString())
+        )
+        val positions = ArrayList<Int>()
+        val ids = ArrayList<Int>()
+        if (c.moveToFirst()) {
+            do {
+                val position = c.getInt(c.getColumnIndex("position"))
+                val id = c.getInt(c.getColumnIndex("id"))
+                positions.add(position)
+                ids.add(id)
+            } while (c.moveToNext())
+        }
+        c.close()
+        for (i in 0 until positions.size) {
+            wd.update(
+                "chat",
+                ContentValues().apply {
+                    put("position", positions[i] + 1)
+                },
+                "id = ?",
+                arrayOf(ids[i].toString())
+            )
+        }
+        wd.update(
+            "chat",
+            ContentValues().apply {
+                put("position", 0)
+            },
+            "id = ?",
+            arrayOf(chat.id.toString())
+        )
+    }
+
+    @SuppressLint("Range")
+    fun deleteChat(chat: Chat) {
+        val c = this.rd.rawQuery("select * from chat where position > ?", arrayOf(chat.position.toString()))
+        val positions = ArrayList<Int>()
+        val ids = ArrayList<Int>()
+        if (c.moveToFirst()) {
+            do {
+                val position = c.getInt(c.getColumnIndex("position"))
+                val id = c.getInt(c.getColumnIndex("id"))
+                positions.add(position)
+                ids.add(id)
+            } while (c.moveToNext())
+        }
+        c.close()
+        for (i in 0 until positions.size) {
+            wd.update(
+                "chat",
+                ContentValues().apply {
+                    put("position", positions[i] - 1)
+                },
+                "id = ?",
+                arrayOf(ids[i].toString())
+            )
+        }
+        wd.delete("chat", "id = ?", arrayOf(chat.id.toString()))
     }
 
     @SuppressLint("Range")
@@ -283,7 +344,8 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
             val avatar = c.getString(c.getColumnIndex("avatar"))
             val news = c.getString(c.getColumnIndex("news"))
             val nikkeids = c.getString(c.getColumnIndex("nikkeids"))
-            res = Chat(id, name, avatar, news, nikkeids)
+            val position = c.getInt(c.getColumnIndex("position"))
+            res = Chat(id, name, avatar, news, position, nikkeids)
         }
         c.close()
         return res
@@ -291,7 +353,8 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
 
     @SuppressLint("Range")
     fun insertChat(chat: Chat): Int {
-        Log.d("TAG", "selectAllexceptionChat:" + gson.toJson(chat.nikkeIds))
+        val c = this.rd.rawQuery("select * from chat where position > ?", arrayOf(chat.position.toString()))
+        var count = c.count
         return this.wd.insert(
             "chat",
             null,
@@ -299,6 +362,7 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 put("name", chat.name)
                 put("avatar", chat.avatar)
                 put("news", chat.news)
+                put("position", count + 1)
                 put("nikkeids", gson.toJson(chat.nikkeIds))
             }
         ).toInt()
@@ -310,6 +374,7 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                 put("name", chat.name)
                 put("avatar", chat.avatar)
                 put("news", chat.news)
+                put("position", chat.position)
                 put("nikkeids", gson.toJson(chat.nikkeIds))
             },
             "id = ?",
