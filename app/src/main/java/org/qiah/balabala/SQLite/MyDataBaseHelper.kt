@@ -76,7 +76,7 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
                             split[1],
                             "${ResourceUtil.getString(R.string.base_url)}${ResourceUtil.getString(R.string.nikke)}${split[0]}",
                             split[2],
-                            ""
+                            if (split.size > 3) split[3] else ""
                         )
                     )
                 }
