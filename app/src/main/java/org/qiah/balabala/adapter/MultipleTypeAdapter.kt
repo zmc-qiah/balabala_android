@@ -97,4 +97,26 @@ abstract class MultipleTypeAdapter() :
             notifyItemRangeInserted(start, cnt - start + l)
         }
     }
+    fun remove(bean: MultipleType?) {
+        bean?.let {
+            if (data.contains(bean)) {
+                val i = data.indexOf(bean)
+                data.removeAt(i)
+                notifyItemRemoved(i)
+            }
+        }
+    }
+    fun moveToPostion(bean: MultipleType?, position: Int) {
+        bean?.let {
+            if (data.contains(bean)) {
+                val i = data.indexOf(bean)
+                if (position != i) {
+                    data.removeAt(i)
+                    data.add(position, bean)
+                    notifyItemRemoved(i)
+                    notifyItemInserted(position)
+                }
+            }
+        }
+    }
 }

@@ -47,6 +47,10 @@ fun enen(time: Long = 50) {
     val vibrator = BaseApplication.context().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     vibrator.vibrate(time)
 }
+fun sorry() {
+    enen()
+    "非常抱歉，该功能未开放".toast()
+}
 
 /**
  * @author : Wangjf
@@ -184,7 +188,7 @@ fun ImageView.load(@DrawableRes drawableResId: Int, radius: Int) {
             .into(this)
     }
 }
-fun ImageView.load(url: String?, max: Int, radius: Int) {
+fun ImageView.load(url: String?, max: Int, radius: Int, min: Int = 0) {
     if (!url.isNullOrEmpty() && url.endsWith(".gif")) {
         Glide.with(context)
             .asGif()
@@ -198,16 +202,21 @@ fun ImageView.load(url: String?, max: Int, radius: Int) {
                         resource.setLoopCount(100)
                         resource.start()
                         this@load.setImageDrawable(resource)
-                        val iw = resource.intrinsicWidth
+                        var iw = resource.intrinsicWidth
                         val ih = resource.intrinsicHeight
                         val ratio = iw.toFloat() / ih.toFloat()
-                        if (max > iw) {
-                            this@load.layoutParams.width = iw
-                            this@load.layoutParams.height = ih
+                        if (url.startsWith("https://")) {
+                            iw = min
                         } else {
-                            this@load.layoutParams.width = max
-                            this@load.layoutParams.height = (max / ratio).toInt()
+                            if (max < iw) {
+                                iw = max
+                            }
+                            if (min > iw) {
+                                iw = min
+                            }
                         }
+                        this@load.layoutParams.width = iw
+                        this@load.layoutParams.height = (iw / ratio).toInt()
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
                     }
@@ -246,16 +255,23 @@ fun ImageView.load(url: String?, max: Int, radius: Int) {
                         transition: Transition<in Drawable>?
                     ) {
                         this@load.setImageDrawable(resource)
-                        val iw = resource.intrinsicWidth
+                        var iw = resource.intrinsicWidth
                         val ih = resource.intrinsicHeight
                         val ratio = iw.toFloat() / ih.toFloat()
-                        if (max > iw) {
-                            this@load.layoutParams.width = iw
-                            this@load.layoutParams.height = ih
-                        } else {
-                            this@load.layoutParams.width = max
-                            this@load.layoutParams.height = (max / ratio).toInt()
+                        if (url != null) {
+                            if (url.startsWith("https://")) {
+                                iw = min
+                            } else {
+                                if (max < iw) {
+                                    iw = max
+                                }
+                                if (min > iw) {
+                                    iw = min
+                                }
+                            }
                         }
+                        this@load.layoutParams.width = iw
+                        this@load.layoutParams.height = (iw / ratio).toInt()
                     }
                     override fun onLoadCleared(placeholder: Drawable?) {
                     }

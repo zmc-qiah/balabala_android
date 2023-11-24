@@ -220,6 +220,16 @@ class MyDataBaseHelper(val context: Context, name: String, version: Int) : SQLit
             )
         }
     }
+    fun updateEmojiByNikke(nikke: Nikke) {
+        rd.update(
+            "Nikke",
+            ContentValues().apply {
+                put("emoji", gson.toJson(nikke.enoji))
+            },
+            "id = ?",
+            arrayOf(nikke.id.toString())
+        )
+    }
 
     @SuppressLint("Range")
     fun selectNikkeByEnterprise(enterprise: String): ArrayList<Nikke> {

@@ -45,7 +45,7 @@ class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) 
                 view.nameTv.show()
             }
         }
-        view.messageIv.load(entity.path, (getWidth() * 0.7).toInt(), 12)
+        view.messageIv.load(entity.path, (getWidth() * 0.7).toInt(), 12, (getWidth() * 0.35).toInt())
         view.root.setOnLongClickListener {
             val location = IntArray(2)
             view.root.getLocationOnScreen(location)

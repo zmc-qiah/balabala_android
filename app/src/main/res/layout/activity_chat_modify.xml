@@ -152,7 +152,7 @@
                 android:textColor="@color/icon_grey"
                 android:layout_marginEnd="8dp"
                 android:id="@+id/pictureIcon"
-                android:textSize="@dimen/mid_icon_size"
+                android:textSize="30dp"
                 app:layout_constraintEnd_toStartOf="@id/sendBtn"
                 app:layout_constraintTop_toTopOf="@id/sendBtn"
                 app:layout_constraintBottom_toBottomOf="@id/sendBtn"/>
@@ -174,7 +174,7 @@
                 android:text="@string/icon_picture"
                 android:textColor="@color/icon_grey"
                 android:id="@+id/tpictureIcon"
-                android:textSize="@dimen/mid_icon_size"
+                android:textSize="30dp"
                 android:visibility="gone"/>
         </androidx.constraintlayout.motion.widget.MotionLayout>
     </org.qiah.balabala.util.RoundConstraintLayout>

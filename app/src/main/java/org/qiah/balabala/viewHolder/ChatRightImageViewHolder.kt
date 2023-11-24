@@ -8,7 +8,7 @@ import org.qiah.balabala.util.load
 
 class ChatRightImageViewHolder(view: ItemChatRightImageBinding, val onLongItemListener: LongItemListener) : MultipleViewHolder<ItemChatRightImageBinding, ChatRightImage>(view) {
     override fun setHolder(entity: ChatRightImage) {
-        view.messageIv.load(entity.path, (getWidth() * 0.7).toInt(), 12)
+        view.messageIv.load(entity.path, (getWidth() * 0.7).toInt(), 12, (getWidth() * 0.35).toInt())
         view.root.setOnLongClickListener {
             val location = IntArray(2)
             view.root.getLocationOnScreen(location)
