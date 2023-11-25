@@ -568,7 +568,6 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                                                     }
                                                 )
                                                 if (selectNikke.enoji == null) {
-                                                    "aa".toast()
                                                     selectNikke.enoji = ArrayList()
                                                 }
                                                 selectNikke.enoji!!.addAll(
