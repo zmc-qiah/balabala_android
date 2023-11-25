@@ -140,6 +140,9 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
                         override fun viewType(): Int = MyType.CHAT_THING
                     })
                 }
+                view.chatRv.smoothScrollToPosition(if (!isModify && !isInsert) adapter.itemCount else modifyPosition + 1)
+            } else {
+                "没有和自己的事件".toast()
             }
         }
         view.selectNikkeCL.tag = false
