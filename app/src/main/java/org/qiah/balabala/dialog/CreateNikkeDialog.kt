@@ -1,11 +1,9 @@
 package org.qiah.balabala.dialog
 
-import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.qiah.balabala.MyListener.ClickItemListener
-import org.qiah.balabala.R
 import org.qiah.balabala.databinding.DialogAddNikkeBinding
 import org.qiah.balabala.util.singleClick
 import org.qiah.balabala.util.toast
@@ -33,8 +31,4 @@ class CreateNikkeDialog(val listener: ClickItemListener<String>) : BaseDialog<Di
         inflater: LayoutInflater,
         parent: ViewGroup?
     ): DialogAddNikkeBinding = DialogAddNikkeBinding.inflate(layoutInflater)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.AppBottomSheet)
-    }
 }
