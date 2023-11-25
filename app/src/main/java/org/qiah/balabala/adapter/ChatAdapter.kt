@@ -20,6 +20,7 @@ import org.qiah.balabala.databinding.ItemChatRightImageBinding
 import org.qiah.balabala.databinding.ItemChatRightTextBinding
 import org.qiah.balabala.databinding.ItemNarrationBinding
 import org.qiah.balabala.databinding.ItemSplitLineBinding
+import org.qiah.balabala.databinding.ItemThingBinding
 import org.qiah.balabala.dialog.ModifyDialog
 import org.qiah.balabala.util.MultipleType
 import org.qiah.balabala.util.MyType
@@ -29,6 +30,7 @@ import org.qiah.balabala.viewHolder.ChatRightImageViewHolder
 import org.qiah.balabala.viewHolder.ChatRightTextViewHolder
 import org.qiah.balabala.viewHolder.NarrationViewHolder
 import org.qiah.balabala.viewHolder.SplitViewHolder
+import org.qiah.balabala.viewHolder.ThingViewHolder
 
 class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listener: ClickModifyDialogListener) : MultipleTypeAdapter() {
     val getPre: (Int) -> MultipleType = { it -> data.get(it) }
@@ -110,6 +112,16 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
             onLongItemListener
         )
 
+        MyType.CHAT_THING -> {
+            ThingViewHolder(
+                ItemThingBinding.inflate(
+                    layoutInflater,
+                    viewGroup,
+                    false
+                ),
+                onLongItemListener
+            )
+        }
         else -> null
     }
 
@@ -151,6 +163,11 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
                         val nikke = db.selectNikkeById(it.nikkeId)
                         data.add(ChatLeftImage(it, it.content, nikke))
                     }
+                }
+                5 -> {
+                    data.add(object : ChatItem(it, it.content) {
+                        override fun viewType(): Int = MyType.CHAT_THING
+                    })
                 }
             }
         }

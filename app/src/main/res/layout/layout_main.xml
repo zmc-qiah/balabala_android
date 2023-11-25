@@ -46,6 +46,12 @@
         android:id="@+id/viewPage"
         app:layout_constraintTop_toBottomOf="@id/topView"
         app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:id="@+id/bgView"
+        android:src="@drawable/bg"/>
 <!--    <ImageView-->
 <!--        android:id="@+id/bgIv"-->
 <!--        android:layout_width="match_parent"-->

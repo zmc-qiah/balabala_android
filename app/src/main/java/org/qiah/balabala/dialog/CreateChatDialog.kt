@@ -1,5 +1,6 @@
 package org.qiah.balabala.dialog
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -158,4 +159,8 @@ class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCre
         }
     }
     private val TAG = CreateChatDialog::class.simpleName
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.AppBottomSheet)
+    }
 }

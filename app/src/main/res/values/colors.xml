@@ -20,4 +20,7 @@
     <color name="top_point">#F2F2F2</color>
     <color name="grey_1">#F7F7F7</color>
     <color name="red_delete">#FF4918</color>
+    <color name="pink">#FFEDF1</color>
+    <color name="deep_pink">#FF92A5</color>
+    <color name="thing_grey">#DBD5D5</color>
 </resources>

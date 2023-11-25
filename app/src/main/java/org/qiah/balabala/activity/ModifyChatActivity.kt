@@ -106,8 +106,42 @@ class ModifyChatActivity : BaseActivity<ActivityChatModifyBinding>() {
         val messages = db.selectAllMessageByChatId(chat.id)
         view.chatRv.addItemDecoration(CommonItemDecoration(8.dp()))
         adapter.addMessages(messages)
+        view.thingIv.load(R.drawable.btn_bg, 200)
     }
     fun loadClick() {
+        view.thingIv.singleClick {
+            if (selectNikke.id != 0) {
+                val s = selectNikke.name
+                val message = Message(
+                    0,
+                    chat.id,
+                    selectNikke.id,
+                    5,
+                    s,
+                    if (!isModify && !isInsert) adapter.itemCount else if (isModify) modifyPosition else modifyPosition + 1
+                )
+                if (!isModify) {
+                    message.id = db.insertMessage(message)
+                } else {
+                    message.id = modifyCI.message.id
+                    Log.d("addMessages", "onResult: " + message.postion + message.postion)
+                    db.updateMessage(message)
+                }
+                if (!isModify && !isInsert) {
+                    adapter.add(object : ChatItem(message, s) {
+                        override fun viewType(): Int = MyType.CHAT_THING
+                    })
+                } else if (isInsert) {
+                    adapter.insertMessage(object : ChatItem(message, s) {
+                        override fun viewType(): Int = MyType.CHAT_THING
+                    })
+                } else {
+                    adapter.updateMessage(object : ChatItem(message, s) {
+                        override fun viewType(): Int = MyType.CHAT_THING
+                    })
+                }
+            }
+        }
         view.selectNikkeCL.tag = false
         view.avatarIv.singleClick {
             hideEmoji()

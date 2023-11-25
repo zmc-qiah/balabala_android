@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toTopOf="@id/actionRcl"
         app:layout_constraintTop_toBottomOf="@id/topView"
         app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="16dp" />
+         />
 
     <org.qiah.balabala.util.RoundConstraintLayout
         android:id="@+id/actionRcl"
@@ -55,11 +55,12 @@
         android:paddingTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/chatRv"
         app:layout_constraintBottom_toTopOf="@id/emojiRv">
-        <TextView
+        <org.qiah.balabala.widget.MidTextView
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.2"
             android:gravity="center"
-            android:padding="4dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="@drawable/bg_select_btn"
             android:layout_height="wrap_content"
             android:text="消息"
@@ -69,24 +70,26 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv2"/>
-        <TextView
+        <org.qiah.balabala.widget.MidTextView
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.2"
             android:gravity="center"
-            android:padding="4dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="@drawable/bg_unselect_btn"
             android:layout_height="wrap_content"
-            android:text="事件"
+            android:text="旁白"
             android:textColor="@color/common_text_white"
             android:id="@+id/tv2"
             app:layout_constraintTop_toTopOf="@id/tv1"
             app:layout_constraintStart_toEndOf="@id/tv1"
             app:layout_constraintEnd_toStartOf="@id/tv3"/>
-        <TextView
+        <org.qiah.balabala.widget.MidTextView
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.2"
             android:gravity="center"
-            android:padding="4dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="@drawable/bg_unselect_btn"
             android:layout_height="wrap_content"
             android:text="分割"
@@ -94,7 +97,29 @@
             android:id="@+id/tv3"
             app:layout_constraintTop_toTopOf="@id/tv1"
             app:layout_constraintStart_toEndOf="@id/tv2"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toStartOf="@id/thingIv"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.2"
+            android:id="@+id/thingIv"
+            android:scaleType="centerCrop"
+            android:background="@drawable/round_white_12"
+            app:layout_constraintTop_toTopOf="@id/tv3"
+            app:layout_constraintBottom_toBottomOf="@id/tv3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv3"/>
+        <org.qiah.balabala.widget.MidTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/common_text_white"
+            android:text="事件"
+            app:layout_constraintStart_toStartOf="@id/thingIv"
+            app:layout_constraintEnd_toEndOf="@id/thingIv"
+            app:layout_constraintBottom_toBottomOf="@id/thingIv"
+            app:layout_constraintTop_toTopOf="@id/thingIv"
+            />
         <androidx.recyclerview.widget.RecyclerView
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="wrap_content"

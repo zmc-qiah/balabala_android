@@ -13,6 +13,7 @@ public abstract class MyType implements MultipleType{
     public static final int CHAT_NARRATION = 1026;
     public static final int ADD_EMOJI = 1027;
     public static final int EMOJI = 1028;
+    public static final int CHAT_THING = 1029;
     public String data = null;
 
     public MyType() {
