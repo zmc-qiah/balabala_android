@@ -51,7 +51,6 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
                 viewGroup: ViewGroup
             ): RecyclerView.ViewHolder? = when (i) {
                 MyType.CHAT -> {
-                    Log.d("chatAdapter", "createViewHolder: " + this.itemCount)
                     MainNikkeViewHolder(
                         ItemNikkeMainBinding.inflate(layoutInflater, viewGroup, false),
                         onClick,

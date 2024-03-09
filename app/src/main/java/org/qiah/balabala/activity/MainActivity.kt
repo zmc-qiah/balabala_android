@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jxxy.debug.sensors.SensorsDataLabel
 import org.qiah.balabala.BaseApplication
 import org.qiah.balabala.adapter.MyFragmentStateAdapter
 import org.qiah.balabala.bean.TabBean
@@ -20,6 +21,7 @@ import org.qiah.balabala.util.getHeight
 import org.qiah.balabala.util.hide
 import org.qiah.balabala.util.show
 
+@SensorsDataLabel("首页")
 class MainActivity : BaseActivity<LayoutMainBinding>() {
     private var tabs = mutableListOf<TabBean>(
         TabBean("任务"),

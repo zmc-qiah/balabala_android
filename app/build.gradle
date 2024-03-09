@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation project(':sensors_data')
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
     implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
     // https://mvnrepository.com/artifact/com.google.code.gson/gson

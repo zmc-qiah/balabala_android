@@ -1,2 +1,3 @@
 rootProject.name = "balabala"
 include ':app'
+include ':sensors_data'

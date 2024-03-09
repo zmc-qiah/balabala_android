@@ -29,6 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.TestActivity1"/>
+        <activity android:name=".activity.TestActivity2"/>
         <activity android:name=".activity.ModifyChatActivity"
             android:windowSoftInputMode="adjustPan"/>
 
