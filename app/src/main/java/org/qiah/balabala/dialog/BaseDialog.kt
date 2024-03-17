@@ -1,8 +1,10 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package org.qiah.balabala.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.* // ktlint-disable no-wildcard-imports
+import android.view.*
 import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
@@ -14,7 +16,6 @@ import org.qiah.balabala.R
  * @date : 2021/1/19
  */
 abstract class BaseDialog<T : ViewBinding> : DialogFragment() {
-
     var gravity = Gravity.CENTER
 
     @StyleRes
@@ -36,7 +37,11 @@ abstract class BaseDialog<T : ViewBinding> : DialogFragment() {
         setStyle(STYLE_NO_TITLE, R.style.BaseDialogTheme)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         val view = getView(inflater, container)
         initView(view)
         return view.root
@@ -50,12 +55,19 @@ abstract class BaseDialog<T : ViewBinding> : DialogFragment() {
     /**
      * 指定布局文件
      */
-    protected abstract fun getView(inflater: LayoutInflater, parent: ViewGroup?): T
+    protected abstract fun getView(
+        inflater: LayoutInflater,
+        parent: ViewGroup?,
+    ): T
+
     fun show(manager: FragmentManager) {
         show(manager, this::class.simpleName)
     }
 
-    override fun show(manager: FragmentManager, tag: String?) {
+    override fun show(
+        manager: FragmentManager,
+        tag: String?,
+    ) {
         try {
             val fragment = manager.findFragmentByTag(tag)
             if (fragment == null || !fragment.isAdded) {

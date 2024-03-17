@@ -1,12 +1,15 @@
 package org.jxxy.debug.sensors
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
+import android.view.View.OnClickListener
 import java.text.SimpleDateFormat
 import java.util.Collections
 import java.util.Date
@@ -95,3 +98,19 @@ class SensorsBindHelper {
         }
     }
 }
+//@SuppressWarnings("all")
+//@TargetApi(15)
+//fun View.getOnClickListener(): View.OnClickListener? {
+//    var res: View.OnClickListener? = null
+//    if (this.hasOnClickListeners()) {
+//        val clazz = this::class.java
+//        val method = clazz.getDeclaredMethod("getListenerInfo")
+//        method.isAccessible = true
+//        val info = method.invoke(this)
+//        val infoClass = Class.forName("android.view.View\$ListenerInfo")
+//        val declaredField = infoClass.getDeclaredField("mOnClickListener")
+//        declaredField.isAccessible = true
+//        res = declaredField as? OnClickListener
+//    }
+//    return res
+//}

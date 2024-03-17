@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
+    android:id="@+id/narration"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <org.qiah.balabala.widget.MidTextView
         android:layout_width="wrap_content"

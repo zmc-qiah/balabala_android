@@ -1,4 +1,5 @@
 package org.qiah.balabala
+
 import org.jxxy.debug.sensors.SensorsBind
 import org.qiah.balabala.SQLite.MyDataBaseHelper
 
@@ -16,6 +17,7 @@ class myApplication : BaseApplication() {
     override fun normalPath(): String {
         return "SourceHanSansCN-Normal#1.otf"
     }
+
     override fun blodPath(): String {
         return "SourceHanSansCN-Heavy#1.otf"
     }

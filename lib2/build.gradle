@@ -1,0 +1,50 @@
+plugins{
+    id 'java-library'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+    id 'org.jetbrains.kotlin.jvm'
+}
+dependencies {
+    implementation 'com.android.tools.build:gradle:7.0.3',{
+        exclude group:'org.ow2.asm'
+    }
+    implementation 'com.android.tools:common:30.0.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.ow2.asm:asm:9.2'
+    implementation 'org.ow2.asm:asm-commons:9.2'
+    implementation 'org.javassist:javassist:3.22.0-GA'
+    implementation 'org.ow2.asm:asm-tree:9.2'
+
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+gradlePlugin {
+    plugins {
+        modularPlugin {
+            // Plugin id.
+            id = 'org.jxxy.debug.TrackPlugin'
+            // Plugin implementation.
+            implementationClass = 'org.jxxy.debug.lib2.TrackPlugin'
+        }
+    }
+}
+
+publishing {
+    publications {
+        AutoTrackPlugin(MavenPublication) {
+            from components.java
+            groupId 'org.jxxy.debug'
+            artifactId 'TrackPlugin'
+            version "1.0.0"
+        }
+    }
+    repositories {
+        maven {
+            url "$rootDir/localMavenRepository/snapshot"
+        }
+    }
+}

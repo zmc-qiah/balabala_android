@@ -1,6 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="40dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <org.qiah.balabala.activity.CenterLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+        <TextView
+            android:id="@+id/aTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aaaaaaaaaaaaaaaaaa"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12">
+
+
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="xrfccc"
+            android:padding="12dp"
+
+            android:background="@drawable/round_deep_pink_12"
+
+            />
+        <ImageView
+            android:id="@+id/aIv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cascsacsacaas141asc51sac"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <ImageView
+            android:id="@+id/aIv2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sacsac854848f"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aaaaaaaaaaaaaaaaaa"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="xrfccc"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aaaaaaaaaaaaaaaaaa"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12">
+
+
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="xrfccc"
+            android:padding="12dp"
+
+            android:background="@drawable/round_deep_pink_12"
+
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cascsacsacaas141asc51sac"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sacsac854848f"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aaaaaaaaaaaaaaaaaa"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="xrfccc"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aaaaaaaaaaaaaaaaaa"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12">
+
+
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="xrfccc"
+            android:padding="12dp"
+
+            android:background="@drawable/round_deep_pink_12"
+
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cascsacsacaas141asc51sac"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sacsac854848f"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aaaaaaaaaaaaaaaaaa"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="xrfccc"
+            android:padding="12dp"
+            android:background="@drawable/round_deep_pink_12"
+
+            />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/qwer" />
+
+
+    </org.qiah.balabala.activity.CenterLayout>
+</ScrollView>

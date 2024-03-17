@@ -15,15 +15,17 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     protected lateinit var find: T
         private set
     private var isLoaded = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         find = bindLayout()
 //        initColorStatusBar(find.root)
         return find.root
     }
+
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         lazyInit()

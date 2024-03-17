@@ -1,6 +1,7 @@
 package org.qiah.balabala.activity
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.Typeface
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -23,16 +24,18 @@ import org.qiah.balabala.util.show
 
 @SensorsDataLabel("首页")
 class MainActivity : BaseActivity<LayoutMainBinding>() {
-    private var tabs = mutableListOf<TabBean>(
-        TabBean("任务"),
-        TabBean("妮姬"),
-        TabBean("队伍")
-    )
+    private val tabs =
+        mutableListOf<TabBean>(
+            TabBean("任务"),
+            TabBean("妮姬"),
+            TabBean("队伍"),
+        )
     private val adapter by lazy {
         setFragment()
         MyFragmentStateAdapter(fragments, this)
     }
     private lateinit var fragments: MutableList<Fragment>
+
     override fun initView() {
         view.viewPage.adapter = adapter
         view.viewPage.isUserInputEnabled = false
@@ -46,29 +49,33 @@ class MainActivity : BaseActivity<LayoutMainBinding>() {
             }
         }.attach()
         view.bgView.x
-        view.tableLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab?.let {
-                    (it.tag as? ItemMainTabBinding)?.unLineView.show()
+        view.tableLayout.addOnTabSelectedListener(
+            object : OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    tab?.let {
+                        (it.tag as? ItemMainTabBinding)?.unLineView.show()
+                    }
                 }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                tab?.let {
-                    (it.tag as? ItemMainTabBinding)?.unLineView.hide()
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    tab?.let {
+                        (it.tag as? ItemMainTabBinding)?.unLineView.hide()
+                    }
                 }
-            }
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                tab?.let {
-                    (it.tag as? ItemMainTabBinding)?.unLineView.show()
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    tab?.let {
+                        (it.tag as? ItemMainTabBinding)?.unLineView.show()
+                    }
                 }
-            }
-        })
-        view.aTv.typeface = Typeface.createFromAsset(BaseApplication.context().getAssets(), "blabla.ttf")
+            },
+        )
+        view.aTv.typeface =
+            Typeface.createFromAsset(BaseApplication.context().getAssets(), "blabla.ttf")
     }
-    companion object {
-        @JvmStatic
-        private var flag = false
-    }
+
+    private var flag = false
+
     override fun onStart() {
         super.onStart()
         if (!flag) {
@@ -80,7 +87,7 @@ class MainActivity : BaseActivity<LayoutMainBinding>() {
                         view.bgView,
                         "y",
                         0f,
-                        -1.0f * getHeight()
+                        -1.0f * getHeight(),
                     ).apply {
                         duration = 400
                         start()
@@ -89,13 +96,19 @@ class MainActivity : BaseActivity<LayoutMainBinding>() {
             }
         }
     }
+
     override fun subscribeUi() {
+        val intent = Intent(this, TestActivity2::class.java)
+        intent.putExtra("aa", "acsacsacsa")
+        startActivity(intent)
     }
+
     private fun setFragment() {
         fragments = ArrayList<Fragment>()
         fragments.add(MainFragment())
         fragments.add(MainFragment())
         fragments.add(MainFragment())
     }
+
     override fun bindLayout(): LayoutMainBinding = LayoutMainBinding.inflate(layoutInflater)
 }

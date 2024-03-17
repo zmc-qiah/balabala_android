@@ -19,7 +19,7 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Balabala"
-        tools:targetApi="31">
+        tools:targetApi="30">
         <activity
             android:name=".activity.MainActivity"
             android:exported="true">
@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TestActivity1"/>
+        <activity android:name=".activity.TestActivity"/>
         <activity android:name=".activity.TestActivity2"/>
         <activity android:name=".activity.ModifyChatActivity"
             android:windowSoftInputMode="adjustPan"/>
