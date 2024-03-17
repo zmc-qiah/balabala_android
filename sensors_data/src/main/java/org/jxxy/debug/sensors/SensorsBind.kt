@@ -8,9 +8,12 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import org.jxxy.debug.maidian.R
+import java.lang.ref.WeakReference
+import kotlin.math.min
 
 object SensorsBind {
     lateinit var app: Application
@@ -20,18 +23,20 @@ object SensorsBind {
     private val hashMap: HashMap<Any, DataLabel> by lazy {
         HashMap()
     }
+    private var nowActivity: WeakReference<Activity>? = null
     var isReflection: Boolean = true
     var isReflectionActivity: Boolean = false
     var isReflectionFragment: Boolean = false
     var isReflectionClick: Boolean = false
     var isReflectionDialog: Boolean = false
+    var maxTextSize: Int = 20
     private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var mDeviceId: String
 
     private lateinit var sensorsBindHelper: SensorsBindHelper
 
-    fun init(app: Application)  {
+    fun init(app: Application) {
         this.app = app
         sensorsBindHelper = SensorsBindHelper()
         sensorsBindHelper.sharedPreferences =
@@ -76,6 +81,7 @@ object SensorsBind {
                 }
 
                 override fun onActivityDestroyed(activity: Activity) {
+                    hashMap.remove(activity)
                 }
             },
         )
@@ -136,6 +142,7 @@ object SensorsBind {
         }
 
     private fun onActivityPaused(activity: Activity) {
+        nowActivity?.clear()
         hashMap.getOrDefault(activity, null)?.let {
             onObtainData(
                 Event(
@@ -156,6 +163,7 @@ object SensorsBind {
     }
 
     private fun onActivityResumed(activity: Activity) {
+        nowActivity = WeakReference(activity)
         handler.removeCallbacks(onAppEnd)
         hashMap.getOrDefault(activity, null)?.let {
             onObtainData(
@@ -180,22 +188,58 @@ object SensorsBind {
 
     @JvmStatic
     fun onTrackView(view: View?) {
-        view?.let {
+        view?.let { view ->
             val context = app.baseContext
-            val resourceName = context.resources.getResourceName(if (it.id > 10) it.id else R.id.sensors_default_id)
-            onObtainData(
-                Event(
-                    Event.EVENT_ACTIVITY_STOP,
-                    "$resourceName be clicked",
-                    mapOf(
-                        "view_id" to resourceName,
-                        "className" to view::class.simpleName.toString(),
-                        "deviceId" to mDeviceId,
-                        "deviceInfo" to mDeviceInfo.toString(),
-                    ),
-                ),
-            )
+            val resourceName = context.resources.getResourceName(if (view.id > 10) view.id else R.id.sensors_default_id)
+            val name = "$resourceName be clicked"
+            val type = Event.EVENT_VIEW_CLICK
+            val map = mutableMapOf<String, String>()
+            nowActivity?.get()?.let {
+                hashMap[it]?.let {
+                    map["activity"] = it.className
+                }
+            }
+            map["TAG"] = view.tag?.toString() ?: ""
+            if (isReflection || isReflectionClick) {
+                getViewInfo(view, map)
+            }
+            a(type, name, map)
         }
+    }
+
+    private fun getViewInfo(
+        view: View,
+        map: MutableMap<String, String>,
+    ) {
+        val kClass = view::class.java
+        map["class"] = kClass.simpleName.toString()
+        if (view is TextView) {
+            map["text"] = view.text.substring(0, min(view.text.length, maxTextSize))
+        } else if (isReflectionClick) {
+            val annotation = kClass.getAnnotation(SensorsViewLabelFiled::class.java)
+            if (annotation != null) {
+                val field = annotation.value
+                val declaredField = kClass.getDeclaredField(field)
+                val any = declaredField.get(view)?.toString() ?: ""
+                map["label"] = "$field = $any"
+            }
+        }
+    }
+
+    fun a(
+        type: Int,
+        name: String,
+        map: Map<String, String>,
+    ) {
+        val map1 = HashMap(map)
+        map1["deviceId"] = mDeviceId
+        onObtainData(
+            Event(
+                type,
+                name,
+                map1,
+            ),
+        )
     }
 
     @JvmStatic
