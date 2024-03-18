@@ -6,26 +6,29 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.room.Room
 import org.jxxy.debug.maidian.R
+import org.jxxy.debug.sensors.dataBase.Event
+import org.jxxy.debug.sensors.dataBase.EventDataBase
 import java.lang.ref.WeakReference
 import kotlin.math.min
 
 object SensorsBind {
     lateinit var app: Application
     private val TAG = "SensorsBind"
+    private var flag = true
     private val appBackgroundDuration = 500L
     private lateinit var mDeviceInfo: Map<String, Any>
     private val hashMap: HashMap<Any, DataLabel> by lazy {
         HashMap()
     }
+    private val lock = Any()
     private var nowActivity: WeakReference<Activity>? = null
     var isReflection: Boolean = true
-    var isReflectionActivity: Boolean = false
     var isReflectionFragment: Boolean = false
     var isReflectionClick: Boolean = false
     var isReflectionDialog: Boolean = false
@@ -35,57 +38,68 @@ object SensorsBind {
     private lateinit var mDeviceId: String
 
     private lateinit var sensorsBindHelper: SensorsBindHelper
+    private lateinit var sensorDataManager: SensorDataManager
 
     fun init(app: Application) {
-        this.app = app
-        sensorsBindHelper = SensorsBindHelper()
-        sensorsBindHelper.sharedPreferences =
-            app.getSharedPreferences(
-                app.resources.getString(app.applicationInfo.labelRes),
-                Context.MODE_PRIVATE,
-            )
-        mDeviceId = sensorsBindHelper.getAndroidID(app.applicationContext)
-        mDeviceInfo = sensorsBindHelper.getDeviceInfo(app.applicationContext)
-        app.registerActivityLifecycleCallbacks(
-            object : Application.ActivityLifecycleCallbacks {
-                override fun onActivityCreated(
-                    activity: Activity,
-                    savedInstanceState: Bundle?,
-                ) {
-                    val annotation = activity::class.java.getAnnotation(SensorsDataLabel::class.java)
-                    val label = annotation?.value ?: " "
-                    val packName = activity.packageManager.getActivityInfo(activity.componentName, 0).packageName.toString()
-                    val string = activity::class.simpleName.toString()
-                    hashMap.put(activity, DataLabel(label, string, packName))
+        synchronized(lock) {
+            if (flag) {
+                this.app = app
+                sensorsBindHelper = SensorsBindHelper()
+                val preferences =
+                    app.getSharedPreferences(
+                        app.resources.getString(app.applicationInfo.labelRes),
+                        Context.MODE_PRIVATE,
+                    )
+                sensorsBindHelper.sharedPreferences =
+                    preferences
+                mDeviceId = sensorsBindHelper.getAndroidID(app.applicationContext)
+                mDeviceInfo = sensorsBindHelper.getDeviceInfo(app.applicationContext)
+                val db = Room.databaseBuilder(app.applicationContext, EventDataBase::class.java, "sensor_data").build()
+                val dao = db.eventDao()
+                sensorDataManager = SensorDataManager(preferences, dao, app.applicationContext)
+                app.registerActivityLifecycleCallbacks(
+                    object : Application.ActivityLifecycleCallbacks {
+                        override fun onActivityCreated(
+                            activity: Activity,
+                            savedInstanceState: Bundle?,
+                        ) {
+                            val annotation = activity::class.java.getAnnotation(SensorsDataLabel::class.java)
+                            val label = annotation?.value ?: ""
+                            val packName = activity.packageManager.getActivityInfo(activity.componentName, 0).packageName.toString()
+                            val string = activity::class.simpleName.toString()
+                            hashMap.put(activity, DataLabel(label, string, packName))
 //                    activity.window.callback = SensorsWindowCallback(activity, activity.window.callback)
-                }
+                        }
 
-                override fun onActivityStarted(activity: Activity) {
-                }
+                        override fun onActivityStarted(activity: Activity) {
+                        }
 
-                override fun onActivityResumed(activity: Activity) {
-                    this@SensorsBind.onActivityResumed(activity)
-                }
+                        override fun onActivityResumed(activity: Activity) {
+                            this@SensorsBind.onActivityResumed(activity)
+                        }
 
-                override fun onActivityPaused(activity: Activity) {
-                    this@SensorsBind.onActivityPaused(activity)
-                }
+                        override fun onActivityPaused(activity: Activity) {
+                            this@SensorsBind.onActivityPaused(activity)
+                        }
 
-                override fun onActivityStopped(activity: Activity) {
-                }
+                        override fun onActivityStopped(activity: Activity) {
+                        }
 
-                override fun onActivitySaveInstanceState(
-                    activity: Activity,
-                    outState: Bundle,
-                ) {
-                }
+                        override fun onActivitySaveInstanceState(
+                            activity: Activity,
+                            outState: Bundle,
+                        ) {
+                        }
 
-                override fun onActivityDestroyed(activity: Activity) {
-                    hashMap.remove(activity)
-                }
-            },
-        )
-        appStart(app, mDeviceId, mDeviceInfo)
+                        override fun onActivityDestroyed(activity: Activity) {
+                            hashMap.remove(activity)
+                        }
+                    },
+                )
+                appStart(app, mDeviceId, mDeviceInfo)
+                flag = false
+            }
+        }
     }
 
     private fun appStart(
@@ -95,21 +109,20 @@ object SensorsBind {
     ) {
         val name = app.resources.getString(app.applicationInfo.labelRes)
         if (!sensorsBindHelper.checkEnd()) {
-            onObtainData(
+            sensorDataManager.onObtainData(
                 Event(
-                    Event.EVENT_APP_START,
+                    Event.EVENT_APP_END,
                     name + "结束——补发",
                     mapOf(
                         "packName" to app.applicationInfo.packageName,
                         "className" to app::class.simpleName.toString(),
                         "deviceId" to mDeviceId,
-                        "deviceInfo" to mDeviceInfo.toString(),
                     ),
                 ),
             )
         }
         sensorsBindHelper.setStart()
-        onObtainData(
+        sensorDataManager.onObtainData(
             Event(
                 Event.EVENT_APP_START,
                 name + "启动",
@@ -126,15 +139,14 @@ object SensorsBind {
     private val onAppEnd =
         Runnable {
             val name = app.resources.getString(app.applicationInfo.labelRes)
-            onObtainData(
+            sensorDataManager.onObtainData(
                 Event(
-                    Event.EVENT_APP_START,
+                    Event.EVENT_APP_END,
                     name + "结束",
                     mapOf(
                         "packName" to app.applicationInfo.packageName,
                         "className" to app::class.simpleName.toString(),
                         "deviceId" to mDeviceId,
-                        "deviceInfo" to mDeviceInfo.toString(),
                     ),
                 ),
             )
@@ -144,17 +156,20 @@ object SensorsBind {
     private fun onActivityPaused(activity: Activity) {
         nowActivity?.clear()
         hashMap.getOrDefault(activity, null)?.let {
-            onObtainData(
+            val map =
+                mutableMapOf<String, String>(
+                    "packName" to it.packName,
+                    "className" to it.className,
+                    "deviceId" to mDeviceId,
+                )
+            if (it.label.length > 1) {
+                map["label"] = it.label
+            }
+            sensorDataManager.onObtainData(
                 Event(
                     Event.EVENT_ACTIVITY_STOP,
-                    "${it.className} stopped",
-                    mapOf<String, String>(
-                        "label" to it.label,
-                        "packName" to it.packName,
-                        "className" to it.className,
-                        "deviceId" to mDeviceId,
-                        "deviceInfo" to mDeviceInfo.toString(),
-                    ),
+                    "${it.className} Paused",
+                    map,
                 ),
             )
         }
@@ -166,40 +181,31 @@ object SensorsBind {
         nowActivity = WeakReference(activity)
         handler.removeCallbacks(onAppEnd)
         hashMap.getOrDefault(activity, null)?.let {
-            onObtainData(
+            sensorDataManager.onObtainData(
                 Event(
-                    Event.EVENT_ACTIVITY_STOP,
+                    Event.EVENT_ACTIVITY_RESUMED,
                     "${it.className} resumed",
                     mapOf<String, String>(
                         "label" to it.label,
                         "packName" to it.packName,
                         "className" to it.className,
                         "deviceId" to mDeviceId,
-                        "deviceInfo" to mDeviceInfo.toString(),
                     ),
                 ),
             )
         }
     }
 
-    private fun onObtainData(event: Event) {
-        Log.d(TAG, "onObtainData: event: $event")
-    }
-
     @JvmStatic
     fun onTrackView(view: View?) {
         view?.let { view ->
-            val context = app.baseContext
+            val context = view.context
             val resourceName = context.resources.getResourceName(if (view.id > 10) view.id else R.id.sensors_default_id)
             val name = "$resourceName be clicked"
             val type = Event.EVENT_VIEW_CLICK
             val map = mutableMapOf<String, String>()
-            nowActivity?.get()?.let {
-                hashMap[it]?.let {
-                    map["activity"] = it.className
-                }
-            }
             map["TAG"] = view.tag?.toString() ?: ""
+            map["id"] = view.id.toString()
             if (isReflection || isReflectionClick) {
                 getViewInfo(view, map)
             }
@@ -229,27 +235,52 @@ object SensorsBind {
     fun a(
         type: Int,
         name: String,
-        map: Map<String, String>,
+        map: MutableMap<String, String>,
     ) {
-        val map1 = HashMap(map)
-        map1["deviceId"] = mDeviceId
-        onObtainData(
+        map["deviceId"] = mDeviceId
+        nowActivity?.get()?.let {
+            hashMap[it]?.let {
+                map["activity"] = it.className
+            }
+        }
+        sensorDataManager.onObtainData(
             Event(
                 type,
                 name,
-                map1,
+                map,
             ),
         )
     }
 
     @JvmStatic
     fun onFragmentResume(fragment: Fragment) {
-        Log.d(TAG, "onFragmentResume: " + if (fragment.activity != null) fragment.activity!!::class.simpleName.toString() else "无")
+        val type = Event.EVENT_FRAGMENT_RESUMED
+        val name = "fragment:${fragment::class.java.simpleName}可见"
+        val map = HashMap<String, String>()
+        if (isReflection || isReflectionFragment) {
+            map["class"] = fragment::class.java.simpleName
+            val dataLabel = fragment::class.java.getAnnotation(SensorsDataLabel::class.java)
+            if (dataLabel != null) {
+                map["label"] = dataLabel.value
+            }
+        }
+        a(type, name, map)
     }
 
     @JvmStatic
     fun onFragmentPause(fragment: Fragment) {
-        Log.d(TAG, "onFragmentPause: ")
+        val type = Event.EVENT_FRAGMENT_PAUSE
+        val simpleName = fragment::class.java.simpleName
+        val name = "fragment:${simpleName}不可见"
+        val map = HashMap<String, String>()
+        if (isReflection || isReflectionFragment) {
+            map["class"] = simpleName
+            val dataLabel = fragment::class.java.getAnnotation(SensorsDataLabel::class.java)
+            if (dataLabel != null) {
+                map["label"] = dataLabel.value
+            }
+        }
+        a(type, name, map)
     }
 
     @JvmStatic
@@ -257,7 +288,19 @@ object SensorsBind {
         dialog: DialogFragment,
         tag: String?,
     ) {
-        Log.d(TAG, "onDialogShow: ")
+        val type = Event.EVENT_DIALOG_SHOW
+        val simpleName = dialog::class.java.simpleName
+        val name = "dialog:${simpleName}可见"
+        val map = HashMap<String, String>()
+        map["tag"] = tag ?: " "
+        if (isReflection || isReflectionDialog) {
+            map["class"] = simpleName
+            val dataLabel = dialog::class.java.getAnnotation(SensorsDataLabel::class.java)
+            if (dataLabel != null) {
+                map["label"] = dataLabel.value
+            }
+        }
+        a(type, name, map)
     }
 
     @JvmStatic
@@ -265,6 +308,20 @@ object SensorsBind {
         dialog: DialogFragment,
         tag: String?,
     ) {
-        Log.d(TAG, "onDialogDismiss: ")
+        val type = Event.EVENT_DIALOG_DISSMISS
+        val simpleName = dialog::class.java.simpleName
+        val name = "dialog:${simpleName}不可见"
+        val map = HashMap<String, String>()
+        map["tag"] = tag ?: " "
+        if (isReflection || isReflectionDialog) {
+            map["class"] = simpleName
+            val dataLabel = dialog::class.java.getAnnotation(SensorsDataLabel::class.java)
+            if (dataLabel != null) {
+                map["label"] = dataLabel.value
+            }
+        }
+        a(type, name, map)
     }
+
+    val ID = "NOWID"
 }

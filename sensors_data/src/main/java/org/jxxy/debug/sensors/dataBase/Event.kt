@@ -1,18 +1,28 @@
-package org.jxxy.debug.sensors
+package org.jxxy.debug.sensors.dataBase
 
-import java.text.SimpleDateFormat
-import java.util.Date
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class Event(val type: Int, val name: String, val eventMap: Map<String, String>) {
-    val time: String
+@Entity(tableName = "sensors_data_event")
+class Event(
+    @ColumnInfo
+    var type: Int,
+    @ColumnInfo
+    var name: String,
+    @ColumnInfo
+    var eventMap: Map<String, String>,
+) {
+    var time: Long
+
+    @PrimaryKey(autoGenerate = true)
+    var id: Long? = null
 
     init {
-        val date = Date(System.currentTimeMillis())
-        time = formatter.format(date)
+        time = System.currentTimeMillis()
     }
 
     companion object {
-        final val formatter = SimpleDateFormat("yyyy年-MM月dd日-HH时mm分ss秒")
         final const val EVENT_APP_START = 1022
         final const val EVENT_APP_END = 1023
         final const val EVENT_ACTIVITY_RESUMED = 1024
@@ -25,6 +35,6 @@ class Event(val type: Int, val name: String, val eventMap: Map<String, String>) 
     }
 
     override fun toString(): String {
-        return "Event(type=$type, name='$name', eventMap=$eventMap, time='$time')"
+        return "Event(type=$type, name='$name', eventMap=$eventMap, time='$time', id=$id)"
     }
 }

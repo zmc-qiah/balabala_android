@@ -23,7 +23,6 @@ class SensorsWindowCallback(
     private val activity: Activity,
     private val callback: Window.Callback,
 ) : Window.Callback {
-    @Suppress("ktlint:standard:property-naming")
     private val TAG = "SensorsBind"
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {

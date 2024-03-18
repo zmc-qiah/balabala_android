@@ -2,7 +2,6 @@ apply from: '../config.gradle'
 
 project.ext.configAppModule project
 apply plugin: 'org.jxxy.debug.TrackPlugin'
-//apply plugin: 'cn.sensorsdata.autotrack.plugin'
 
 dependencies {
     implementation project(':sensors_data')
