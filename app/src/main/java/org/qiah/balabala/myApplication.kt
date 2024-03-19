@@ -1,13 +1,13 @@
 package org.qiah.balabala
 
-import org.jxxy.debug.sensors.SensorsBind
+import org.jxxy.debug.sensors.SensorsBind.SensorsBindBuilder
 import org.qiah.balabala.SQLite.MyDataBaseHelper
 
 class myApplication : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         MyDataBaseHelper(context(), "Nikke_balabala", 1)
-        SensorsBind.init(this)
+        SensorsBindBuilder(this).init()
     }
 
     public override fun iconFontPath(): String {

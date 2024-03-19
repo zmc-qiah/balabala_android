@@ -21,7 +21,6 @@ class SensorDataManager(val preferences: SharedPreferences? = null, val dao: Eve
     private val TAG = "SensorDataManager"
     private var gson: Gson = Gson()
     private val mutex = Mutex()
-    private var targetId = 0L
 
     fun onObtainData(event: Event) {
         runBlocking(Dispatchers.IO) {

@@ -21,29 +21,39 @@ object SensorsBind {
     lateinit var app: Application
     private val TAG = "SensorsBind"
     private var flag = true
-    private val appBackgroundDuration = 500L
+    private var appBackgroundDuration = 3000L
     private lateinit var mDeviceInfo: Map<String, Any>
     private val hashMap: HashMap<Any, DataLabel> by lazy {
         HashMap()
     }
     private val lock = Any()
     private var nowActivity: WeakReference<Activity>? = null
-    var isReflection: Boolean = true
-    var isReflectionFragment: Boolean = false
-    var isReflectionClick: Boolean = false
-    var isReflectionDialog: Boolean = false
-    var maxTextSize: Int = 20
+    private var isReflection: Boolean = true
+    private var isReflectionFragment: Boolean = false
+    private var isReflectionClick: Boolean = false
+    private var isReflectionDialog: Boolean = false
+    private var maxTextSize: Int = 20
     private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var mDeviceId: String
 
     private lateinit var sensorsBindHelper: SensorsBindHelper
     private lateinit var sensorDataManager: SensorDataManager
+    private var headers: Map<String, String>? = null
+    private var url: String? = null
 
-    fun init(app: Application) {
+    fun init(build: SensorsBindBuilder) {
         synchronized(lock) {
             if (flag) {
-                this.app = app
+                app = build.tempApp
+                isReflection = build.isReflection
+                isReflectionFragment = build.isReflectionFragment
+                isReflectionClick = build.isReflectionClick
+                isReflectionDialog = build.isReflectionDialog
+                maxTextSize = build.maxTextSize
+                headers = build.headers
+                url = build.url
+                appBackgroundDuration = build.appBackgroundDuration
                 sensorsBindHelper = SensorsBindHelper()
                 val preferences =
                     app.getSharedPreferences(
@@ -324,4 +334,68 @@ object SensorsBind {
     }
 
     val ID = "NOWID"
+
+    class SensorsBindBuilder(val tempApp: Application) {
+        var appBackgroundDuration: Long = 0
+            private set
+        var isReflectionDialog: Boolean = false
+            private set
+        var maxTextSize: Int = 0
+            private set
+        var isReflectionClick: Boolean = false
+            private set
+        var isReflectionFragment: Boolean = false
+            private set
+        var isReflection: Boolean = false
+            private set
+
+        fun setAppBackgroundDuration(duration: Long): SensorsBindBuilder {
+            appBackgroundDuration = duration
+            return this
+        }
+
+        fun isReflectionDialog(isReflectionDialog: Boolean): SensorsBindBuilder {
+            this.isReflectionDialog = isReflectionDialog
+            return this
+        }
+
+        fun setMaxTextSize(size: Int): SensorsBindBuilder {
+            maxTextSize = size
+            return this
+        }
+
+        fun isReflectionClick(isReflectionClick: Boolean): SensorsBindBuilder {
+            this.isReflectionClick = isReflectionClick
+            return this
+        }
+
+        fun isReflectionFragment(isReflectionFragment: Boolean): SensorsBindBuilder {
+            this.isReflectionFragment = isReflectionFragment
+            return this
+        }
+
+        fun isReflection(isReflection: Boolean): SensorsBindBuilder {
+            this.isReflection = isReflection
+            return this
+        }
+
+        var headers: Map<String, String>? = null
+            private set
+        var url: String? = null
+            private set
+
+        fun setHeaders(headers: Map<String, String>?): SensorsBindBuilder {
+            this.headers = headers
+            return this
+        }
+
+        fun setUrl(url: String?): SensorsBindBuilder {
+            this.url = url
+            return this
+        }
+
+        fun init() {
+            SensorsBind.init(this)
+        }
+    }
 }
