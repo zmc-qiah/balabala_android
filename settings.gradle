@@ -2,6 +2,5 @@ rootProject.name = "balabala"
 include ':app'
 include ':sensors_data'
 include ':lib2'
-//include ':autotrack_sdk'
-//include ':autotrack_plugin'
-
+//
+//include ':adapter'

@@ -15,6 +15,7 @@ class LambdaNodeAdapter(api: Int, val classVisitor: ClassVisitor) : ClassNode(ap
     override fun visitEnd() {
         super.visitEnd()
         //            log("lambda: " + this.name, true)
+
         val shouldHookMethodList = mutableSetOf<String>()
         for (methodNode in this.methods) {
             if (methodNode.isStatic) {
@@ -94,6 +95,11 @@ class LambdaNodeAdapter(api: Int, val classVisitor: ClassVisitor) : ClassNode(ap
             val nextInstruction = instructions.next()
             if (nextInstruction is InvokeDynamicInsnNode) {
                 if (filter(nextInstruction)) {
+                    if (this@LambdaNodeAdapter.name.contains("TestActivity2")) {
+                        println(
+                            "LambdaNodeAdapter nextInstruction,nextInstruction.name:${nextInstruction.name} nextInstruction.desc${nextInstruction.desc}",
+                        )
+                    }
                     handleList.add(nextInstruction)
                 }
             }

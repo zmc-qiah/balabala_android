@@ -4,6 +4,9 @@ project.ext.configAppModule project
 apply plugin: 'org.jxxy.debug.TrackPlugin'
 
 dependencies {
+    implementation 'org.ow2.asm:asm:9.2'
+    implementation 'org.ow2.asm:asm-commons:9.2'
+    implementation 'org.ow2.asm:asm-tree:9.2'
     implementation project(':sensors_data')
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
     implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -23,6 +24,7 @@ class SensorDataManager(val preferences: SharedPreferences? = null, val dao: Eve
     private val mutex = Mutex()
 
     fun onObtainData(event: Event) {
+        Log.d(TAG, "onObtainData: " + event)
         runBlocking(Dispatchers.IO) {
             async {
                 event.id = dao.insert(event)
