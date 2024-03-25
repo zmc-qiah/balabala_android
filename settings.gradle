@@ -2,5 +2,7 @@ rootProject.name = "balabala"
 include ':app'
 include ':sensors_data'
 include ':lib2'
-//
+
 //include ':adapter'
+include ':simpleRecycleView'
+include ':adapter_plugin'

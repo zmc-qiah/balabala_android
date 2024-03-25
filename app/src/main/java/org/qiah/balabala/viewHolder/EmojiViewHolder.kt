@@ -1,5 +1,6 @@
 package org.qiah.balabala.viewHolder
 
+import org.jxxy.debug.simpleRv.MultipleViewHolder
 import org.qiah.balabala.MyListener.ClickItemListener
 import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.databinding.ItemEmojiBinding
@@ -8,7 +9,9 @@ import org.qiah.balabala.util.getWidth
 import org.qiah.balabala.util.load
 import org.qiah.balabala.util.singleClick
 
-class EmojiViewHolder(view: ItemEmojiBinding, val listener: ClickItemListener<String>, val onLong: LongItemListener) : MultipleViewHolder<ItemEmojiBinding, MyType>(view) {
+class EmojiViewHolder(view: ItemEmojiBinding, val listener: ClickItemListener<String>, val onLong: LongItemListener) : MultipleViewHolder<ItemEmojiBinding, MyType>(
+    view,
+) {
     override fun setHolder(entity: MyType) {
         val width = getWidth() / 5
         view.root.layoutParams.width = width
@@ -22,7 +25,7 @@ class EmojiViewHolder(view: ItemEmojiBinding, val listener: ClickItemListener<St
             val a = IntArray(2)
             view.root.getLocationOnScreen(a)
             val b = intArrayOf(a[0], a[1], view.root.width, view.root.height)
-            onLong.onLongClick(b, absoluteAdapterPosition, entity)
+            onLong.onLongClick(b, adapterPosition, entity)
             true
         }
     }

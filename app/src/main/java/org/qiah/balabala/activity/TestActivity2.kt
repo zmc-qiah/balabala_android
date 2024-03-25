@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.util.Log
-import android.view.View
 import org.qiah.balabala.databinding.Activity1Binding
 import org.qiah.balabala.util.singleClick
 
@@ -17,13 +16,9 @@ class TestActivity2 : BaseActivity<Activity1Binding>() {
         view.aIv.singleClick {
             Log.d(TAG, "initView: aIv")
         }
-        view.aTv.setOnClickListener(
-            object : View.OnClickListener {
-                override fun onClick(v: View?) {
-                    Log.d(TAG, "initView: aTv")
-                }
-            },
-        )
+        view.aTv.setOnClickListener {
+            it.id
+        }
         view.aIv2.setOnClickListener {
             Log.d(TAG, "initView: aIv2")
         }

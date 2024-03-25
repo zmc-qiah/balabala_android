@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import org.jxxy.debug.simpleRv.MultipleTypeAdapter
 import org.qiah.balabala.MyListener.ClickCreateListener
 import org.qiah.balabala.MyListener.ClickItemListener
 import org.qiah.balabala.MyListener.ClickLongChatDialogListener
 import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.SQLite.MyDataBaseHelper
 import org.qiah.balabala.activity.ModifyChatActivity
-import org.qiah.balabala.adapter.MultipleTypeAdapter
 import org.qiah.balabala.bean.Chat
 import org.qiah.balabala.bean.CreateChat
 import org.qiah.balabala.databinding.FragmentNikkeBinding
@@ -34,7 +34,10 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
             override fun onClick(data: Chat) {
             }
 
-            override fun onClick(data: Chat, position: Int) {
+            override fun onClick(
+                data: Chat,
+                position: Int,
+            ) {
                 selectChat = data
                 selectPosition = position
                 val intent = Intent(requireActivity(), ModifyChatActivity::class.java)
@@ -48,17 +51,18 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
             override fun createViewHolder(
                 i: Int,
                 layoutInflater: LayoutInflater,
-                viewGroup: ViewGroup
-            ): RecyclerView.ViewHolder? = when (i) {
-                MyType.CHAT -> {
-                    MainNikkeViewHolder(
-                        ItemNikkeMainBinding.inflate(layoutInflater, viewGroup, false),
-                        onClick,
-                        longListener
-                    )
+                viewGroup: ViewGroup,
+            ): RecyclerView.ViewHolder? =
+                when (i) {
+                    MyType.CHAT -> {
+                        MainNikkeViewHolder(
+                            ItemNikkeMainBinding.inflate(layoutInflater, viewGroup, false),
+                            onClick,
+                            longListener,
+                        )
+                    }
+                    else -> null
                 }
-                else -> null
-            }
         }
     }
 
@@ -66,8 +70,14 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
 
     override fun initView() {
 //        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        find.root.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-        find.sortIcon.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+        find.root.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+        )
+        find.sortIcon.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+        )
         val i = (getHeight() * 0.81).toInt()
         val i1 = find.sortIcon.measuredHeight
         val i2: Float = 20.dp()
@@ -99,18 +109,20 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
         }
         super.onResume()
     }
+
     private val listener: ClickCreateListener by lazy {
         object : ClickCreateListener {
             override fun onClick(nikkes: CreateChat) {
-                val chat = Chat(
-                    1,
-                    if (!nikkes.name.isNullOrEmpty()) nikkes.name else nikkes.nikkes.get(0).name,
-                    nikkes.nikkes.get(0).avatarPath!!,
-                    "",
-                    chatAdapter.itemCount + 1,
-                    ArrayList(nikkes.nikkes.map { it.id }),
-                    nikkes.nikkes
-                )
+                val chat =
+                    Chat(
+                        1,
+                        if (!nikkes.name.isNullOrEmpty()) nikkes.name else nikkes.nikkes.get(0).name,
+                        nikkes.nikkes.get(0).avatarPath!!,
+                        "",
+                        chatAdapter.itemCount + 1,
+                        ArrayList(nikkes.nikkes.map { it.id }),
+                        nikkes.nikkes,
+                    )
                 chat.id = db.insertChat(chat)
                 chatAdapter.add(chat)
                 find.numsTv.text = "对话清单:(${chatAdapter.itemCount})"
@@ -130,23 +142,41 @@ class MainFragment : BaseFragment<FragmentNikkeBinding>() {
         }
     val longListener by lazy {
         object : LongItemListener {
-            override fun onLongClick(location: IntArray, position: Int, entry: MyType) {
-                LongChatDialog(location, position, entry as Chat, onClickDialog).show(parentFragmentManager, LongChatDialog::class.simpleName)
+            override fun onLongClick(
+                location: IntArray,
+                position: Int,
+                entry: MyType,
+            ) {
+                LongChatDialog(
+                    location,
+                    position,
+                    entry as Chat,
+                    onClickDialog,
+                ).show(parentFragmentManager, LongChatDialog::class.simpleName)
             }
         }
     }
 
     private val onClickDialog: ClickLongChatDialogListener by lazy {
         object : ClickLongChatDialogListener {
-            override fun onMoveTo(entry: Chat, position: Int) {
+            override fun onMoveTo(
+                entry: Chat,
+                position: Int,
+            ) {
                 chatAdapter.moveToPostion(entry, 0)
                 db.moveChatToTop(entry)
             }
 
-            override fun onUpdate(entry: Chat, position: Int) {
+            override fun onUpdate(
+                entry: Chat,
+                position: Int,
+            ) {
             }
 
-            override fun onDelete(entry: Chat, position: Int) {
+            override fun onDelete(
+                entry: Chat,
+                position: Int,
+            ) {
                 chatAdapter.remove(entry)
                 db.deleteChat(entry)
                 find.numsTv.text = "对话清单:(${chatAdapter.itemCount})"

@@ -5,7 +5,7 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.commons.AdviceAdapter
 
-class TrackClassVisitor(classVisitor: ClassVisitor) : ClassVisitor(Opcodes.ASM7, classVisitor) {
+class TrackClassVisitor(classVisitor: ClassVisitor, val list: List<Pair<String, String>>) : ClassVisitor(Opcodes.ASM7, classVisitor) {
     private var interfaces: Array<out String>? = null
     private var name: String? = null
     private var superName: String? = null
@@ -32,7 +32,7 @@ class TrackClassVisitor(classVisitor: ClassVisitor) : ClassVisitor(Opcodes.ASM7,
         exceptions: Array<out String>?,
     ): MethodVisitor {
         var visitMethod = super.visitMethod(access, name, descriptor, signature, exceptions)
-        if (name == "onClick" && interfaces?.contains("android/view/View\$OnClickListener") == true) {
+        if ((name == "onClick" && interfaces?.contains("android/view/View\$OnClickListener") == true) || (isLambda(name, descriptor))) {
             visitMethod =
                 object : AdviceAdapter(
                     Opcodes.ASM7,
@@ -147,5 +147,16 @@ class TrackClassVisitor(classVisitor: ClassVisitor) : ClassVisitor(Opcodes.ASM7,
                 }
         }
         return visitMethod
+    }
+
+    private fun isLambda(
+        name: String?,
+        descriptor: String?,
+    ): Boolean {
+        var res = false
+        list.forEach {
+            if (name == it.first && descriptor == it.second) res = true
+        }
+        return res
     }
 }

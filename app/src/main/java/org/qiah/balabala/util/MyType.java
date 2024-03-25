@@ -1,6 +1,8 @@
 package org.qiah.balabala.util;
 
-public abstract class MyType implements MultipleType{
+import org.jxxy.debug.simpleRv.MultipleType;
+
+public abstract class MyType implements MultipleType {
     public static final int MAIN_NIKKE = 1018;
     public static final int CHAT = 1018;
     public static final int NIKKE = 1019;

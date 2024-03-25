@@ -3,6 +3,8 @@ package org.jxxy.debug.sensors
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -66,7 +68,7 @@ object SensorsBind {
                 mDeviceInfo = sensorsBindHelper.getDeviceInfo(app.applicationContext)
                 val db = Room.databaseBuilder(app.applicationContext, EventDataBase::class.java, "sensor_data").build()
                 val dao = db.eventDao()
-                sensorDataManager = SensorDataManager(preferences, dao, app.applicationContext)
+                sensorDataManager = SensorDataManager(preferences, dao)
                 app.registerActivityLifecycleCallbacks(
                     object : Application.ActivityLifecycleCallbacks {
                         override fun onActivityCreated(
@@ -129,6 +131,7 @@ object SensorsBind {
                         "deviceId" to mDeviceId,
                     ),
                 ),
+                isOnWifi(),
             )
         }
         sensorsBindHelper.setStart()
@@ -143,6 +146,7 @@ object SensorsBind {
                     "deviceInfo" to mDeviceInfo.toString(),
                 ),
             ),
+            isOnWifi(),
         )
     }
 
@@ -159,6 +163,7 @@ object SensorsBind {
                         "deviceId" to mDeviceId,
                     ),
                 ),
+                isOnWifi(),
             )
             sensorsBindHelper.setEnd()
         }
@@ -181,6 +186,7 @@ object SensorsBind {
                     "${it.className} Paused",
                     map,
                 ),
+                isOnWifi(),
             )
         }
         handler.removeCallbacks(onAppEnd)
@@ -202,6 +208,7 @@ object SensorsBind {
                         "deviceId" to mDeviceId,
                     ),
                 ),
+                isOnWifi(),
             )
         }
     }
@@ -259,6 +266,7 @@ object SensorsBind {
                 name,
                 map,
             ),
+            isOnWifi(),
         )
     }
 
@@ -331,6 +339,21 @@ object SensorsBind {
             }
         }
         a(type, name, map)
+    }
+
+    fun isOnWifi(): Boolean {
+        var res = false
+        val connMgr = app.baseContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo: NetworkInfo? = connMgr.activeNetworkInfo
+        if (networkInfo?.isConnected == true) {
+            for (network in connMgr.allNetworks) {
+                if (connMgr.getNetworkInfo(network)?.type == ConnectivityManager.TYPE_WIFI) {
+                    res = true
+                    break
+                }
+            }
+        }
+        return res
     }
 
     val ID = "NOWID"

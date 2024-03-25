@@ -1,9 +1,6 @@
 package org.jxxy.debug.sensors
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -18,19 +15,22 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-class SensorDataManager(val preferences: SharedPreferences? = null, val dao: EventDao, val context: Context) {
+class SensorDataManager(val preferences: SharedPreferences? = null, val dao: EventDao) {
     private val TAG = "SensorDataManager"
     private var gson: Gson = Gson()
     private val mutex = Mutex()
 
-    fun onObtainData(event: Event) {
+    fun onObtainData(
+        event: Event,
+        isOnWifi: Boolean,
+    ) {
         Log.d(TAG, "onObtainData: " + event)
         runBlocking(Dispatchers.IO) {
             async {
                 event.id = dao.insert(event)
             }.await()
             mutex.withLock {
-                if (isOnWifi()) {
+                if (isOnWifi) {
                     val target = dao.selectMaxId()
                     val nowId = preferences?.getLong(SensorsBind.ID, 0L) ?: 0L
                     val code =
@@ -100,21 +100,5 @@ class SensorDataManager(val preferences: SharedPreferences? = null, val dao: Eve
         }
         connection.disconnect()
         return code
-    }
-
-    fun isOnWifi(): Boolean {
-        var res = false
-        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo: NetworkInfo? = connMgr.activeNetworkInfo
-//        return networkInfo?.isConnected == true
-        if (networkInfo?.isConnected == true) {
-            for (network in connMgr.allNetworks) {
-                if (connMgr.getNetworkInfo(network)?.type == ConnectivityManager.TYPE_WIFI) {
-                    res = true
-                    break
-                }
-            }
-        }
-        return res
     }
 }

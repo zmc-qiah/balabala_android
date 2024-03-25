@@ -1,9 +1,8 @@
-package org.qiah.balabala.viewHolder
+package org.jxxy.debug.simpleRv
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import org.qiah.balabala.util.MultipleType
 
 /**
  * @author : Wangjf
@@ -19,6 +18,10 @@ abstract class MultipleViewHolder<V : ViewBinding?, T : MultipleType?>(var view:
     }
 
     abstract fun setHolder(entity: T)
-    open fun setHolder(entity: T, payload: Any) {
+
+    open fun setHolder(
+        entity: T,
+        payload: Any,
+    ) {
     }
 }

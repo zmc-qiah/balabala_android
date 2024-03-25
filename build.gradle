@@ -20,6 +20,7 @@ buildscript {
 
 //            classpath "com.pengxr:toast:1.3.0"
             classpath 'org.jxxy.debug:TrackPlugin:1.0.0'
+//            classpath 'org.jxxy.debug:AdapterPlugin:1.0.0'
         }
     }
     dependencies {

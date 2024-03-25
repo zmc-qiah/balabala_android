@@ -1,6 +1,7 @@
 package org.qiah.balabala.viewHolder
 
 import android.util.Log
+import org.jxxy.debug.simpleRv.MultipleViewHolder
 import org.qiah.balabala.MyListener.SelectNikkeListener
 import org.qiah.balabala.bean.Nikke
 import org.qiah.balabala.databinding.ItemSelectNikkeBinding
@@ -8,7 +9,9 @@ import org.qiah.balabala.util.load
 import org.qiah.balabala.util.nullOrNot
 import org.qiah.balabala.util.singleClick
 
-class NikkeAvatarViewHolder(view: ItemSelectNikkeBinding, var listener: SelectNikkeListener, val flag: Boolean = true) : MultipleViewHolder<ItemSelectNikkeBinding, Nikke>(view) {
+class NikkeAvatarViewHolder(view: ItemSelectNikkeBinding, var listener: SelectNikkeListener, val flag: Boolean = true) : MultipleViewHolder<ItemSelectNikkeBinding, Nikke>(
+    view,
+) {
     override fun setHolder(entity: Nikke) {
         Log.d("NikkeAvata", "setHolder: $entity")
         entity.avatarId.nullOrNot(
@@ -17,7 +20,7 @@ class NikkeAvatarViewHolder(view: ItemSelectNikkeBinding, var listener: SelectNi
             },
             {
                 view.avatarIv.load(entity.avatarId!!, 6)
-            }
+            },
         )
         val b = entity.flag
         if (b) {

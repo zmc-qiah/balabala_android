@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import org.jxxy.debug.simpleRv.MultipleType
+import org.jxxy.debug.simpleRv.MultipleTypeAdapter
 import org.qiah.balabala.MyListener.ClickModifyDialogListener
 import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.SQLite.MyDataBaseHelper
@@ -22,7 +24,6 @@ import org.qiah.balabala.databinding.ItemNarrationBinding
 import org.qiah.balabala.databinding.ItemSplitLineBinding
 import org.qiah.balabala.databinding.ItemThingBinding
 import org.qiah.balabala.dialog.ModifyDialog
-import org.qiah.balabala.util.MultipleType
 import org.qiah.balabala.util.MyType
 import org.qiah.balabala.viewHolder.ChatLeftImageViewHolder
 import org.qiah.balabala.viewHolder.ChatLeftTextViewHolder
@@ -38,14 +39,18 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
     var newPosition: Int = -1
     val onLongItemListener: LongItemListener by lazy {
         object : LongItemListener {
-            override fun onLongClick(location: IntArray, position: Int, entry: MyType) {
+            override fun onLongClick(
+                location: IntArray,
+                position: Int,
+                entry: MyType,
+            ) {
                 oldPosition = newPosition
                 newPosition = position
                 ModifyDialog(
                     location,
                     listener,
                     entry as ChatItem,
-                    position
+                    position,
                 ) { if (newPosition != -1) notifyItemChanged(newPosition, true) }.show(fm)
             }
         }
@@ -54,76 +59,83 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
     override fun createViewHolder(
         i: Int,
         layoutInflater: LayoutInflater,
-        viewGroup: ViewGroup
-    ): RecyclerView.ViewHolder? = when (i) {
-        MyType.CHAT_LEFT_TEXT -> ChatLeftTextViewHolder(
-            ItemChatLeftTextBinding.inflate(
-                layoutInflater,
-                viewGroup,
-                false
-            ),
-            getPre,
-            onLongItemListener
-        )
+        viewGroup: ViewGroup,
+    ): RecyclerView.ViewHolder? =
+        when (i) {
+            MyType.CHAT_LEFT_TEXT ->
+                ChatLeftTextViewHolder(
+                    ItemChatLeftTextBinding.inflate(
+                        layoutInflater,
+                        viewGroup,
+                        false,
+                    ),
+                    getPre,
+                    onLongItemListener,
+                )
 
-        MyType.CHAT_RIGHT_TEXT -> ChatRightTextViewHolder(
-            ItemChatRightTextBinding.inflate(
-                layoutInflater,
-                viewGroup,
-                false
-            ),
-            onLongItemListener
-        )
+            MyType.CHAT_RIGHT_TEXT ->
+                ChatRightTextViewHolder(
+                    ItemChatRightTextBinding.inflate(
+                        layoutInflater,
+                        viewGroup,
+                        false,
+                    ),
+                    onLongItemListener,
+                )
 
-        MyType.CHAT_LEFT_IMAGE -> ChatLeftImageViewHolder(
-            ItemChatLeftImageBinding.inflate(
-                layoutInflater,
-                viewGroup,
-                false
-            ),
-            getPre,
-            onLongItemListener
-        )
+            MyType.CHAT_LEFT_IMAGE ->
+                ChatLeftImageViewHolder(
+                    ItemChatLeftImageBinding.inflate(
+                        layoutInflater,
+                        viewGroup,
+                        false,
+                    ),
+                    getPre,
+                    onLongItemListener,
+                )
 
-        MyType.CHAT_RIGHT_IMAGE -> ChatRightImageViewHolder(
-            ItemChatRightImageBinding.inflate(
-                layoutInflater,
-                viewGroup,
-                false
-            ),
-            onLongItemListener
-        )
+            MyType.CHAT_RIGHT_IMAGE ->
+                ChatRightImageViewHolder(
+                    ItemChatRightImageBinding.inflate(
+                        layoutInflater,
+                        viewGroup,
+                        false,
+                    ),
+                    onLongItemListener,
+                )
 
-        MyType.CHAT_SPLIT_LINE -> SplitViewHolder(
-            ItemSplitLineBinding.inflate(
-                layoutInflater,
-                viewGroup,
-                false
-            ),
-            onLongItemListener
-        )
+            MyType.CHAT_SPLIT_LINE ->
+                SplitViewHolder(
+                    ItemSplitLineBinding.inflate(
+                        layoutInflater,
+                        viewGroup,
+                        false,
+                    ),
+                    onLongItemListener,
+                )
 
-        MyType.CHAT_NARRATION -> NarrationViewHolder(
-            ItemNarrationBinding.inflate(
-                layoutInflater,
-                viewGroup,
-                false
-            ),
-            onLongItemListener
-        )
+            MyType.CHAT_NARRATION ->
+                NarrationViewHolder(
+                    ItemNarrationBinding.inflate(
+                        layoutInflater,
+                        viewGroup,
+                        false,
+                    ),
+                    onLongItemListener,
+                )
 
-        MyType.CHAT_THING -> {
-            ThingViewHolder(
-                ItemThingBinding.inflate(
-                    layoutInflater,
-                    viewGroup,
-                    false
-                ),
-                onLongItemListener
-            )
+            MyType.CHAT_THING -> {
+                ThingViewHolder(
+                    ItemThingBinding.inflate(
+                        layoutInflater,
+                        viewGroup,
+                        false,
+                    ),
+                    onLongItemListener,
+                )
+            }
+            else -> null
         }
-        else -> null
-    }
 
     fun addMessages(messages: List<Message>?) {
         if (messages == null || messages.isEmpty()) {
@@ -145,15 +157,19 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
                 }
 
                 2 -> {
-                    data.add(object : ChatItem(it, it.content) {
-                        override fun viewType(): Int = CHAT_NARRATION
-                    })
+                    data.add(
+                        object : ChatItem(it, it.content) {
+                            override fun viewType(): Int = CHAT_NARRATION
+                        },
+                    )
                 }
 
                 3 -> {
-                    data.add(object : ChatItem(it, it.content) {
-                        override fun viewType(): Int = CHAT_SPLIT_LINE
-                    })
+                    data.add(
+                        object : ChatItem(it, it.content) {
+                            override fun viewType(): Int = CHAT_SPLIT_LINE
+                        },
+                    )
                 }
 
                 4 -> {
@@ -165,14 +181,17 @@ class ChatAdapter(val db: MyDataBaseHelper, val fm: FragmentManager, val listene
                     }
                 }
                 5 -> {
-                    data.add(object : ChatItem(it, it.content) {
-                        override fun viewType(): Int = MyType.CHAT_THING
-                    })
+                    data.add(
+                        object : ChatItem(it, it.content) {
+                            override fun viewType(): Int = MyType.CHAT_THING
+                        },
+                    )
                 }
             }
         }
         this.notifyItemRangeChanged(start, cnt)
     }
+
     fun updateMessage(entry: ChatItem?) {
         entry?.let {
             data.set(entry.message.postion, entry)

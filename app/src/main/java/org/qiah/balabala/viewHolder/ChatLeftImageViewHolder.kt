@@ -1,20 +1,26 @@
 package org.qiah.balabala.viewHolder
 
 import android.view.ViewGroup
+import org.jxxy.debug.simpleRv.MultipleType
+import org.jxxy.debug.simpleRv.MultipleViewHolder
 import org.qiah.balabala.MyListener.LongItemListener
 import org.qiah.balabala.bean.ChatLeftImage
 import org.qiah.balabala.bean.ChatLeftText
 import org.qiah.balabala.databinding.ItemChatLeftImageBinding
-import org.qiah.balabala.util.MultipleType
 import org.qiah.balabala.util.dp
 import org.qiah.balabala.util.getWidth
 import org.qiah.balabala.util.gone
 import org.qiah.balabala.util.load
 import org.qiah.balabala.util.show
 
-class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) -> MultipleType, val onLongItemListener: LongItemListener) : MultipleViewHolder<ItemChatLeftImageBinding, ChatLeftImage>(view) {
+@Suppress("ktlint:standard:max-line-length")
+class ChatLeftImageViewHolder(
+    view: ItemChatLeftImageBinding,
+    val getPre: (Int) -> MultipleType,
+    val onLongItemListener: LongItemListener,
+) : MultipleViewHolder<ItemChatLeftImageBinding, ChatLeftImage>(view) {
     override fun setHolder(entity: ChatLeftImage) {
-        if (absoluteAdapterPosition == 0 ||
+        if (adapterPosition == 0 ||
             entity.nikke == null
         ) {
             view.avatarIv.load(entity.nikke!!, true)
@@ -23,7 +29,7 @@ class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) 
             view.avatarIv.show()
             view.nameTv.show()
         } else {
-            var t: MultipleType = getPre(absoluteAdapterPosition - 1)
+            var t: MultipleType = getPre(adapterPosition - 1)
             var i1 = -1
             var i2 = -2
             if (t is ChatLeftText) {
@@ -49,7 +55,7 @@ class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) 
         view.root.setOnLongClickListener {
             val location = IntArray(2)
             view.root.getLocationOnScreen(location)
-            onLongItemListener.onLongClick(location, absoluteAdapterPosition, entity)
+            onLongItemListener.onLongClick(location, adapterPosition, entity)
             view.root.alpha = 0.7f
             true
         }
@@ -57,7 +63,11 @@ class ChatLeftImageViewHolder(view: ItemChatLeftImageBinding, val getPre: (Int) 
 //            (view.avatarIv.resources as? GifDrawable)?.start()
 //        }
     }
-    override fun setHolder(entity: ChatLeftImage, payload: Any) {
+
+    override fun setHolder(
+        entity: ChatLeftImage,
+        payload: Any,
+    ) {
         super.setHolder(entity, payload)
         view.root.alpha = 1f
     }

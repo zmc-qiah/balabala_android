@@ -11,13 +11,13 @@ import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
+import org.jxxy.debug.simpleRv.MultipleTypeAdapter
 import org.qiah.balabala.BaseApplication
 import org.qiah.balabala.MyListener.ClickCreateListener
 import org.qiah.balabala.MyListener.ClickItemListener
 import org.qiah.balabala.MyListener.SelectNikkeListener
 import org.qiah.balabala.R
 import org.qiah.balabala.SQLite.MyDataBaseHelper
-import org.qiah.balabala.adapter.MultipleTypeAdapter
 import org.qiah.balabala.bean.CreateChat
 import org.qiah.balabala.bean.Nikke
 import org.qiah.balabala.databinding.DialogCreateNikkeChatBinding
@@ -29,6 +29,7 @@ import org.qiah.balabala.util.getHeight
 import org.qiah.balabala.util.singleClick
 import org.qiah.balabala.util.toast
 import org.qiah.balabala.viewHolder.NikkeAvatarViewHolder
+
 class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCreateNikkeChatBinding>() {
     init {
         gravity = Gravity.BOTTOM
@@ -36,6 +37,7 @@ class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCre
         height = getHeight() / 6 * 5
         alpha = 0.3f
     }
+
     private var temp: String? = null
     private val SelectNikkeListener by lazy {
         object : SelectNikkeListener {
@@ -60,10 +62,12 @@ class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCre
             override fun createViewHolder(
                 i: Int,
                 layoutInflater: LayoutInflater,
-                viewGroup: ViewGroup
-            ): RecyclerView.ViewHolder? = NikkeAvatarViewHolder(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false), SelectNikkeListener)
+                viewGroup: ViewGroup,
+            ): RecyclerView.ViewHolder? =
+                NikkeAvatarViewHolder(ItemSelectNikkeBinding.inflate(layoutInflater, viewGroup, false), SelectNikkeListener)
         }
     }
+
     override fun initView(view: DialogCreateNikkeChatBinding) {
         view.nikkeAvatarRv.adapter = adapter
         view.nikkeAvatarRv.addItemDecoration(SpanItemDecoration(8F, 4F, 4))
@@ -77,88 +81,114 @@ class CreateChatDialog(var listener: ClickCreateListener) : BaseDialog<DialogCre
         }
         nikkes = db.selectNikkeAll()
         adapter.add(nikkes)
-        view.searchEt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+        view.searchEt.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                }
 
-            override fun afterTextChanged(s: Editable?) {
-                val s1 = s.toString()
-                if (s1.isEmpty()) {
-                    adapter.clearAndAdd(nikkes)
-                } else {
-                    if ("米西利斯".equals(s1) || "泰特拉".equals(s1) || "极乐净土".equals(s1) || "其他".equals(s1) || "朝圣者".equals(s1) || ResourceUtil.getString(
-                            R.string.added_nikke_enterprise
-                        ).equals(s1)
-                    ) {
-                        adapter.clearAndAdd(
-                            nikkes.map {
-                                if (s1.equals(it.enterprise)) {
-                                    it
-                                } else null
-                            }.filterNotNull()
-                        )
+                override fun afterTextChanged(s: Editable?) {
+                    val s1 = s.toString()
+                    if (s1.isEmpty()) {
+                        adapter.clearAndAdd(nikkes)
                     } else {
-                        adapter.clearAndAdd(
-                            nikkes.map {
-                                if (it.name.contains(s1)) {
-                                    it
-                                } else null
-                            }.filterNotNull()
-                        )
+                        if ("米西利斯".equals(s1) || "泰特拉".equals(s1) || "极乐净土".equals(s1) || "其他".equals(s1) || "朝圣者".equals(s1) ||
+                            ResourceUtil.getString(
+                                R.string.added_nikke_enterprise,
+                            ).equals(s1)
+                        ) {
+                            adapter.clearAndAdd(
+                                nikkes.map {
+                                    if (s1.equals(it.enterprise)) {
+                                        it
+                                    } else {
+                                        null
+                                    }
+                                }.filterNotNull(),
+                            )
+                        } else {
+                            adapter.clearAndAdd(
+                                nikkes.map {
+                                    if (it.name.contains(s1)) {
+                                        it
+                                    } else {
+                                        null
+                                    }
+                                }.filterNotNull(),
+                            )
+                        }
                     }
                 }
-            }
-        })
+            },
+        )
         view.addIv.singleClick {
             "挑选头像".toast()
             PictureSelector.create(context)
                 .openGallery(SelectMimeType.TYPE_IMAGE)
                 .setImageEngine(GlideEngine())
                 .setMaxSelectNum(1)
-                .forResult(object : OnResultCallbackListener<LocalMedia> {
-                    override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
-                        result?.getOrNull(0)?.let {
-                            temp = it.realPath
-                            CreateNikkeDialog(createListener).show(parentFragmentManager, CreateNikkeDialog::class.simpleName)
+                .forResult(
+                    object : OnResultCallbackListener<LocalMedia> {
+                        override fun onResult(result: java.util.ArrayList<LocalMedia>?) {
+                            result?.getOrNull(0)?.let {
+                                temp = it.realPath
+                                CreateNikkeDialog(createListener).show(parentFragmentManager, CreateNikkeDialog::class.simpleName)
+                            }
                         }
-                    }
 
-                    override fun onCancel() {
-                    }
-                })
+                        override fun onCancel() {
+                        }
+                    },
+                )
         }
     }
+
     override fun getView(
         inflater: LayoutInflater,
-        parent: ViewGroup?
+        parent: ViewGroup?,
     ): DialogCreateNikkeChatBinding = DialogCreateNikkeChatBinding.inflate(layoutInflater)
+
     private val createListener: ClickItemListener<String> by lazy {
         object : ClickItemListener<String> {
             override fun onClick(data: String) {
                 temp?.let {
                     val id = db.addNikke(data, it)
-                    val bean = Nikke(
-                        data,
-                        ResourceUtil.getString(
-                            R.string.added_nikke_enterprise
-                        ),
-                        temp,
-                        id
-                    )
+                    val bean =
+                        Nikke(
+                            data,
+                            ResourceUtil.getString(
+                                R.string.added_nikke_enterprise,
+                            ),
+                            temp,
+                            id,
+                        )
                     nikkes.add(bean)
                     adapter.add(bean)
                 }
             }
 
-            override fun onClick(data: String, position: Int) {
+            override fun onClick(
+                data: String,
+                position: Int,
+            ) {
                 onClick(data)
             }
         }
     }
     private val TAG = CreateChatDialog::class.simpleName
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppBottomSheet)

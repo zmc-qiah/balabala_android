@@ -4,7 +4,6 @@ import com.android.build.api.transform.QualifiedContent
 import com.android.build.gradle.internal.pipeline.TransformManager
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
-import org.objectweb.asm.Opcodes
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -13,8 +12,10 @@ class TrackTransform() : BaseCustomTransform(true) {
         { fis, fos ->
             val classReader = ClassReader(fis)
             val classWriter = ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
-            val classVisitor = LambdaNodeAdapter(Opcodes.ASM7, classWriter)
-            classReader.accept(TrackClassVisitor(classVisitor), ClassReader.EXPAND_FRAMES)
+            val list = ArrayList<Pair<String, String>>()
+            val classVisitor = FindLambdaVisitor(classWriter, list)
+            classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
+            classReader.accept(TrackClassVisitor(classVisitor, list), ClassReader.EXPAND_FRAMES)
             fos.write(classWriter.toByteArray())
         }
 
